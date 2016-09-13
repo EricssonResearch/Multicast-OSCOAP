@@ -75,7 +75,6 @@ Node IDs are necessary in order to identify a given node with no commitment to a
 On the other hand, the group context includes, among other security attributes:
 
 1. a symmetric group key KG;
-
 2. a unique context identifier IDGC.
 
 In particular, two distinct group contexts must be associated with different group context identifiers. Since different groups can be managed by different Group Managers, a possible way to ensure uniqueness of group context identifiers is to consider the format IDGC = \{IDG \|\| IPGM\}, where i) IDG is the group identifier of group G, and is unique in the pool of groups including G and managed by that Group Manager; ii) and IPGM is the IP address of the Group Manager. Possible alternative ways to ensure uniqueness of group context identifiers are out of the scope of this document.
