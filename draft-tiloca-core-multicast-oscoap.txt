@@ -1,0 +1,504 @@
+
+
+
+
+CoRE Working Group                                             M. Tiloca
+Internet-Draft                                                      SICS
+Intended status: Standards Track                      September 13, 2016
+Expires: March 17, 2017
+
+
+                  Secure group communication for CoAP
+               draft-tiloca-core-multicast-oscoap-latest
+
+Abstract
+
+   This document describes how to enable secure communication in a group
+   of devices that exchange (multicast) CoAP messages.
+
+   The proposed approach relies on Object Security for CoAP (OSCOAP)
+   [I-D.selander-ace-object-security], with reference to the "one
+   request - one response" model.  No extensions or changes to OSCOAP
+   are required.
+
+   Furthermore, the proposed approach provides source authentication of
+   group messages, by means of digital signatures produced through
+   asymmetric private keys and embedded in the secure messages.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at http://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on March 17, 2017.
+
+Copyright Notice
+
+   Copyright (c) 2016 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (http://trustee.ietf.org/license-info) in effect on the date of
+
+
+
+Tiloca                   Expires March 17, 2017                 [Page 1]
+
+Internet-Draft     Secure group communication for CoAP    September 2016
+
+
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+     1.1.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Assumptions and requirements  . . . . . . . . . . . . . . . .   3
+   3.  Support for multicast communication . . . . . . . . . . . . .   4
+   4.  Binding between requests and responses  . . . . . . . . . . .   5
+   5.  Security material . . . . . . . . . . . . . . . . . . . . . .   5
+   6.  Message exchange and processing . . . . . . . . . . . . . . .   5
+     6.1.  Step 1 - Transmission of multicast request messages . . .   6
+     6.2.  Step 2 - Reception and processing of multicast request
+           messages  . . . . . . . . . . . . . . . . . . . . . . . .   6
+     6.3.  Step 3 - Transmission of unicast response messages  . . .   7
+     6.4.  Step 4 - Processing of unicast response messages on
+           sender nodes  . . . . . . . . . . . . . . . . . . . . . .   7
+   7.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .   8
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
+     8.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .   8
+   Appendix A.  Appendix . . . . . . . . . . . . . . . . . . . . . .   9
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   9
+
+1.  Introduction
+
+   Insert introduction here.
+
+1.1.  Terminology
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in [RFC2119].  These
+   words may also appear in this document in lowercase, absent their
+   normative meanings.
+
+   Readers are expected to be familiar with the terms and concepts
+   described in [RFC7252] and [RFC7641].
+
+   Terminology for constrained environments, such as "constrained
+   device", "constrained-node network", is defined in [RFC7228].
+
+
+
+
+
+Tiloca                   Expires March 17, 2017                 [Page 2]
+
+Internet-Draft     Secure group communication for CoAP    September 2016
+
+
+2.  Assumptions and requirements
+
+   A node N joins a group G by explicitly interacting with a responsible
+   Group Manager.  Upon joining a group, a node receives a unique node
+   ID IDN with respect to a certain context, which is associated to the
+   group G and shared among all its members.  These pieces of
+   information are provided by the Group Manager through out-of-band
+   means or other pre-established secure channels (further details are
+   out of scope).
+
+   Node IDs are necessary in order to identify a given node with no
+   commitment to any protocol-relevant identifiers as IP addresses.  The
+   Group Manager generates and manages node IDs in order to ensure their
+   uniqueness within a same multicast group.  That is, there cannot be
+   multiple nodes that belong to the same group and are associated to a
+   same node ID.
+
+   On the other hand, the group context includes, among other security
+   attributes:
+
+   1.  a symmetric group key KG;
+
+   2.  a unique context identifier IDGC.
+
+   In particular, two distinct group contexts must be associated with
+   different group context identifiers.  Since different groups can be
+   managed by different Group Managers, a possible way to ensure
+   uniqueness of group context identifiers is to consider the format
+   IDGC = {IDG || IPGM}, where i) IDG is the group identifier of group
+   G, and is unique in the pool of groups including G and managed by
+   that Group Manager; ii) and IPGM is the IP address of the Group
+   Manager.  Possible alternative ways to ensure uniqueness of group
+   context identifiers are out of the scope of this document.
+
+   In order to verify digital signatures of secure messages and ensure
+   their source authenticity, every node in the group is supposed to be
+   pre-provisioned with the necessary public keys associated to message
+   originators, or to get such keys from dedicated entities when it
+   becomes necessary.
+
+   A group member can behave as sender node and/or listener node.  As a
+   sender node, it can transmit multicast request messages to the group.
+   As a listener node, it receives multicast request messages from a
+   sender node, and possibly replies by transmitting unicast response
+   messages.  Upon joining the group, nodes are not required to know how
+   many and what nodes are active in the group.
+
+
+
+
+
+Tiloca                   Expires March 17, 2017                 [Page 3]
+
+Internet-Draft     Secure group communication for CoAP    September 2016
+
+
+   We assume that there are no internal adversaries in the multicast
+   group, i.e. group members are not compromised and are not interested
+   in inspecting and/or tampering with messages sent to / received from
+   other members in the group.  Establishment, revocation and renewal of
+   the group context and key material is out of the scope of this
+   document.
+
+   According to the multicast CoAP specification [RFC7252], any possible
+   proxy entity is supposed to know about the sender nodes in the group
+   and to not perform aggregation of response messages.  Also, every
+   sender node expects and is able to handle multiple unicast response
+   messages associated to a same multicast request message.
+
+3.  Support for multicast communication
+
+   OSCOAP messages exchanged in a group G convey a COSE object whose
+   header includes also:
+
+   1.  The group context identifier IDGC as "kid" parameter.  The most
+       significant bit of IDGC is conventionally set to '1', in order to
+       recognize it as a group context identifier (rather than a unicast
+       context identifier), and to enable the correct parsing of the
+       rest of the COSE object.
+
+   2.  The ID of the sender node, if the OSCOAP message is a multicast
+       request message.
+
+   3.  The ID of the listener node, if the OSCOAP message is a unicast
+       response to a multicast request.
+
+   4.  The Group transaction identifier (GTid), if the OSCOAP message is
+       a unicast response to a multicast request.  The GTid is defined
+       as {IDGC , IDS , SN}, where IDS is the ID of the sender node that
+       sent the associated multicast request message, and SN is the
+       write sequence number considered by the sender node when securing
+       and transmitting that request message.
+
+   Even in the presence of an intermediary proxy, this makes it
+   possible:
+
+   1.  on the listener side, to understand which is the specific sender
+       node originating a multicast request message, so decoupling
+       message security and IP addressing;
+
+   2.  on the sender node, to understand which is the specific listener
+       node originating a unicast response message as a reply to a
+       multicast request message, so decoupling message security and IP
+       addressing;
+
+
+
+Tiloca                   Expires March 17, 2017                 [Page 4]
+
+Internet-Draft     Secure group communication for CoAP    September 2016
+
+
+   3.  possibly adopt DTLS to protect hop-by-hop communication between a
+       sender node and a proxy (and vice versa), and between a proxy and
+       a listener node (and vice versa), together with the adoption of
+       secure group communication based on OSCOAP.
+
+4.  Binding between requests and responses
+
+   The mapping between a unicast response message and the associated
+   multicast request message relies on the same principle adopted in
+   OSCOAP [I-D.selander-ace-object-security].  That is, it is based on
+   the Group Transaction Identifier (GTid), included by listener nodes
+   in the COSE object conveyed in their own unicast response message to
+   a multicast request message.
+
+5.  Security material
+
+   Each node maintains data structures named read/write group
+   communication states.  In particular, each node N in a group G
+   stores:
+
+   1.  a single write group communication state, considered to secure
+       outgoing multicast request messages and outgoing unicast response
+       messages to received multicast requests;
+
+   2.  a read group communication state for each different node that
+       originated i) a received multicast request message; or ii) a
+       unicast response message to a multicast request previously sent
+       by node N itself.  Read group communication states are considered
+       to process such incoming secure messages.
+
+   Once it has fully joined a group G, a node N creates a write
+   communication state where it stores:
+
+   1.  a write sequence number SNWN initialized to 0
+
+   2.  a node key KN as KN = HKDF_Expand(KG , IDN || "Key" ||
+       Key_lenght)
+
+   3.  a node initialization vector IVN as IVN = HKDF_Expand(IVG ,
+       IDN || "IV" || IV_lenght)
+
+   4.  its own asymmetric private key K-N
+
+6.  Message exchange and processing
+
+   TODO.
+
+
+
+
+
+Tiloca                   Expires March 17, 2017                 [Page 5]
+
+Internet-Draft     Secure group communication for CoAP    September 2016
+
+
+6.1.  Step 1 - Transmission of multicast request messages
+
+   A sender node S refers to its own write group communication state and
+   proceeds as follows.
+
+   First, node S produces a signature X of the "Plaintext" and
+   "Additional authenticated data" defined in
+   [I-D.selander-ace-object-security], by means of its own asymmetric
+   private key K-S.
+
+   Second, node S considers its node key KS and its node initialization
+   vector IVS to protect the outgoing multicast request message.  To
+   this end, it produces a secure OSCOAP message
+   [I-D.selander-ace-object-security], computing the "Cipher text" from
+   the "Plaintext", the "Additional authenticated data", and the
+   signature X.  In particular, node S considers the write sequence
+   number SNWS from its own write group communication state to generate
+   a unique IV for the AEAD.
+
+   Finally, node S increments the value of SNWS by 1 and transmits the
+   multicast request message to the group G.
+
+6.2.  Step 2 - Reception and processing of multicast request messages
+
+   A listener node L processeses a multicast request message as such,
+   because of the multicast IP destination address specified in the
+   message IP header.  If the multicast request message has the most
+   significant bit of the "kid" parameter in the COSE object's header
+   set to 0, node L discards the message as invalid.
+
+   Otherwise, node L retrieves the group context identifier IDGC, the
+   sender identifier IDS, and the write sequence number SNWS, from the
+   COSE object's header.
+
+   If this is the very first multicast request message received from
+   that sender node (i.e. node L is not maintaining a read group
+   communication state associated to node S), then node L:
+
+   [I-D.selander-ace-object-security] derives the sender node key KS =
+   HKDF_Expand(KG , IDS || "Key" || Key_lenght) and the sender node
+   initialization vector IVS = HKDF_Expand(IVG , IDS || "IV" ||
+   IV_lenght) associated to node S;
+
+   1.  creates a read group communication state associated to node S,
+       where it stores KS, IVS, SNWS, and node S' public key K+S.
+
+   Then, node L considers the sender node key KS, the sender node
+   initialization vector IVS, and the write sequence number SNWS to
+
+
+
+Tiloca                   Expires March 17, 2017                 [Page 6]
+
+Internet-Draft     Secure group communication for CoAP    September 2016
+
+
+   unsecure the received multicast request message, according to the
+   OSCOAP procedure described in [I-D.selander-ace-object-security].
+   After that, it verifies the signature X conveyed in the COSE object,
+   by means of sender S' public key K+S.
+
+   If the multicast request message is successfully decrypted and
+   verified, node L updates the sequence number stored in the considered
+   read group communication state, according to the adopted anti-replay
+   policies.
+
+6.3.  Step 3 - Transmission of unicast response messages
+
+   In order to reply to a multicast request message sent by node S, the
+   listener node L refers to its own write group communication state and
+   builds a secure unicast response message as follows.
+
+   First, node L produces a signature Y of the "Plaintext" and
+   "Additional authenticated data" defined in
+   [I-D.selander-ace-object-security], by means of its own asymmetric
+   private key K-L.
+
+   Second, node L considers its node key KL and its node initialization
+   vector IVL to protect the outgoing unicast response message.  To this
+   end, it produces a secure OSCOAP message
+   [I-D.selander-ace-object-security], computing the "Cipher text" from
+   the "Plaintext", the "Additional authenticated data", and the
+   signature Y.  In particular, node L considers the write sequence
+   number SNWL from its own write group communication state to generate
+   a unique IV for the AEAD.
+
+   Finally, node L increments the value of SNWL by 1 and transmits the
+   unicast response message to the sender node S.
+
+6.4.  Step 4 - Processing of unicast response messages on sender nodes
+
+   A sender node S processes a unicast response message to one of its
+   own previously sent multicast request messages as follows.
+
+   Node S retrieves the group context identifier IDGC and the write
+   sequence number SNWL, from the COSE object's header.  In particular,
+   IDGC is retrieved from the group transaction identifier GTid.
+
+   If this is the very first unicast response message received from node
+   L as a reply to one of S' multicast request messages (i.e. node S is
+   not maintaining a read group communication state associated to node
+   L), then node S:
+
+
+
+
+
+Tiloca                   Expires March 17, 2017                 [Page 7]
+
+Internet-Draft     Secure group communication for CoAP    September 2016
+
+
+   1.  derives the node key KL = HKDF_Expand(KG , IDL || "Key" ||
+       Key_lenght) and the node initialization vector IVL =
+       HKDF_Expand(IVG , IDL || "IV" || IV_lenght) associated to node L.
+
+   2.  creates a read group communication state associated to node L,
+       where it stores KL, IVL, SNWL, and node L's public key K+L.
+
+   Then, node S considers the listener node key KL, the listener node
+   initialization vector IVL, and the write sequence number SNWL to
+   unsecure the received unicast response message, according to the
+   OSCOAP procedure described in [I-D.selander-ace-object-security].
+   After that, it verifies the signature Y conveyed in the COSE object,
+   by means of listener L's public key K+L.
+
+   If the unicast response message is successfully decrypted and
+   verified, node S updates the sequence number stored in the considered
+   read group communication state, according to the adopted anti-replay
+   policies.
+
+7.  Acknowledgments
+
+   TODO.
+
+8.  References
+
+8.1.  Normative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <http://www.rfc-editor.org/info/rfc2119>.
+
+   [RFC7252]  Shelby, Z., Hartke, K., and C. Bormann, "The Constrained
+              Application Protocol (CoAP)", RFC 7252,
+              DOI 10.17487/RFC7252, June 2014,
+              <http://www.rfc-editor.org/info/rfc7252>.
+
+   [RFC7641]  Hartke, K., "Observing Resources in the Constrained
+              Application Protocol (CoAP)", RFC 7641,
+              DOI 10.17487/RFC7641, September 2015,
+              <http://www.rfc-editor.org/info/rfc7641>.
+
+8.2.  Informative References
+
+   [I-D.selander-ace-object-security]
+              Selander, G., Mattsson, J., Palombini, F., and L. Seitz,
+              "Object Security of CoAP (OSCOAP)", draft-selander-ace-
+              object-security-05 (work in progress), July 2016.
+
+
+
+Tiloca                   Expires March 17, 2017                 [Page 8]
+
+Internet-Draft     Secure group communication for CoAP    September 2016
+
+
+   [RFC7228]  Bormann, C., Ersue, M., and A. Keranen, "Terminology for
+              Constrained-Node Networks", RFC 7228,
+              DOI 10.17487/RFC7228, May 2014,
+              <http://www.rfc-editor.org/info/rfc7228>.
+
+Appendix A.  Appendix
+
+   TODO.
+
+Author's Address
+
+   Marco Tiloca
+   SICS
+   TBD
+   Kista  TBD
+   Sweden
+
+   Email: marco@sisc.se
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Tiloca                   Expires March 17, 2017                 [Page 9]
