@@ -271,7 +271,7 @@ li, p {
 <link href="#rfc.section.1" rel="Chapter" title="1 Introduction"/>
 <link href="#rfc.section.1.1" rel="Chapter" title="1.1 Terminology"/>
 <link href="#rfc.section.2" rel="Chapter" title="2 Scope description"/>
-<link href="#rfc.section.3" rel="Chapter" title="3 Security material"/>
+<link href="#rfc.section.3" rel="Chapter" title="3 Security context"/>
 <link href="#rfc.section.4" rel="Chapter" title="4 Message exchange"/>
 <link href="#rfc.section.5" rel="Chapter" title="5 Binding between requests and responses"/>
 <link href="#rfc.section.6" rel="Chapter" title="6 Message processing"/>
@@ -327,7 +327,7 @@ li, p {
   <a href="#rfc.abstract">Abstract</a>
 </h1>
 <p>This document describes how to enable secure communication in a group of devices that exchange (multicast) CoAP messages.</p>
-<p>The proposed approach relies on Object Security for CoAP (OSCOAP) <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>, with reference to the "one request - one response" model. No extensions or changes to OSCOAP are required.</p>
+<p>The proposed approach relies on Object Security for CoAP (OSCOAP) <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>, with reference to the "one request - one response" model. Only minor extensions or changes to OSCOAP are required.</p>
 <p>Furthermore, the proposed approach provides source authentication of group messages, by means of digital signatures produced through asymmetric private keys and embedded in the secure messages.</p>
 <h1 id="rfc.status">
   <a href="#rfc.status">Status of This Memo</a>
@@ -350,7 +350,7 @@ li, p {
   	<li>1.   <a href="#rfc.section.1">Introduction</a></li>
 <ul><li>1.1.   <a href="#rfc.section.1.1">Terminology</a></li>
 </ul><li>2.   <a href="#rfc.section.2">Scope description</a></li>
-<li>3.   <a href="#rfc.section.3">Security material</a></li>
+<li>3.   <a href="#rfc.section.3">Security context</a></li>
 <li>4.   <a href="#rfc.section.4">Message exchange</a></li>
 <li>5.   <a href="#rfc.section.5">Binding between requests and responses</a></li>
 <li>6.   <a href="#rfc.section.6">Message processing</a></li>
@@ -365,31 +365,8 @@ li, p {
   </ul>
 
   <h1 id="rfc.section.1"><a href="#rfc.section.1">1.</a> <a href="#intro" id="intro">Introduction</a></h1>
-<p id="rfc.section.1.p.1">TODO</p>
-<h1 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a> <a href="#terminology" id="terminology">Terminology</a></h1>
-<p id="rfc.section.1.1.p.1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <a href="#RFC2119">[RFC2119]</a>. These words may also appear in this document in lowercase, absent their normative meanings.</p>
-<p id="rfc.section.1.1.p.2">Readers are expected to be familiar with the terms and concepts described in <a href="#RFC7252">[RFC7252]</a> and <a href="#RFC7641">[RFC7641]</a>.</p>
-<p id="rfc.section.1.1.p.3">Terminology for constrained environments, such as "constrained device", "constrained-node network", is defined in <a href="#RFC7228">[RFC7228]</a>.</p>
-<p id="rfc.section.1.1.p.4">TODO: OSCOAP terminology.</p>
-<h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> <a href="#scope" id="scope">Scope description</a></h1>
-<p id="rfc.section.2.p.1">An endpoint joins a group by explicitly interacting with a responsible Group Manager. An endpoint member of a group can behave as a broadcaster and/or as a listener. As a broadcaster, it can transmit multicast request messages to the group. As a listener, it receives multicast request messages from a broadcaster, and possibly replies by transmitting unicast response messages. Upon joining the group, endpoints are not required to know how many and what endpoints are active in the group.</p>
-<p id="rfc.section.2.p.2">We assume that there are no internal adversaries in the multicast group, i.e. group members are not compromised and are not interested in inspecting and/or tampering with messages sent to/received from other members in the group. Establishment, revocation and renewal of the group context and key material is out of the scope of this document.</p>
-<p id="rfc.section.2.p.3">According to the multicast CoAP specification <a href="#RFC7252">[RFC7252]</a>, any possible proxy entity is supposed to know about the broadcasters in the group and to not perform aggregation of response messages. Also, every broadcaster expects and is able to handle multiple unicast response messages associated to a same multicast request message.</p>
-<p id="rfc.section.2.p.4">An endpoint that is member of a group is identified by a unique endpoint ID, which is associated to the group and shared among all its members.  Endpoint IDs are necessary in order to identify a given endpoint with no commitment to any protocol-relevant identifiers as IP addresses. The Group Manager generates and manages endpoint IDs in order to ensure their uniqueness within a same multicast group. That is, there cannot be multiple endpoints that belong to the same group and are associated to a same endpoint ID.</p>
-<p id="rfc.section.2.p.5">An endpoint needs to have other data, in order to participate in the group communication, such for example the shared keying material to protect and verify the message and the public keys of the broadcasters of the groups, in order to verify digital signatures of secure messages and ensure their source authenticity. These pieces of information are provided by the Group Manager through out-of-band means or other pre-established secure channels (further details are out of scope).</p>
-<h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#sec-material" id="sec-material">Security material</a></h1>
-<p id="rfc.section.3.p.1">To support multicast communication secured with OSCOAP, each endpoint maintains a security context as defined in section 3 of <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>. In particular, each endpoint in a group stores:</p>
-<p/>
-
-<ol>
-  <li>one Common Context, containing the Context Identifier and the Base Key used to derive the keying material (Section 3.2 of <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>);</li>
-  <li>one Sender Context, used to secure outgoing messages;</li>
-  <li>one Recipient Context for each different endpoint that broadcasted a received message, used to process such incoming secure messages.</li>
-</ol>
-<p id="rfc.section.3.p.3">In addition to what's defined in <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>, the Sender Context stores the endpoint's own asymmetric public-private key pair, and each Recipient Context stores the other broadcasting endpoint's public key.</p>
-<h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#mess-exchange" id="mess-exchange">Message exchange</a></h1>
-<p id="rfc.section.4.p.1">The message exchanged needs to be protected as a non-multicast message, with the following addition: the Sender ID of the endpoint must be sent explicitely in the communication. The Sender ID is added to the COSE object (Section 5 of <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>) in the "protected" field of the header. TODO: define label.</p>
-<p id="rfc.section.4.p.2">Even in the presence of an intermediary proxy, the use of multicast OSCOAP makes it possible:</p>
+<p id="rfc.section.1.p.1">TODO: motivation</p>
+<p id="rfc.section.1.p.2">Even in the presence of an intermediary proxy, the use of multicast OSCOAP makes it possible:</p>
 <p/>
 
 <ol>
@@ -397,6 +374,28 @@ li, p {
   <li>on the broadcaster side, to understand which is the specific listener originating a unicast response message as a reply to a multicast request message, so decoupling message security and IP addressing;</li>
   <li>possibly adopt DTLS to protect hop-by-hop communication between a broadcaster and a proxy (and vice versa), and between a proxy and a listener (and vice versa), together with the adoption of secure group communication based on OSCOAP.</li>
 </ol>
+<h1 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a> <a href="#terminology" id="terminology">Terminology</a></h1>
+<p id="rfc.section.1.1.p.1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <a href="#RFC2119">[RFC2119]</a>. These words may also appear in this document in lowercase, absent their normative meanings.</p>
+<p id="rfc.section.1.1.p.2">Readers are expected to be familiar with the terms and concepts described in <a href="#RFC7252">[RFC7252]</a> and <a href="#RFC7641">[RFC7641]</a>.</p>
+<p id="rfc.section.1.1.p.3">Terminology for constrained environments, such as "constrained device", "constrained-node network", is defined in <a href="#RFC7228">[RFC7228]</a>.</p>
+<p id="rfc.section.1.1.p.4">TODO: OSCOAP terminology.</p>
+<h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> <a href="#scope" id="scope">Scope description</a></h1>
+<p id="rfc.section.2.p.1">An endpoint joins a group by explicitly interacting with a responsible Group Manager. An endpoint member of a group can behave as a broadcaster and/or as a listener. As a broadcaster, it can transmit multicast request messages to the group. As a listener, it receives multicast request messages from a broadcaster, and possibly replies by transmitting unicast response messages. Upon joining the group, endpoints are not required to know how many and what endpoints are active in the group.</p>
+<p id="rfc.section.2.p.2">According to the multicast CoAP specification <a href="#RFC7252">[RFC7252]</a>, any possible proxy entity is supposed to know about the broadcasters in the group and to not perform aggregation of response messages. Also, every broadcaster expects and is able to handle multiple unicast response messages associated to a same multicast request message.</p>
+<p id="rfc.section.2.p.3">An endpoint that is member of a group is identified by an endpoint ID, which is associated to the group and shared among all its members.  Endpoint IDs are necessary in order to identify a given endpoint with no commitment to any protocol-relevant identifiers as IP addresses. The Group Manager generates and manages endpoint IDs in order to ensure their uniqueness within a same multicast group. That is, there cannot be multiple endpoints that belong to the same group and are associated to a same endpoint ID.</p>
+<p id="rfc.section.2.p.4">An endpoint needs to have other data, in order to participate in the group communication, such for example the shared keying material to protect and verify the message and the public keys of the broadcasters of the groups, in order to verify digital signatures of secure messages and ensure their source authenticity. These pieces of information are provided by the Group Manager through out-of-band means or other pre-established secure channels; further details about establishment, revocation and renewal of the group context and key material is out of the scope of this document.</p>
+<h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#sec-context" id="sec-context">Security context</a></h1>
+<p id="rfc.section.3.p.1">To support multicast communication secured with OSCOAP, each endpoint maintains a security context as defined in section 3 of <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>. In particular, each endpoint in a group stores:</p>
+<p/>
+
+<ol>
+  <li>one Common Context, containing the Context Identifier and the Base Key used to derive the keying material (Section 3.2 of <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>);</li>
+  <li>one Sender Context, used to secure outgoing messages;</li>
+  <li>one Recipient Context for each different broadcaster from which messages are received, used to process such incoming secure messages.</li>
+</ol>
+<p id="rfc.section.3.p.3">In addition to what is defined in <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>, the Sender Context stores the endpoint's own asymmetric public-private key pair, and each Recipient Context stores the other broadcaster's public key.</p>
+<h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#mess-exchange" id="mess-exchange">Message exchange</a></h1>
+<p id="rfc.section.4.p.1">The message exchanged is protected as a non-multicast message, with the following addition: the Sender ID of the endpoint must be sent explicitely. The Sender ID MUST be sent in the COSE object, as defined in Section TBD of <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>).</p>
 <h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#req-resp-binding" id="req-resp-binding">Binding between requests and responses</a></h1>
 <p id="rfc.section.5.p.1">The mapping between a unicast response message and the associated multicast request message relies on the same principle adopted in OSCOAP <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>. That is, it is based on the Transaction Identifier, included by listener endpoints in the COSE object conveyed in their own unicast response message to a multicast request message.</p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#mess-processing" id="mess-processing">Message processing</a></h1>
