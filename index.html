@@ -270,15 +270,11 @@ li, p {
   <link href="#rfc.toc" rel="Contents"/>
 <link href="#rfc.section.1" rel="Chapter" title="1 Introduction"/>
 <link href="#rfc.section.1.1" rel="Chapter" title="1.1 Terminology"/>
-<link href="#rfc.section.2" rel="Chapter" title="2 Assumptions and requirements"/>
-<link href="#rfc.section.3" rel="Chapter" title="3 Support for multicast communication"/>
-<link href="#rfc.section.4" rel="Chapter" title="4 Binding between requests and responses"/>
-<link href="#rfc.section.5" rel="Chapter" title="5 Security material"/>
-<link href="#rfc.section.6" rel="Chapter" title="6 Message exchange and processing"/>
-<link href="#rfc.section.6.1" rel="Chapter" title="6.1 Step 1 - Transmission of multicast request messages"/>
-<link href="#rfc.section.6.2" rel="Chapter" title="6.2 Step 2 - Reception and processing of multicast request messages"/>
-<link href="#rfc.section.6.3" rel="Chapter" title="6.3 Step 3 - Transmission of unicast response messages"/>
-<link href="#rfc.section.6.4" rel="Chapter" title="6.4 Step 4 - Processing of unicast response messages on sender nodes"/>
+<link href="#rfc.section.2" rel="Chapter" title="2 Scope description"/>
+<link href="#rfc.section.3" rel="Chapter" title="3 Security material"/>
+<link href="#rfc.section.4" rel="Chapter" title="4 Message exchange"/>
+<link href="#rfc.section.5" rel="Chapter" title="5 Binding between requests and responses"/>
+<link href="#rfc.section.6" rel="Chapter" title="6 Message processing"/>
 <link href="#rfc.section.7" rel="Chapter" title="7 Acknowledgments"/>
 <link href="#rfc.references" rel="Chapter" title="8 References"/>
 <link href="#rfc.references.1" rel="Chapter" title="8.1 Normative References"/>
@@ -292,7 +288,7 @@ li, p {
 
   <meta name="dct.creator" content="Tiloca, M." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-tiloca-core-multicast-oscoap-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-9-13" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-9-14" />
   <meta name="dct.abstract" content="This document describes how to enable secure communication in a group of devices that exchange (multicast) CoAP messages." />
   <meta name="description" content="This document describes how to enable secure communication in a group of devices that exchange (multicast) CoAP messages." />
 
@@ -313,10 +309,10 @@ li, p {
 </tr>
 <tr>
   <td class="left">Intended status: Standards Track</td>
-  <td class="right">September 13, 2016</td>
+  <td class="right">September 14, 2016</td>
 </tr>
 <tr>
-  <td class="left">Expires: March 17, 2017</td>
+  <td class="left">Expires: March 18, 2017</td>
   <td class="right"></td>
 </tr>
 
@@ -339,7 +335,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on March 17, 2017.</p>
+<p>This Internet-Draft will expire on March 18, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -353,16 +349,12 @@ li, p {
 
   	<li>1.   <a href="#rfc.section.1">Introduction</a></li>
 <ul><li>1.1.   <a href="#rfc.section.1.1">Terminology</a></li>
-</ul><li>2.   <a href="#rfc.section.2">Assumptions and requirements</a></li>
-<li>3.   <a href="#rfc.section.3">Support for multicast communication</a></li>
-<li>4.   <a href="#rfc.section.4">Binding between requests and responses</a></li>
-<li>5.   <a href="#rfc.section.5">Security material</a></li>
-<li>6.   <a href="#rfc.section.6">Message exchange and processing</a></li>
-<ul><li>6.1.   <a href="#rfc.section.6.1">Step 1 - Transmission of multicast request messages</a></li>
-<li>6.2.   <a href="#rfc.section.6.2">Step 2 - Reception and processing of multicast request messages</a></li>
-<li>6.3.   <a href="#rfc.section.6.3">Step 3 - Transmission of unicast response messages</a></li>
-<li>6.4.   <a href="#rfc.section.6.4">Step 4 - Processing of unicast response messages on sender nodes</a></li>
-</ul><li>7.   <a href="#rfc.section.7">Acknowledgments</a></li>
+</ul><li>2.   <a href="#rfc.section.2">Scope description</a></li>
+<li>3.   <a href="#rfc.section.3">Security material</a></li>
+<li>4.   <a href="#rfc.section.4">Message exchange</a></li>
+<li>5.   <a href="#rfc.section.5">Binding between requests and responses</a></li>
+<li>6.   <a href="#rfc.section.6">Message processing</a></li>
+<li>7.   <a href="#rfc.section.7">Acknowledgments</a></li>
 <li>8.   <a href="#rfc.references">References</a></li>
 <ul><li>8.1.   <a href="#rfc.references.1">Normative References</a></li>
 <li>8.2.   <a href="#rfc.references.2">Informative References</a></li>
@@ -373,105 +365,54 @@ li, p {
   </ul>
 
   <h1 id="rfc.section.1"><a href="#rfc.section.1">1.</a> <a href="#intro" id="intro">Introduction</a></h1>
-<p id="rfc.section.1.p.1">Insert introduction here.</p>
+<p id="rfc.section.1.p.1">TODO</p>
 <h1 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a> <a href="#terminology" id="terminology">Terminology</a></h1>
 <p id="rfc.section.1.1.p.1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <a href="#RFC2119">[RFC2119]</a>. These words may also appear in this document in lowercase, absent their normative meanings.</p>
 <p id="rfc.section.1.1.p.2">Readers are expected to be familiar with the terms and concepts described in <a href="#RFC7252">[RFC7252]</a> and <a href="#RFC7641">[RFC7641]</a>.</p>
 <p id="rfc.section.1.1.p.3">Terminology for constrained environments, such as "constrained device", "constrained-node network", is defined in <a href="#RFC7228">[RFC7228]</a>.</p>
-<h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> <a href="#assumptions-and-requirements" id="assumptions-and-requirements">Assumptions and requirements</a></h1>
-<p id="rfc.section.2.p.1">A node N joins a group G by explicitly interacting with a responsible Group Manager. Upon joining a group, a node receives a unique node ID IDN with respect to a certain context, which is associated to the group G and shared among all its members. These pieces of information are provided by the Group Manager through out-of-band means or other pre-established secure channels (further details are out of scope).</p>
-<p id="rfc.section.2.p.2">Node IDs are necessary in order to identify a given node with no commitment to any protocol-relevant identifiers as IP addresses. The Group Manager generates and manages node IDs in order to ensure their uniqueness within a same multicast group. That is, there cannot be multiple nodes that belong to the same group and are associated to a same node ID.</p>
-<p id="rfc.section.2.p.3">On the other hand, the group context includes, among other security attributes:</p>
+<p id="rfc.section.1.1.p.4">TODO: OSCOAP terminology.</p>
+<h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> <a href="#scope" id="scope">Scope description</a></h1>
+<p id="rfc.section.2.p.1">An endpoint joins a group by explicitly interacting with a responsible Group Manager. An endpoint member of a group can behave as a broadcaster and/or as a listener. As a broadcaster, it can transmit multicast request messages to the group. As a listener, it receives multicast request messages from a broadcaster, and possibly replies by transmitting unicast response messages. Upon joining the group, endpoints are not required to know how many and what endpoints are active in the group.</p>
+<p id="rfc.section.2.p.2">We assume that there are no internal adversaries in the multicast group, i.e. group members are not compromised and are not interested in inspecting and/or tampering with messages sent to/received from other members in the group. Establishment, revocation and renewal of the group context and key material is out of the scope of this document.</p>
+<p id="rfc.section.2.p.3">According to the multicast CoAP specification <a href="#RFC7252">[RFC7252]</a>, any possible proxy entity is supposed to know about the broadcasters in the group and to not perform aggregation of response messages. Also, every broadcaster expects and is able to handle multiple unicast response messages associated to a same multicast request message.</p>
+<p id="rfc.section.2.p.4">An endpoint that is member of a group is identified by a unique endpoint ID, which is associated to the group and shared among all its members.  Endpoint IDs are necessary in order to identify a given endpoint with no commitment to any protocol-relevant identifiers as IP addresses. The Group Manager generates and manages endpoint IDs in order to ensure their uniqueness within a same multicast group. That is, there cannot be multiple endpoints that belong to the same group and are associated to a same endpoint ID.</p>
+<p id="rfc.section.2.p.5">An endpoint needs to have other data, in order to participate in the group communication, such for example the shared keying material to protect and verify the message and the public keys of the broadcasters of the groups, in order to verify digital signatures of secure messages and ensure their source authenticity. These pieces of information are provided by the Group Manager through out-of-band means or other pre-established secure channels (further details are out of scope).</p>
+<h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#sec-material" id="sec-material">Security material</a></h1>
+<p id="rfc.section.3.p.1">To support multicast communication secured with OSCOAP, each endpoint maintains a security context as defined in section 3 of <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>. In particular, each endpoint in a group stores:</p>
 <p/>
 
 <ol>
-  <li>a symmetric group key KG;</li>
-  <li>a unique context identifier IDGC.</li>
+  <li>one Common Context, containing the Context Identifier and the Base Key used to derive the keying material (Section 3.2 of <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>);</li>
+  <li>one Sender Context, used to secure outgoing messages;</li>
+  <li>one Recipient Context for each different endpoint that broadcasted a received message, used to process such incoming secure messages.</li>
 </ol>
-<p id="rfc.section.2.p.5">In particular, two distinct group contexts must be associated with different group context identifiers. Since different groups can be managed by different Group Managers, a possible way to ensure uniqueness of group context identifiers is to consider the format IDGC = {IDG || IPGM}, where i) IDG is the group identifier of group G, and is unique in the pool of groups including G and managed by that Group Manager; ii) and IPGM is the IP address of the Group Manager. Possible alternative ways to ensure uniqueness of group context identifiers are out of the scope of this document.</p>
-<p id="rfc.section.2.p.6">In order to verify digital signatures of secure messages and ensure their source authenticity, every node in the group is supposed to be pre-provisioned with the necessary public keys associated to message originators, or to get such keys from dedicated entities when it becomes necessary.</p>
-<p id="rfc.section.2.p.7">A group member can behave as sender node and/or listener node. As a sender node, it can transmit multicast request messages to the group. As a listener node, it receives multicast request messages from a sender node, and possibly replies by transmitting unicast response messages. Upon joining the group, nodes are not required to know how many and what nodes are active in the group.</p>
-<p id="rfc.section.2.p.8">We assume that there are no internal adversaries in the multicast group, i.e. group members are not compromised and are not interested in inspecting and/or tampering with messages sent to / received from other members in the group. Establishment, revocation and renewal of the group context and key material is out of the scope of this document.</p>
-<p id="rfc.section.2.p.9">According to the multicast CoAP specification <a href="#RFC7252">[RFC7252]</a>, any possible proxy entity is supposed to know about the sender nodes in the group and to not perform aggregation of response messages. Also, every sender node expects and is able to handle multiple unicast response messages associated to a same multicast request message.</p>
-<h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#multicast-communication" id="multicast-communication">Support for multicast communication</a></h1>
-<p id="rfc.section.3.p.1">OSCOAP messages exchanged in a group G convey a COSE object whose header includes also:</p>
+<p id="rfc.section.3.p.3">In addition to what's defined in <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>, the Sender Context stores the endpoint's own asymmetric public-private key pair, and each Recipient Context stores the other broadcasting endpoint's public key.</p>
+<h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#mess-exchange" id="mess-exchange">Message exchange</a></h1>
+<p id="rfc.section.4.p.1">The message exchanged needs to be protected as a non-multicast message, with the following addition: the Sender ID of the endpoint must be sent explicitely in the communication. The Sender ID is added to the COSE object (Section 5 of <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>) in the "protected" field of the header. TODO: define label.</p>
+<p id="rfc.section.4.p.2">Even in the presence of an intermediary proxy, the use of multicast OSCOAP makes it possible:</p>
 <p/>
 
 <ol>
-  <li>The group context identifier IDGC as "kid" parameter. The most significant bit of IDGC is conventionally set to '1', in order to recognize it as a group context identifier (rather than a unicast context identifier), and to enable the correct parsing of the rest of the COSE object.</li>
-  <li>The ID of the sender node, if the OSCOAP message is a multicast request message.</li>
-  <li>The ID of the listener node, if the OSCOAP message is a unicast response to a multicast request.</li>
-  <li>The Group transaction identifier (GTid), if the OSCOAP message is a unicast response to a multicast request. The GTid is defined as {IDGC , IDS , SN}, where IDS is the ID of the sender node that sent the associated multicast request message, and SN is the write sequence number considered by the sender node when securing and transmitting that request message.</li>
+  <li>on the listener side, to understand which is the specific broadcaster originating a multicast request message, so decoupling message security and IP addressing;</li>
+  <li>on the broadcaster side, to understand which is the specific listener originating a unicast response message as a reply to a multicast request message, so decoupling message security and IP addressing;</li>
+  <li>possibly adopt DTLS to protect hop-by-hop communication between a broadcaster and a proxy (and vice versa), and between a proxy and a listener (and vice versa), together with the adoption of secure group communication based on OSCOAP.</li>
 </ol>
-<p id="rfc.section.3.p.3">Even in the presence of an intermediary proxy, this makes it possible:</p>
-<p/>
-
-<ol>
-  <li>on the listener side, to understand which is the specific sender node originating a multicast request message, so decoupling message security and IP addressing;</li>
-  <li>on the sender node, to understand which is the specific listener node originating a unicast response message as a reply to a multicast request message, so decoupling message security and IP addressing;</li>
-  <li>possibly adopt DTLS to protect hop-by-hop communication between a sender node and a proxy (and vice versa), and between a proxy and a listener node (and vice versa), together with the adoption of secure group communication based on OSCOAP.</li>
-</ol>
-<h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#req-resp-binding" id="req-resp-binding">Binding between requests and responses</a></h1>
-<p id="rfc.section.4.p.1">The mapping between a unicast response message and the associated multicast request message relies on the same principle adopted in OSCOAP <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>. That is, it is based on the Group Transaction Identifier (GTid), included by listener nodes in the COSE object conveyed in their own unicast response message to a multicast request message.</p>
-<h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#sec-material" id="sec-material">Security material</a></h1>
-<p id="rfc.section.5.p.1">Each node maintains data structures named read/write group communication states. In particular, each node N in a group G stores:</p>
-<p/>
-
-<ol>
-  <li>a single write group communication state, considered to secure outgoing multicast request messages and outgoing unicast response messages to received multicast requests;</li>
-  <li>a read group communication state for each different node that originated i) a received multicast request message; or ii) a unicast response message to a multicast request previously sent by node N itself. Read group communication states are considered to process such incoming secure messages.</li>
-</ol>
-<p id="rfc.section.5.p.3">Once it has fully joined a group G, a node N creates a write communication state where it stores:</p>
-<p/>
-
-<ol>
-  <li>a write sequence number SNWN initialized to 0</li>
-  <li>a node key KN as KN = HKDF_Expand(KG , IDN || "Key" || Key_lenght)</li>
-  <li>a node initialization vector IVN as IVN = HKDF_Expand(IVG , IDN || "IV" || IV_lenght)</li>
-  <li>its own asymmetric private key K-N</li>
-</ol>
-<h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#coap-headers-and-options" id="coap-headers-and-options">Message exchange and processing</a></h1>
-<p id="rfc.section.6.p.1">TODO.</p>
-<h1 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a> <a href="#step-1-transmission-of-multicast-request-messages" id="step-1-transmission-of-multicast-request-messages">Step 1 - Transmission of multicast request messages</a></h1>
-<p id="rfc.section.6.1.p.1">A sender node S refers to its own write group communication state and proceeds as follows.</p>
-<p id="rfc.section.6.1.p.2">First, node S produces a signature X of the "Plaintext" and "Additional authenticated data" defined in <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>, by means of its own asymmetric private key K-S.</p>
-<p id="rfc.section.6.1.p.3">Second, node S considers its node key KS and its node initialization vector IVS to protect the outgoing multicast request message. To this end, it produces a secure OSCOAP message <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>, computing the "Cipher text" from the "Plaintext", the "Additional authenticated data", and the signature X. In particular, node S considers the write sequence number SNWS from its own write group communication state to generate a unique IV for the AEAD.</p>
-<p id="rfc.section.6.1.p.4">Finally, node S increments the value of SNWS by 1 and transmits the multicast request message to the group G.</p>
-<h1 id="rfc.section.6.2"><a href="#rfc.section.6.2">6.2.</a> <a href="#step-2-reception-and-processing-of-multicast-request-messages" id="step-2-reception-and-processing-of-multicast-request-messages">Step 2 - Reception and processing of multicast request messages</a></h1>
-<p id="rfc.section.6.2.p.1">A listener node L processeses a multicast request message as such, because of the multicast IP destination address specified in the message IP header. If the multicast request message has the most significant bit of the "kid" parameter in the COSE object's header set to 0, node L discards the message as invalid.</p>
-<p id="rfc.section.6.2.p.2">Otherwise, node L retrieves the group context identifier IDGC, the sender identifier IDS, and the write sequence number SNWS, from the COSE object's header.</p>
-<p id="rfc.section.6.2.p.3">If this is the very first multicast request message received from that sender node (i.e. node L is not maintaining a read group communication state associated to node S), then node L:</p>
-<p><a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a> derives the sender node key KS = HKDF_Expand(KG , IDS || "Key" || Key_lenght) and the sender node initialization vector IVS = HKDF_Expand(IVG , IDS || "IV" || IV_lenght) associated to node S;</p>
-<p/>
-
-<ol>
-  <li>creates a read group communication state associated to node S, where it stores KS, IVS, SNWS, and node S' public key K+S.</li>
-</ol>
-<p id="rfc.section.6.2.p.6">Then, node L considers the sender node key KS, the sender node initialization vector IVS, and the write sequence number SNWS to unsecure the received multicast request message, according to the OSCOAP procedure described in <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>. After that, it verifies the signature X conveyed in the COSE object, by means of sender S' public key K+S.</p>
-<p id="rfc.section.6.2.p.7">If the multicast request message is successfully decrypted and verified, node L updates the sequence number stored in the considered read group communication state, according to the adopted anti-replay policies.</p>
-<h1 id="rfc.section.6.3"><a href="#rfc.section.6.3">6.3.</a> <a href="#step-3-transmission-of-unicast-response-messages" id="step-3-transmission-of-unicast-response-messages">Step 3 - Transmission of unicast response messages</a></h1>
-<p id="rfc.section.6.3.p.1">In order to reply to a multicast request message sent by node S, the listener node L refers to its own write group communication state and builds a secure unicast response message as follows.</p>
-<p id="rfc.section.6.3.p.2">First, node L produces a signature Y of the "Plaintext" and "Additional authenticated data" defined in <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>, by means of its own asymmetric private key K-L.</p>
-<p id="rfc.section.6.3.p.3">Second, node L considers its node key KL and its node initialization vector IVL to protect the outgoing unicast response message. To this end, it produces a secure OSCOAP message <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>, computing the "Cipher text" from the "Plaintext", the "Additional authenticated data", and the signature Y. In particular, node L considers the write sequence number SNWL from its own write group communication state to generate a unique IV for the AEAD.</p>
-<p id="rfc.section.6.3.p.4">Finally, node L increments the value of SNWL by 1 and transmits the unicast response message to the sender node S.</p>
-<h1 id="rfc.section.6.4"><a href="#rfc.section.6.4">6.4.</a> <a href="#step-4-processing-of-unicast-response-messages-on-sender-nodes" id="step-4-processing-of-unicast-response-messages-on-sender-nodes">Step 4 - Processing of unicast response messages on sender nodes</a></h1>
-<p id="rfc.section.6.4.p.1">A sender node S processes a unicast response message to one of its own previously sent multicast request messages as follows.</p>
-<p id="rfc.section.6.4.p.2">Node S retrieves the group context identifier IDGC and the write sequence number SNWL, from the COSE object's header. In particular, IDGC is retrieved from the group transaction identifier GTid.</p>
-<p id="rfc.section.6.4.p.3">If this is the very first unicast response message received from node L as a reply to one of S' multicast request messages (i.e. node S is not maintaining a read group communication state associated to node L), then node S:</p>
-<p/>
-
-<ol>
-  <li>derives the node key KL = HKDF_Expand(KG , IDL || "Key" || Key_lenght) and the node initialization vector IVL = HKDF_Expand(IVG , IDL || "IV" || IV_lenght) associated to node L.</li>
-  <li>creates a read group communication state associated to node L, where it stores KL, IVL, SNWL, and node L's public key K+L.</li>
-</ol>
-<p id="rfc.section.6.4.p.5">Then, node S considers the listener node key KL, the listener node initialization vector IVL, and the write sequence number SNWL to unsecure the received unicast response message, according to the OSCOAP procedure described in <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>. After that, it verifies the signature Y conveyed in the COSE object, by means of listener L's public key K+L.</p>
-<p id="rfc.section.6.4.p.6">If the unicast response message is successfully decrypted and verified, node S updates the sequence number stored in the considered read group communication state, according to the adopted anti-replay policies.</p>
+<h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#req-resp-binding" id="req-resp-binding">Binding between requests and responses</a></h1>
+<p id="rfc.section.5.p.1">The mapping between a unicast response message and the associated multicast request message relies on the same principle adopted in OSCOAP <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>. That is, it is based on the Transaction Identifier, included by listener endpoints in the COSE object conveyed in their own unicast response message to a multicast request message.</p>
+<h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#mess-processing" id="mess-processing">Message processing</a></h1>
+<p id="rfc.section.6.p.1">The processing for securing multicast requests and unicast response with OSCOAP is the same as in non-multicast communication, with this difference: the sending endpoint uses its own private key to create a counter signature of the COSE_Encrypt0 object (Appendix C.4 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>). The recipient uses the corresponding public key to verify the counter signature before proceding with the verification of the message.</p>
 <h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#acknowledgments" id="acknowledgments">Acknowledgments</a></h1>
 <p id="rfc.section.7.p.1">TODO.</p>
 <h1 id="rfc.references"><a href="#rfc.references">8.</a> References</h1>
 <h1 id="rfc.references.1"><a href="#rfc.references.1">8.1.</a> Normative References</h1>
 <table>
   <tbody>
+    <tr>
+      <td class="reference">
+        <b id="I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</b>
+      </td>
+      <td class="top"><a>Schaad, J.</a>, "<a href="http://tools.ietf.org/html/draft-ietf-cose-msg-18">CBOR Object Signing and Encryption (COSE)</a>", Internet-Draft draft-ietf-cose-msg-18, September 2016.</td>
+    </tr>
     <tr>
       <td class="reference">
         <b id="RFC2119">[RFC2119]</b>
@@ -509,8 +450,7 @@ li, p {
     </tr>
   </tbody>
 </table>
-<h1 id="rfc.appendix.A"><a href="#rfc.appendix.A">Appendix A.</a> <a href="#appendix-a" id="appendix-a">Appendix</a></h1>
-<p id="rfc.section.A.p.1">TODO.</p>
+<h1 id="rfc.appendix.A"><a href="#rfc.appendix.A">Appendix A.</a> <a href="#appendix" id="appendix">Appendix</a></h1>
 <h1 id="rfc.authors">
   <a href="#rfc.authors">Author's Address</a>
 </h1>
