@@ -47,7 +47,7 @@ informative:
 
 This document describes how to enable secure communication in a group of devices that exchange (multicast) CoAP messages.
 
-The proposed approach relies on Object Security for CoAP (OSCOAP) {{I-D.selander-ace-object-security}}, with reference to the "one request - one response" model. No extensions or changes to OSCOAP are required.
+The proposed approach relies on Object Security for CoAP (OSCOAP) {{I-D.selander-ace-object-security}}, with reference to the "one request - one response" model. Only minor extensions or changes to OSCOAP are required.
 
 Furthermore, the proposed approach provides source authentication of group messages, by means of digital signatures produced through asymmetric private keys and embedded in the secure messages.
 
@@ -56,7 +56,13 @@ Furthermore, the proposed approach provides source authentication of group messa
 
 # Introduction # {#intro}
 
-TODO
+TODO: motivation
+
+Even in the presence of an intermediary proxy, the use of multicast OSCOAP makes it possible:
+
+1. on the listener side, to understand which is the specific broadcaster originating a multicast request message, so decoupling message security and IP addressing;
+2. on the broadcaster side, to understand which is the specific listener originating a unicast response message as a reply to a multicast request message, so decoupling message security and IP addressing;
+3. possibly adopt DTLS to protect hop-by-hop communication between a broadcaster and a proxy (and vice versa), and between a proxy and a listener (and vice versa), together with the adoption of secure group communication based on OSCOAP.
 
 ## Terminology ## {#terminology}
 
@@ -72,37 +78,26 @@ TODO: OSCOAP terminology.
 
 An endpoint joins a group by explicitly interacting with a responsible Group Manager. An endpoint member of a group can behave as a broadcaster and/or as a listener. As a broadcaster, it can transmit multicast request messages to the group. As a listener, it receives multicast request messages from a broadcaster, and possibly replies by transmitting unicast response messages. Upon joining the group, endpoints are not required to know how many and what endpoints are active in the group.
 
-We assume that there are no internal adversaries in the multicast group, i.e. group members are not compromised and are not interested in inspecting and/or tampering with messages sent to/received from other members in the group. Establishment, revocation and renewal of the group context and key material is out of the scope of this document.
-
 According to the multicast CoAP specification {{RFC7252}}, any possible proxy entity is supposed to know about the broadcasters in the group and to not perform aggregation of response messages. Also, every broadcaster expects and is able to handle multiple unicast response messages associated to a same multicast request message.
 
-An endpoint that is member of a group is identified by a unique endpoint ID, which is associated to the group and shared among all its members.
+An endpoint that is member of a group is identified by an endpoint ID, which is associated to the group and shared among all its members.
 Endpoint IDs are necessary in order to identify a given endpoint with no commitment to any protocol-relevant identifiers as IP addresses. The Group Manager generates and manages endpoint IDs in order to ensure their uniqueness within a same multicast group. That is, there cannot be multiple endpoints that belong to the same group and are associated to a same endpoint ID.
 
-An endpoint needs to have other data, in order to participate in the group communication, such for example the shared keying material to protect and verify the message and the public keys of the broadcasters of the groups, in order to verify digital signatures of secure messages and ensure their source authenticity. These pieces of information are provided by the Group Manager through out-of-band means or other pre-established secure channels (further details are out of scope).
+An endpoint needs to have other data, in order to participate in the group communication, such for example the shared keying material to protect and verify the message and the public keys of the broadcasters of the groups, in order to verify digital signatures of secure messages and ensure their source authenticity. These pieces of information are provided by the Group Manager through out-of-band means or other pre-established secure channels; further details about establishment, revocation and renewal of the group context and key material is out of the scope of this document.
 
-<!-- TODO: move to security considerations? 
-  Two distinct group contexts must be associated with different group context identifiers. Since different groups can be managed by different Group Managers, a possible way to ensure uniqueness of group context identifiers is to consider the format IDGC = \{IDG \|\| IPGM\}, where i) IDG is the group identifier of group G, and is unique in the pool of groups including G and managed by that Group Manager; ii) and IPGM is the IP address of the Group Manager. Possible alternative ways to ensure uniqueness of group context identifiers are out of the scope of this document. -->
-
-# Security material # {#sec-material}
+# Security context # {#sec-context}
 
 To support multicast communication secured with OSCOAP, each endpoint maintains a security context as defined in section 3 of {{I-D.selander-ace-object-security}}. In particular, each endpoint in a group stores:
 
 1. one Common Context, containing the Context Identifier and the Base Key used to derive the keying material (Section 3.2 of {{I-D.selander-ace-object-security}});
 2. one Sender Context, used to secure outgoing messages;
-3. one Recipient Context for each different endpoint that broadcasted a received message, used to process such incoming secure messages.
+3. one Recipient Context for each different broadcaster from which messages are received, used to process such incoming secure messages.
 
-In addition to what's defined in {{I-D.selander-ace-object-security}}, the Sender Context stores the endpoint's own asymmetric public-private key pair, and each Recipient Context stores the other broadcasting endpoint's public key.
+In addition to what is defined in {{I-D.selander-ace-object-security}}, the Sender Context stores the endpoint's own asymmetric public-private key pair, and each Recipient Context stores the other broadcaster's public key.
 
 # Message exchange # {#mess-exchange}
 
-The message exchanged needs to be protected as a non-multicast message, with the following addition: the Sender ID of the endpoint must be sent explicitely in the communication. The Sender ID is added to the COSE object (Section 5 of {{I-D.selander-ace-object-security}}) in the "protected" field of the header. TODO: define label.
-
-Even in the presence of an intermediary proxy, the use of multicast OSCOAP makes it possible:
-
-1. on the listener side, to understand which is the specific broadcaster originating a multicast request message, so decoupling message security and IP addressing;
-2. on the broadcaster side, to understand which is the specific listener originating a unicast response message as a reply to a multicast request message, so decoupling message security and IP addressing;
-3. possibly adopt DTLS to protect hop-by-hop communication between a broadcaster and a proxy (and vice versa), and between a proxy and a listener (and vice versa), together with the adoption of secure group communication based on OSCOAP.
+The message exchanged is protected as a non-multicast message, with the following addition: the Sender ID of the endpoint must be sent explicitely. The Sender ID MUST be sent in the COSE object, as defined in Section TBD of {{I-D.selander-ace-object-security}}).
 
 # Binding between requests and responses # {#req-resp-binding}
 
