@@ -97,7 +97,7 @@ In addition to what is defined in {{I-D.selander-ace-object-security}}, the Send
 
 # Message exchange # {#mess-exchange}
 
-The message exchanged is protected as a non-multicast message, with the following addition: the Sender ID of the endpoint must be sent explicitely. The Sender ID MUST be sent in the COSE object, as defined in Section TBD of {{I-D.selander-ace-object-security}}).
+The message exchanged is protected as a non-multicast message, with the following modification: the Sender ID of the endpoint MUST be sent explicitely. The Sender ID MUST be sent in the COSE object, as defined in Section 5 of {{I-D.selander-ace-object-security}}).
 
 # Binding between requests and responses # {#req-resp-binding}
 
