@@ -4,8 +4,8 @@
 
 CoRE Working Group                                             M. Tiloca
 Internet-Draft                                                      SICS
-Intended status: Standards Track                      September 14, 2016
-Expires: March 18, 2017
+Intended status: Standards Track                      September 15, 2016
+Expires: March 19, 2017
 
 
                   Secure group communication for CoAP
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 18, 2017.
+   This Internet-Draft will expire on March 19, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Tiloca                   Expires March 18, 2017                 [Page 1]
+Tiloca                   Expires March 19, 2017                 [Page 1]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Tiloca                   Expires March 18, 2017                 [Page 2]
+Tiloca                   Expires March 19, 2017                 [Page 2]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -165,7 +165,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca                   Expires March 18, 2017                 [Page 3]
+Tiloca                   Expires March 19, 2017                 [Page 3]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -199,9 +199,9 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 4.  Message exchange
 
    The message exchanged is protected as a non-multicast message, with
-   the following addition: the Sender ID of the endpoint must be sent
-   explicitely.  The Sender ID MUST be sent in the COSE object, as
-   defined in Section TBD of [I-D.selander-ace-object-security]).
+   the following modification: the Sender ID of the endpoint MUST be
+   sent explicitely.  The Sender ID MUST be sent in the COSE object, as
+   defined in Section 5 of [I-D.selander-ace-object-security]).
 
 5.  Binding between requests and responses
 
@@ -221,7 +221,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca                   Expires March 18, 2017                 [Page 4]
+Tiloca                   Expires March 19, 2017                 [Page 4]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -277,7 +277,7 @@ Appendix A.  Appendix
 
 
 
-Tiloca                   Expires March 18, 2017                 [Page 5]
+Tiloca                   Expires March 19, 2017                 [Page 5]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -333,4 +333,4 @@ Author's Address
 
 
 
-Tiloca                   Expires March 18, 2017                 [Page 6]
+Tiloca                   Expires March 19, 2017                 [Page 6]
