@@ -1,4 +1,4 @@
-# Secure group communication for CoAP
+# Secure group communication for CoAP [![Build Status](https://travis-ci.org/EricssonResearch/Multicast-OSCOAP.svg?branch=master)](https://travis-ci.org/EricssonResearch/Multicast-OSCOAP)
 
 This is the working area for the Individual internet-draft, "Secure group communication for CoAP".
 
