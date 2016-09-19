@@ -191,9 +191,15 @@ In order to address this issue, upon receiving a multicast message from a partic
 
 A possible different approach considers the GC as an additional listener in the multicast group. Then, the GC can maintain the sequence number values of each broadcaster in the group. When late joiners send a request to the GC to join the group, the GC can provide them with the list of sequence number values to be stored in the Recipient Contexts associated to the appropriate broadcasters.
 
-## Retrieval of public keys ## {#ssec-retrieval-of-public-keys}
+## Provisioning of public keys ## {#ssec-provisioning-of-public-keys}
 
-TBD
+Upon receiving a secure CoAP message, a recipient endpoint relies on the sender endpoint's public key, in order to verify the counter signature conveyed in the COSE Object.
+
+If not already stored in the Recipient Context associated to the sender endpoint, the recipient endpoint retrieves the public key from a trusted key repository. In such a case, the correct binding between the sender endpoint and the retrieved public key MUST be assured, for instance by means of public certificates. Further details about how this requirement can be fulfilled are out of the scope of this document.
+
+Alternatively, the Group Manager can be configured to store public keys of group members and provide them upon request. In such a case, upon joining a multicast group, an endpoint provides the Group Manager with its own public key, by means of the same secure channel used to carry out the join procedure. After that, the Group Manager MUST perform a proof-of-possession challenge-response with the joining endpoint, in order to verify that it actually owns the associated private key. In case of success, the Group Manager stores the received public key as associated to the joining endpoint and its endpoint ID. From then on, that public key will be available for secure and trusted delivery to other endpoints in the multicast group.
+
+Note that in simple, poorly-dynamic, multicast groups, it can be convenient for the Group Manager to provide an endpoint upon its joining with the public keys associated to all endpoints currently present in the group.
 
 # Acknowledgments #
 
