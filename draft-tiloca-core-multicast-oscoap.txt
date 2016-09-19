@@ -4,8 +4,8 @@
 
 CoRE Working Group                                             M. Tiloca
 Internet-Draft                                          SICS Swedish ICT
-Intended status: Standards Track                      September 18, 2016
-Expires: March 22, 2017
+Intended status: Standards Track                      September 19, 2016
+Expires: March 23, 2017
 
 
                   Secure group communication for CoAP
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 22, 2017.
+   This Internet-Draft will expire on March 23, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Tiloca                   Expires March 22, 2017                 [Page 1]
+Tiloca                   Expires March 23, 2017                 [Page 1]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -77,13 +77,13 @@ Table of Contents
    7.  Security considerations . . . . . . . . . . . . . . . . . . .  10
      7.1.  Group-level security  . . . . . . . . . . . . . . . . . .  11
      7.2.  Late joining endpoints  . . . . . . . . . . . . . . . . .  11
-     7.3.  Retrieval of public keys  . . . . . . . . . . . . . . . .  12
+     7.3.  Provisioning of public keys . . . . . . . . . . . . . . .  12
    8.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  12
    9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
      9.1.  Normative References  . . . . . . . . . . . . . . . . . .  12
-     9.2.  Informative References  . . . . . . . . . . . . . . . . .  12
-   Appendix A.  Appendix . . . . . . . . . . . . . . . . . . . . . .  13
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  13
+     9.2.  Informative References  . . . . . . . . . . . . . . . . .  13
+   Appendix A.  Appendix . . . . . . . . . . . . . . . . . . . . . .  14
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  14
 
 1.  Introduction
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Tiloca                   Expires March 22, 2017                 [Page 2]
+Tiloca                   Expires March 23, 2017                 [Page 2]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -165,7 +165,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca                   Expires March 22, 2017                 [Page 3]
+Tiloca                   Expires March 23, 2017                 [Page 3]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -221,7 +221,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca                   Expires March 22, 2017                 [Page 4]
+Tiloca                   Expires March 23, 2017                 [Page 4]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -277,7 +277,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca                   Expires March 22, 2017                 [Page 5]
+Tiloca                   Expires March 23, 2017                 [Page 5]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -333,7 +333,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca                   Expires March 22, 2017                 [Page 6]
+Tiloca                   Expires March 23, 2017                 [Page 6]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -389,7 +389,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca                   Expires March 22, 2017                 [Page 7]
+Tiloca                   Expires March 23, 2017                 [Page 7]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -445,7 +445,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca                   Expires March 22, 2017                 [Page 8]
+Tiloca                   Expires March 23, 2017                 [Page 8]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -501,7 +501,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca                   Expires March 22, 2017                 [Page 9]
+Tiloca                   Expires March 23, 2017                 [Page 9]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -557,7 +557,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca                   Expires March 22, 2017                [Page 10]
+Tiloca                   Expires March 23, 2017                [Page 10]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -613,14 +613,42 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca                   Expires March 22, 2017                [Page 11]
+Tiloca                   Expires March 23, 2017                [Page 11]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
 
-7.3.  Retrieval of public keys
+7.3.  Provisioning of public keys
 
-   TBD
+   Upon receiving a secure CoAP message, a recipient endpoint relies on
+   the sender endpoint's public key, in order to verify the counter
+   signature conveyed in the COSE Object.
+
+   If not already stored in the Recipient Context associated to the
+   sender endpoint, the recipient endpoint retrieves the public key from
+   a trusted key repository.  In such a case, the correct binding
+   between the sender endpoint and the retrieved public key MUST be
+   assured, for instance by means of public certificates.  Further
+   details about how this requirement can be fulfilled are out of the
+   scope of this document.
+
+   Alternatively, the Group Manager can be configured to store public
+   keys of group members and provide them upon request.  In such a case,
+   upon joining a multicast group, an endpoint provides the Group
+   Manager with its own public key, by means of the same secure channel
+   used to carry out the join procedure.  After that, the Group Manager
+   MUST perform a proof-of-possession challenge-response with the
+   joining endpoint, in order to verify that it actually owns the
+   associated private key.  In case of success, the Group Manager stores
+   the received public key as associated to the joining endpoint and its
+   endpoint ID.  From then on, that public key will be available for
+   secure and trusted delivery to other endpoints in the multicast
+   group.
+
+   Note that in simple, poorly-dynamic, multicast groups, it can be
+   convenient for the Group Manager to provide an endpoint upon its
+   joining with the public keys associated to all endpoints currently
+   present in the group.
 
 8.  Acknowledgments
 
@@ -638,6 +666,13 @@ Internet-Draft     Secure group communication for CoAP    September 2016
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
+
+
+
+Tiloca                   Expires March 23, 2017                [Page 12]
+
+Internet-Draft     Secure group communication for CoAP    September 2016
+
 
    [RFC7252]  Shelby, Z., Hartke, K., and C. Bormann, "The Constrained
               Application Protocol (CoAP)", RFC 7252,
@@ -665,15 +700,6 @@ Internet-Draft     Secure group communication for CoAP    September 2016
               Architecture", RFC 3740, DOI 10.17487/RFC3740, March 2004,
               <http://www.rfc-editor.org/info/rfc3740>.
 
-
-
-
-
-Tiloca                   Expires March 22, 2017                [Page 12]
-
-Internet-Draft     Secure group communication for CoAP    September 2016
-
-
    [RFC4046]  Baugher, M., Canetti, R., Dondeti, L., and F. Lindholm,
               "Multicast Security (MSEC) Group Key Management
               Architecture", RFC 4046, DOI 10.17487/RFC4046, April 2005,
@@ -692,6 +718,17 @@ Internet-Draft     Secure group communication for CoAP    September 2016
    [RFC4949]  Shirey, R., "Internet Security Glossary, Version 2",
               FYI 36, RFC 4949, DOI 10.17487/RFC4949, August 2007,
               <http://www.rfc-editor.org/info/rfc4949>.
+
+
+
+
+
+
+
+Tiloca                   Expires March 23, 2017                [Page 13]
+
+Internet-Draft     Secure group communication for CoAP    September 2016
+
 
    [RFC6282]  Hui, J., Ed. and P. Thubert, "Compression Format for IPv6
               Datagrams over IEEE 802.15.4-Based Networks", RFC 6282,
@@ -725,4 +762,23 @@ Author's Address
 
 
 
-Tiloca                   Expires March 22, 2017                [Page 13]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Tiloca                   Expires March 23, 2017                [Page 14]
