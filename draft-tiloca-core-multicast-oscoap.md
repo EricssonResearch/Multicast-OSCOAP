@@ -52,12 +52,7 @@ informative:
 
 --- abstract
 
-This document describes how to enable secure communication in a group of devices that exchange (multicast) CoAP messages.
-
-The proposed approach relies on Object Security for CoAP (OSCOAP) {{I-D.selander-ace-object-security}}, with reference to the "one request - one response" model. Only minor extensions or changes to OSCOAP are required.
-
-Furthermore, the proposed approach provides source authentication of group messages, by means of digital signatures produced through asymmetric private keys and embedded in the secure messages.
-
+This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) {{I-D.selander-ace-object-security}} and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for CoAP multicast request messages and related CoAP unicast response messages. Source authentication of messages exchanged within the group is ensured, by means of digital counter signatures produced through asymmetric private keys of sender devices and embedded in the secure CoAP messages.
 
 --- middle
 
