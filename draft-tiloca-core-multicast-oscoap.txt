@@ -4,12 +4,12 @@
 
 CoRE Working Group                                             M. Tiloca
 Internet-Draft                                          SICS Swedish ICT
-Intended status: Standards Track                      September 22, 2016
-Expires: March 26, 2017
+Intended status: Standards Track                      September 25, 2016
+Expires: March 29, 2017
 
 
                   Secure group communication for CoAP
-               draft-tiloca-core-multicast-oscoap-latest
+                 draft-tiloca-core-multicast-oscoap-00
 
 Abstract
 
@@ -18,12 +18,12 @@ Abstract
    in a group communication context.  The proposed approach relies on
    Object Security of CoAP (OSCOAP) [I-D.selander-ace-object-security]
    and the CBOR Object Signing and Encryption (COSE) format.  All
-   security requirements fulfilled by OSCOAP are maintained for CoAP
-   multicast request messages and related CoAP unicast response
-   messages.  Source authentication of messages exchanged within the
+   security requirements fulfilled by OSCOAP are maintained for
+   multicast CoAP request messages and related unicast CoAP response
+   messages.  Source authentication of all messages exchanged within the
    group is ensured, by means of digital counter signatures produced
    through asymmetric private keys of sender devices and embedded in the
-   secure CoAP messages.
+   protected CoAP messages.
 
 Status of This Memo
 
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 26, 2017.
+   This Internet-Draft will expire on March 29, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Tiloca                   Expires March 26, 2017                 [Page 1]
+Tiloca                   Expires March 29, 2017                 [Page 1]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -68,48 +68,104 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-     1.1.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   3
-   2.  Use cases . . . . . . . . . . . . . . . . . . . . . . . . . .   4
-   3.  Requirements  . . . . . . . . . . . . . . . . . . . . . . . .   6
-   4.  Scope description . . . . . . . . . . . . . . . . . . . . . .   8
-   5.  Security context  . . . . . . . . . . . . . . . . . . . . . .   9
-   6.  Message exchange  . . . . . . . . . . . . . . . . . . . . . .  10
-   7.  Security considerations . . . . . . . . . . . . . . . . . . .  10
-     7.1.  Group-level security  . . . . . . . . . . . . . . . . . .  11
-     7.2.  Late joining endpoints  . . . . . . . . . . . . . . . . .  11
-     7.3.  Provisioning of public keys . . . . . . . . . . . . . . .  12
-   8.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  12
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  12
-     9.2.  Informative References  . . . . . . . . . . . . . . . . .  13
-   Appendix A.  Appendix . . . . . . . . . . . . . . . . . . . . . .  14
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  14
+     1.1.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   4
+   2.  Use cases . . . . . . . . . . . . . . . . . . . . . . . . . .   5
+   3.  Requirements  . . . . . . . . . . . . . . . . . . . . . . . .   7
+   4.  Scope description . . . . . . . . . . . . . . . . . . . . . .   9
+   5.  Security context  . . . . . . . . . . . . . . . . . . . . . .  10
+   6.  Message exchange  . . . . . . . . . . . . . . . . . . . . . .  11
+   7.  Security considerations . . . . . . . . . . . . . . . . . . .  11
+     7.1.  Group-level security  . . . . . . . . . . . . . . . . . .  12
+     7.2.  Late joining endpoints  . . . . . . . . . . . . . . . . .  12
+     7.3.  Provisioning of public keys . . . . . . . . . . . . . . .  13
+   8.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  13
+   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  13
+     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  13
+     9.2.  Informative References  . . . . . . . . . . . . . . . . .  14
+   Appendix A.  Appendix . . . . . . . . . . . . . . . . . . . . . .  15
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  15
 
 1.  Introduction
 
-   TODO: motivation
+   The Constrained Application Protocol (CoAP) [RFC7252] is a web
+   transfer protocol specifically designed for constrained devices and
+   networks.  In order to meet typical use case architectures and
+   requirements, CoAP specifies the use of proxy endpoints for
+   scalability and efficiency.  In case secure communication is
+   required, CoAP considers the adoption of the DTLS protocol [RFC6347].
+   However, this requires DTLS to be terminated at proxy endpoints,
+   which would then have indiscriminate access to CoAP messages and be
+   able to undetectably manipulate, reorder and delete them, or inject
+   new ones.
 
-   Even in the presence of an intermediary proxy, the use of multicast
-   OSCOAP makes it possible:
+   In order to overcome these limitations,
+   [I-D.selander-ace-object-security] describes Object Security of CoAP
+   (OSCOAP), a security protocol based on the exchange of protected CoAP
+   messages among two endpoints across possible intermediary nodes.  In
+   particular, OSCOAP signals its usage with the CoAP option Object-
+   Security also defined in [I-D.selander-ace-object-security], builds
+   on CBOR Object Signing and Encryption (COSE) [I-D.ietf-cose-msg] and
+   provides end-to-end encryption, integrity, and replay protection.  To
+
+
+
+Tiloca                   Expires March 29, 2017                 [Page 2]
+
+Internet-Draft     Secure group communication for CoAP    September 2016
+
+
+   this end, a CoAP message is protected by including payload (if any),
+   certain options, and header fields in a COSE object, which finally
+   replaces the authenticated and encrypted fields in the protected
+   message.
+
+   More recently, [RFC7390] has enabled group communication for CoAP,
+   highlighting various use cases where deployed devices benefit from a
+   group communication model.  In fact, there are multiple use cases
+   where group communication is highly convenient to limit latencies and
+   improve performance, such as lightening control, integrated building
+   control, software and firmware updates, parameter and configuration
+   updates, commissioning of constrained networks, and emergency
+   broadcasts.  Since such use cases often have security requirements as
+   well, [RFC7390] recognizes the importance to introduce a secure mode
+   for CoAP group communication.  Although various approaches have been
+   examined, none of them has been recognized as the one to be
+   considered for adoption.
+
+   This document describes multicast OSCOAP, an approach that provides
+   end-to-end security of CoAP messages exchanged between members of a
+   multicast group.  In particular, the described approach defines how
+   OSCOAP should be used in a group communication context, while
+   fulfilling the same security requirements.  That is, end-to-end
+   security is assured for multicast CoAP requests sent by broadcaster
+   nodes to the group and for related unicast CoAP responses sent as
+   reply by multiple listener nodes.  Multicast OSCOAP provides source
+   authentication of all CoAP messages exchanged within the group, by
+   means of digital counter signatures produced through asymmetric
+   private keys of sender devices and embedded in the protected CoAP
+   messages.
+
+   Finally, even in the presence of intermediary nodes acting as
+   proxies, multicast OSCOAP makes it still possible:
 
    1.  on the listener side, to understand which is the specific
-       broadcaster originating a multicast request message, so
-       decoupling message security and IP addressing;
+       broadcaster originating a multicast CoAP request message, so
+       decoupling end-to-end security from IP addressing;
 
    2.  on the broadcaster side, to understand which is the specific
-       listener originating a unicast response message as a reply to a
-       multicast request message, so decoupling message security and IP
-       addressing;
+       listener originating a unicast CoAP response message as a reply
+       to a multicast CoAP request message, so decoupling end-to-end
+       security from IP addressing;
 
-   3.  possibly adopt DTLS to protect hop-by-hop communication between a
-       broadcaster and a proxy (and vice versa), and between a proxy and
-       a listener (and vice versa), together with the adoption of secure
-       group communication based on OSCOAP.
-
-
+   3.  possibly adopt DTLS at the same time, in order to protect hop-by-
+       hop communication between a broadcaster node and a proxy (and
+       vice versa), and between a proxy and a listener node (and vice
+       versa).
 
 
-Tiloca                   Expires March 26, 2017                 [Page 2]
+
+
+Tiloca                   Expires March 29, 2017                 [Page 3]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -165,7 +221,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca                   Expires March 26, 2017                 [Page 3]
+Tiloca                   Expires March 29, 2017                 [Page 4]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -221,7 +277,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca                   Expires March 26, 2017                 [Page 4]
+Tiloca                   Expires March 29, 2017                 [Page 5]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -277,7 +333,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca                   Expires March 26, 2017                 [Page 5]
+Tiloca                   Expires March 29, 2017                 [Page 6]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -333,7 +389,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca                   Expires March 26, 2017                 [Page 6]
+Tiloca                   Expires March 29, 2017                 [Page 7]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -389,7 +445,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca                   Expires March 26, 2017                 [Page 7]
+Tiloca                   Expires March 29, 2017                 [Page 8]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -445,7 +501,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca                   Expires March 26, 2017                 [Page 8]
+Tiloca                   Expires March 29, 2017                 [Page 9]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -501,7 +557,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca                   Expires March 26, 2017                 [Page 9]
+Tiloca                   Expires March 29, 2017                [Page 10]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -557,7 +613,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca                   Expires March 26, 2017                [Page 10]
+Tiloca                   Expires March 29, 2017                [Page 11]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -613,7 +669,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca                   Expires March 26, 2017                [Page 11]
+Tiloca                   Expires March 29, 2017                [Page 12]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -669,7 +725,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca                   Expires March 26, 2017                [Page 12]
+Tiloca                   Expires March 29, 2017                [Page 13]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -725,7 +781,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca                   Expires March 26, 2017                [Page 13]
+Tiloca                   Expires March 29, 2017                [Page 14]
 
 Internet-Draft     Secure group communication for CoAP    September 2016
 
@@ -734,6 +790,10 @@ Internet-Draft     Secure group communication for CoAP    September 2016
               Datagrams over IEEE 802.15.4-Based Networks", RFC 6282,
               DOI 10.17487/RFC6282, September 2011,
               <http://www.rfc-editor.org/info/rfc6282>.
+
+   [RFC6347]  Rescorla, E. and N. Modadugu, "Datagram Transport Layer
+              Security Version 1.2", RFC 6347, DOI 10.17487/RFC6347,
+              January 2012, <http://www.rfc-editor.org/info/rfc6347>.
 
    [RFC7228]  Bormann, C., Ersue, M., and A. Keranen, "Terminology for
               Constrained-Node Networks", RFC 7228,
@@ -777,8 +837,4 @@ Author's Address
 
 
 
-
-
-
-
-Tiloca                   Expires March 26, 2017                [Page 14]
+Tiloca                   Expires March 29, 2017                [Page 15]
