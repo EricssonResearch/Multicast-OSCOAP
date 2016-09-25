@@ -1,7 +1,7 @@
 ---
 title: Secure group communication for CoAP
 # abbrev: 
-docname: draft-tiloca-core-multicast-oscoap-latest
+docname: draft-tiloca-core-multicast-oscoap-00
 
 # stand_alone: true
 
@@ -48,23 +48,30 @@ informative:
   RFC4944:
   RFC4949:
   RFC6282:
+  RFC6347:
   RFC7228:
 
 --- abstract
 
-This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) {{I-D.selander-ace-object-security}} and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for CoAP multicast request messages and related CoAP unicast response messages. Source authentication of messages exchanged within the group is ensured, by means of digital counter signatures produced through asymmetric private keys of sender devices and embedded in the secure CoAP messages.
+This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) {{I-D.selander-ace-object-security}} and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast CoAP request messages and related unicast CoAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital counter signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages.
 
 --- middle
 
 # Introduction # {#intro}
 
-TODO: motivation
+The Constrained Application Protocol (CoAP) {{RFC7252}} is a web transfer protocol specifically designed for constrained devices and networks. In order to meet typical use case architectures and requirements, CoAP specifies the use of proxy endpoints for scalability and efficiency. In case secure communication is required, CoAP considers the adoption of the DTLS protocol {{RFC6347}}. However, this requires DTLS to be terminated at proxy endpoints, which would then have indiscriminate access to CoAP messages and be able to undetectably manipulate, reorder and delete them, or inject new ones.
 
-Even in the presence of an intermediary proxy, the use of multicast OSCOAP makes it possible:
+In order to overcome these limitations, {{I-D.selander-ace-object-security}} describes Object Security of CoAP (OSCOAP), a security protocol based on the exchange of protected CoAP messages among two endpoints across possible intermediary nodes. In particular, OSCOAP signals its usage with the CoAP option Object-Security also defined in {{I-D.selander-ace-object-security}}, builds on CBOR Object Signing and Encryption (COSE) {{I-D.ietf-cose-msg}} and provides end-to-end encryption, integrity, and replay protection. To this end, a CoAP message is protected by including payload (if any), certain options, and header fields in a COSE object, which finally replaces the authenticated and encrypted fields in the protected message.
 
-1. on the listener side, to understand which is the specific broadcaster originating a multicast request message, so decoupling message security and IP addressing;
-2. on the broadcaster side, to understand which is the specific listener originating a unicast response message as a reply to a multicast request message, so decoupling message security and IP addressing;
-3. possibly adopt DTLS to protect hop-by-hop communication between a broadcaster and a proxy (and vice versa), and between a proxy and a listener (and vice versa), together with the adoption of secure group communication based on OSCOAP.
+More recently, {{RFC7390}} has enabled group communication for CoAP, highlighting various use cases where deployed devices benefit from a group communication model. In fact, there are multiple use cases where group communication is highly convenient to limit latencies and improve performance, such as lightening control, integrated building control, software and firmware updates, parameter and configuration updates, commissioning of constrained networks, and emergency broadcasts. Since such use cases often have security requirements as well, {{RFC7390}} recognizes the importance to introduce a secure mode for CoAP group communication. Although various approaches have been examined, none of them has been recognized as the one to be considered for adoption.
+
+This document describes multicast OSCOAP, an approach that provides end-to-end security of CoAP messages exchanged between members of a multicast group. In particular, the described approach defines how OSCOAP should be used in a group communication context, while fulfilling the same security requirements. That is, end-to-end security is assured for multicast CoAP requests sent by broadcaster nodes to the group and for related unicast CoAP responses sent as reply by multiple listener nodes. Multicast OSCOAP provides source authentication of all CoAP messages exchanged within the group, by means of digital counter signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages.
+
+Finally, even in the presence of intermediary nodes acting as proxies, multicast OSCOAP makes it still possible:
+
+1. on the listener side, to understand which is the specific broadcaster originating a multicast CoAP request message, so decoupling end-to-end security from IP addressing;
+2. on the broadcaster side, to understand which is the specific listener originating a unicast CoAP response message as a reply to a multicast CoAP request message, so decoupling end-to-end security from IP addressing;
+3. possibly adopt DTLS at the same time, in order to protect hop-by-hop communication between a broadcaster node and a proxy (and vice versa), and between a proxy and a listener node (and vice versa).
 
 ## Terminology ## {#terminology}
 
