@@ -146,11 +146,11 @@ The following security requirements need to be fulfilled by the approach describ
 
 * Data replay protection: it MUST NOT be possible to replay a group request message or a group response message, which would disrupt the correct communication in the group and the activity of group members.
 
-* Group-level data confidentiality: messages sent within the multicast group SHOULD be encrypted. In fact, some control commands and/or associated responses could pose unforeseen security and privacy risks to the system users, when sent as plaintext. In particular, data confidentiality MAY be required if privacy sensitive data is exchanged in the group. This document considers group-level data confidentiality since messages are encrypted at a group level, i.e. in such a way that they can be decrypted by any member of the multicast group, but not by an external adversary or other external entities.
+* Group-level data confidentiality: messages sent within the multicast group SHALL be encrypted. In fact, some control commands and/or associated responses could pose unforeseen security and privacy risks to the system users, when sent as plaintext. In particular, data confidentiality MAY be required if privacy sensitive data is exchanged in the group. This document considers group-level data confidentiality since messages are encrypted at a group level, i.e. in such a way that they can be decrypted by any member of the multicast group, but not by an external adversary or other external entities.
 
-* Source authentication: messages sent within the multicast group SHOULD be authenticated. That is, it is essential to ensure that a message is originated by a member of the group in the first place (group data authentication), and in particular by a specific member of the group (source  data authentication). The approach proposed in this document provides both group data authentication and source data authentication, both for group requests originated by broadcasters and group responses originated by listeners. In order to provide source data authentication, outgoing messages are signed by the respective originator group member by means of its own asymmetric private key. The resulting signature is included in the COSE object.
+* Source authentication: messages sent within the multicast group SHALL be authenticated. That is, it is essential to ensure that a message is originated by a member of the group in the first place (group authentication), and in particular by a specific member of the group (source authentication). The approach proposed in this document provides both group authentication and source authentication, both for group requests originated by broadcasters and group responses originated by listeners. In order to provide source authentication, outgoing messages are signed by the respective originator group member by means of its own asymmetric private key. The resulting signature is included in the COSE object.
 
-* Data integrity: messages sent within the multicast group SHOULD be integrity protected. That is, it is essential to ensure that a message has not been tampered with by an external adversary or other external entities which are not group members. Data integrity is provided through the same means used to provide data authentication.
+* Message integrity: messages sent within the multicast group SHOULD be integrity protected. That is, it is essential to ensure that a message has not been tampered with by an external adversary or other external entities which are not group members. Message integrity is provided through the same means used to provide source authentication.
 
 # Scope description # {#scope}
 
@@ -220,11 +220,6 @@ TODO
 
 --- back
 
-# Appendix #
-
-
-
---- fluff
 
 
 
