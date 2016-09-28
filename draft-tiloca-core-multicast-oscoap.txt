@@ -85,7 +85,6 @@ Table of Contents
    9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  13
      9.1.  Normative References  . . . . . . . . . . . . . . . . . .  13
      9.2.  Informative References  . . . . . . . . . . . . . . . . .  13
-   Appendix A.  Appendix . . . . . . . . . . . . . . . . . . . . . .  14
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
 
 1.  Introduction
@@ -106,6 +105,7 @@ Table of Contents
    Object Security of CoAP (OSCOAP)[I-D.selander-ace-object-security]
    describes a security protocol based on the exchange of protected CoAP
    messages.  OSCOAP builds on CBOR Object Signing and Encryption (COSE)
+   [I-D.ietf-cose-msg] and provides end-to-end encryption, integrity,
 
 
 
@@ -114,7 +114,6 @@ Tiloca, et al.            Expires April 1, 2017                 [Page 2]
 Internet-Draft     Secure group communication for CoAP    September 2016
 
 
-   [I-D.ietf-cose-msg] and provides end-to-end encryption, integrity,
    and replay protection across intermediate modes.  To this end, a CoAP
    message is protected by including payload (if any), certain options,
    and header fields in a COSE object, which finally replaces the
@@ -162,6 +161,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
    o  Group Controller (GC): entity responsible for creating a multicast
       group, establishing and provisioning security contexts among
       authorized group members, and managing the joining of new group
+      members.  This entity may also be responsible for renewing/
 
 
 
@@ -170,7 +170,6 @@ Tiloca, et al.            Expires April 1, 2017                 [Page 3]
 Internet-Draft     Secure group communication for CoAP    September 2016
 
 
-      members.  This entity may also be responsible for renewing/
       updating security contexts and related keying material.  The GC is
       not required to be an actual member of the multicast group and to
       take part in the group communication.
@@ -218,6 +217,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
       according to their physical location in the building.  For
       instance, lighting devices and switches in a room or corridor can
       be configured as members of a single multicast group.  Switches
+      are then used to control the lighting devices, by sending on/off/
 
 
 
@@ -226,7 +226,6 @@ Tiloca, et al.            Expires April 1, 2017                 [Page 4]
 Internet-Draft     Secure group communication for CoAP    September 2016
 
 
-      are then used to control the lighting devices, by sending on/off/
       dimming commands to all lighting devices in a group. 6LoWPAN
       border routers that are connected to an IPv6 network backbone
       (which is also multicast-enabled) are used to interconnect 6LoWPAN
@@ -273,6 +272,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
       expected to possibly reply back, in order to provide a feedback
       about the execution of the update operation (e.g.  OK, failure,
       error) and their current operational status.
+
 
 
 
@@ -404,7 +404,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
       members.
 
    o  Group-level data confidentiality: messages sent within the
-      multicast group SHOULD be encrypted.  In fact, some control
+      multicast group SHALL be encrypted.  In fact, some control
       commands and/or associated responses could pose unforeseen
       security and privacy risks to the system users, when sent as
       plaintext.  In particular, data confidentiality MAY be required if
@@ -415,24 +415,24 @@ Internet-Draft     Secure group communication for CoAP    September 2016
       external adversary or other external entities.
 
    o  Source authentication: messages sent within the multicast group
-      SHOULD be authenticated.  That is, it is essential to ensure that
-      a message is originated by a member of the group in the first
-      place (group data authentication), and in particular by a specific
-      member of the group (source data authentication).  The approach
-      proposed in this document provides both group data authentication
-      and source data authentication, both for group requests originated
-      by broadcasters and group responses originated by listeners.  In
-      order to provide source data authentication, outgoing messages are
-      signed by the respective originator group member by means of its
-      own asymmetric private key.  The resulting signature is included
-      in the COSE object.
+      SHALL be authenticated.  That is, it is essential to ensure that a
+      message is originated by a member of the group in the first place
+      (group authentication), and in particular by a specific member of
+      the group (source authentication).  The approach proposed in this
+      document provides both group authentication and source
+      authentication, both for group requests originated by broadcasters
+      and group responses originated by listeners.  In order to provide
+      source authentication, outgoing messages are signed by the
+      respective originator group member by means of its own asymmetric
+      private key.  The resulting signature is included in the COSE
+      object.
 
-   o  Data integrity: messages sent within the multicast group SHOULD be
-      integrity protected.  That is, it is essential to ensure that a
+   o  Message integrity: messages sent within the multicast group SHOULD
+      be integrity protected.  That is, it is essential to ensure that a
       message has not been tampered with by an external adversary or
-      other external entities which are not group members.  Data
-      integrity is provided through the same means used to provide data
-      authentication.
+      other external entities which are not group members.  Message
+      integrity is provided through the same means used to provide
+      source authentication.
 
 4.  Scope description
 
@@ -754,8 +754,6 @@ Internet-Draft     Secure group communication for CoAP    September 2016
               DOI 10.17487/RFC7228, May 2014,
               <http://www.rfc-editor.org/info/rfc7228>.
 
-Appendix A.  Appendix
-
 Authors' Addresses
 
    Marco Tiloca
@@ -774,6 +772,8 @@ Authors' Addresses
    Sweden
 
    Email: goran.selander@ericsson.com
+
+
 
 
 

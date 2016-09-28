@@ -283,7 +283,6 @@ li, p {
 <link href="#rfc.references" rel="Chapter" title="9 References"/>
 <link href="#rfc.references.1" rel="Chapter" title="9.1 Normative References"/>
 <link href="#rfc.references.2" rel="Chapter" title="9.2 Informative References"/>
-<link href="#rfc.appendix.A" rel="Chapter" title="A Appendix"/>
 <link href="#rfc.authors" rel="Chapter"/>
 
 
@@ -372,8 +371,7 @@ li, p {
 <li>9.   <a href="#rfc.references">References</a></li>
 <ul><li>9.1.   <a href="#rfc.references.1">Normative References</a></li>
 <li>9.2.   <a href="#rfc.references.2">Informative References</a></li>
-</ul><li>Appendix A.   <a href="#rfc.appendix.A">Appendix</a></li>
-<li><a href="#rfc.authors">Authors' Addresses</a></li>
+</ul><li><a href="#rfc.authors">Authors' Addresses</a></li>
 
 
   </ul>
@@ -429,9 +427,9 @@ li, p {
   <li>Multicast communication topology: this document considers both 1-to-N (one broadcaster and multiple listeners) and M-to-N (multiple broadcasters and multiple listeners) communication topologies. The 1-to-N communication topology is the simplest group communication scenario that would serve the needs of a typical LLN. For instance, in the lighting control use case, switches are the only entities responsible for sending commands to a group of lighting devices. In more advanced lighting control use cases, a M-to-N communication topology would be required, for instance in case multiple sensors (presence or day-light) are responsible to trigger events to a group of lighting devices.</li>
   <li>Multicast group size: security solutions for group communication SHOULD be able to adequately support different, possibly large, group sizes. Group size is the combination of the number of broadcasters and listeners in a multicast group, with possible overlap (i.e. a broadcaster MAY also be a listener at the same time). In the use cases mentioned in this document, the number of broadcasters (normally the controlling devices) is expected to be much smaller than the number of listeners (i.e. the controlled devices). A security solution for group communication that supports 1 to 50 broadcasters would be able to properly cover the group sizes required for most use cases that are relevant for this document. The total number of group members is expected to be in the range of 2 to 100 devices. Groups larger than that SHOULD be divided into smaller independent multicast groups, e.g. by grouping lights in a building on a per floor basis.</li>
   <li>Data replay protection: it MUST NOT be possible to replay a group request message or a group response message, which would disrupt the correct communication in the group and the activity of group members.</li>
-  <li>Group-level data confidentiality: messages sent within the multicast group SHOULD be encrypted. In fact, some control commands and/or associated responses could pose unforeseen security and privacy risks to the system users, when sent as plaintext. In particular, data confidentiality MAY be required if privacy sensitive data is exchanged in the group. This document considers group-level data confidentiality since messages are encrypted at a group level, i.e. in such a way that they can be decrypted by any member of the multicast group, but not by an external adversary or other external entities.</li>
-  <li>Source authentication: messages sent within the multicast group SHOULD be authenticated. That is, it is essential to ensure that a message is originated by a member of the group in the first place (group data authentication), and in particular by a specific member of the group (source  data authentication). The approach proposed in this document provides both group data authentication and source data authentication, both for group requests originated by broadcasters and group responses originated by listeners. In order to provide source data authentication, outgoing messages are signed by the respective originator group member by means of its own asymmetric private key. The resulting signature is included in the COSE object.</li>
-  <li>Data integrity: messages sent within the multicast group SHOULD be integrity protected. That is, it is essential to ensure that a message has not been tampered with by an external adversary or other external entities which are not group members. Data integrity is provided through the same means used to provide data authentication.</li>
+  <li>Group-level data confidentiality: messages sent within the multicast group SHALL be encrypted. In fact, some control commands and/or associated responses could pose unforeseen security and privacy risks to the system users, when sent as plaintext. In particular, data confidentiality MAY be required if privacy sensitive data is exchanged in the group. This document considers group-level data confidentiality since messages are encrypted at a group level, i.e. in such a way that they can be decrypted by any member of the multicast group, but not by an external adversary or other external entities.</li>
+  <li>Source authentication: messages sent within the multicast group SHALL be authenticated. That is, it is essential to ensure that a message is originated by a member of the group in the first place (group authentication), and in particular by a specific member of the group (source authentication). The approach proposed in this document provides both group authentication and source authentication, both for group requests originated by broadcasters and group responses originated by listeners. In order to provide source authentication, outgoing messages are signed by the respective originator group member by means of its own asymmetric private key. The resulting signature is included in the COSE object.</li>
+  <li>Message integrity: messages sent within the multicast group SHOULD be integrity protected. That is, it is essential to ensure that a message has not been tampered with by an external adversary or other external entities which are not group members. Message integrity is provided through the same means used to provide source authentication.</li>
 </ul>
 <h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#scope" id="scope">Scope description</a></h1>
 <p id="rfc.section.4.p.1">An endpoint joins a multicast group by explicitly interacting with the responsible Group Manager. An endpoint registered as member of a group can behave as a broadcaster and/or as a listener. As a broadcaster, it can transmit multicast request messages to the group. As a listener, it receives multicast request messages from any broadcaster in the group, and possibly replies by transmitting unicast response messages. Upon joining the group, endpoints are not required to know how many and what endpoints are active in the same group.</p>
@@ -563,7 +561,6 @@ li, p {
     </tr>
   </tbody>
 </table>
-<h1 id="rfc.appendix.A"><a href="#rfc.appendix.A">Appendix A.</a> <a href="#appendix" id="appendix">Appendix</a></h1>
 <h1 id="rfc.authors">
   <a href="#rfc.authors">Authors' Addresses</a>
 </h1>
