@@ -30,10 +30,29 @@ author:
         code: SE-16440 Stockholm
         country: Sweden
         email: marco@sics.se
+      -
+        ins: G. Selander
+        name: Goeran Selander
+        org: Ericsson AB
+        street: Farogatan 6
+        city: Kista
+        code: SE-16480 Stockholm
+        country: Sweden
+        email: goran.selander@ericsson.com
+      -
+        ins: F. Palombini
+        name: Francesca Palombini
+        org: Ericsson AB
+        street: Farogatan 6
+        city: Kista
+        code: SE-16480 Stockholm
+        country: Sweden
+        email: francesca.palombini@ericsson.com
 
 normative:
 
   I-D.ietf-cose-msg:
+  I-D.selander-ace-object-security:
   RFC2119:
   RFC7252:
   RFC7390:
@@ -41,19 +60,17 @@ normative:
 
 informative:
 
-  I-D.selander-ace-object-security:
   RFC3740:
   RFC4046:
   RFC4535:
   RFC4944:
   RFC4949:
   RFC6282:
-  RFC6347:
   RFC7228:
 
 --- abstract
 
-This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) {{I-D.selander-ace-object-security}} and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast CoAP request messages and related unicast CoAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital counter signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages.
+This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) {{I-D.selander-ace-object-security}} and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast CoAP request messages and related unicast CoAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages.
 
 --- middle
 
@@ -65,18 +82,7 @@ The Constrained Application Protocol (CoAP) {{RFC7252}} is a web transfer protoc
 
 Object Security of CoAP (OSCOAP){{I-D.selander-ace-object-security}} describes a security protocol based on the exchange of protected CoAP messages. OSCOAP builds on CBOR Object Signing and Encryption (COSE) {{I-D.ietf-cose-msg}} and provides end-to-end encryption, integrity, and replay protection across intermediate modes. To this end, a CoAP message is protected by including payload (if any), certain options, and header fields in a COSE object, which finally replaces the authenticated and encrypted fields in the protected message.
 
-This document describes multicast OSCOAP, providing end-to-end security of CoAP messages exchanged between members of a multicast group. In particular, the described approach defines how OSCOAP should be used in a group communication context, while fulfilling the same security requirements. That is, end-to-end security is assured for multicast CoAP requests sent by broadcaster nodes to the group and for related unicast CoAP responses sent as reply by multiple listener nodes. Multicast OSCOAP provides source authentication of all CoAP messages exchanged within the group, by means of digital counter signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages.
-
-
-- - -
-
-CONSIDER OMIT:
-
-Multicast OSCOAP includes:
-
-1. on the listener side, authentication of broadcaster originating a multicast CoAP request message
-2. on the broadcaster side, authentication of listener originating a unicast CoAP response message as a reply to a multicast CoAP request message
-3. decoupling end-to-end security from IP addressing;
+This document describes multicast OSCOAP, providing end-to-end security of CoAP messages exchanged between members of a multicast group. In particular, the described approach defines how OSCOAP should be used in a group communication context, while fulfilling the same security requirements. That is, end-to-end security is assured for multicast CoAP requests sent by broadcaster nodes to the group and for related unicast CoAP responses sent as reply by multiple listener nodes. Multicast OSCOAP provides source authentication of all CoAP messages exchanged within the group, by means of digital signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages. As in OSCOAP, it is still possible to simultaneously rely on DTLS to protect hop-by-hop communication between a broadcaster node and a proxy (and vice versa), and between a proxy and a listener node (and vice versa).
 
 ## Terminology ## {#terminology}
 
@@ -142,7 +148,7 @@ The following security requirements need to be fulfilled by the approach describ
 
 * Group-level data confidentiality: messages sent within the multicast group SHOULD be encrypted. In fact, some control commands and/or associated responses could pose unforeseen security and privacy risks to the system users, when sent as plaintext. In particular, data confidentiality MAY be required if privacy sensitive data is exchanged in the group. This document considers group-level data confidentiality since messages are encrypted at a group level, i.e. in such a way that they can be decrypted by any member of the multicast group, but not by an external adversary or other external entities.
 
-* Source authentication: messages sent within the multicast group SHOULD be authenticated. That is, it is essential to ensure that a message is originated by a member of the group in the first place (group data authentication), and in particular by a specific member of the group (source  data authentication). The approach proposed in this document provides both group data authentication and source data authentication, both for group requests originated by broadcasters and group responses originated by listeners. In order to provide source data authentication, outgoing messages are signed by the respective originator group member by means of its own asymmetric private key. The resulting counter-signature is included in the unprotected part of the CoSE object's header.
+* Source authentication: messages sent within the multicast group SHOULD be authenticated. That is, it is essential to ensure that a message is originated by a member of the group in the first place (group data authentication), and in particular by a specific member of the group (source  data authentication). The approach proposed in this document provides both group data authentication and source data authentication, both for group requests originated by broadcasters and group responses originated by listeners. In order to provide source data authentication, outgoing messages are signed by the respective originator group member by means of its own asymmetric private key. The resulting signature is included in the COSE object.
 
 * Data integrity: messages sent within the multicast group SHOULD be integrity protected. That is, it is essential to ensure that a message has not been tampered with by an external adversary or other external entities which are not group members. Data integrity is provided through the same means used to provide data authentication.
 
@@ -154,7 +160,7 @@ An endpoint which is registered as member of a group is identified by an endpoin
 
 In order to participate in the secure group communication, an endpoint needs to maintain additional pieces of information, stored in its own security context. Those include keying material used to protect and verify group messages, as well as the public keys of other endpoints in the groups, in order to verify digital signatures of secure messages and ensure their source authenticity. These pieces of information are provided by the Group Manager through out-of-band means or other pre-established secure channels. Further details about establishment, revocation and renewal of the security context and keying material is out of the scope of this document.
 
-According to the multicast CoAP??? specification {{RFC7252}}, any possible proxy entity is supposed to know about the broadcasters in the group and to not perform aggregation of response messages. Also, every broadcaster expects and is able to handle multiple unicast response messages associated to a same multicast request message.
+According to {{RFC7390}}, any possible proxy entity is supposed to know about the broadcasters in the group and to not perform aggregation of response messages. Also, every broadcaster expects and is able to handle multiple unicast response messages associated to a same multicast request message.
 
 # Security context # {#sec-context}
 
