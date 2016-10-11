@@ -279,21 +279,21 @@ li, p {
 <link href="#rfc.section.7.1" rel="Chapter" title="7.1 Group-level security"/>
 <link href="#rfc.section.7.2" rel="Chapter" title="7.2 Late joining endpoints"/>
 <link href="#rfc.section.7.3" rel="Chapter" title="7.3 Provisioning of public keys"/>
-<link href="#rfc.section.8" rel="Chapter" title="8 Acknowledgments"/>
+<link href="#rfc.section.8" rel="Chapter" title="8 IANA Considerations"/>
 <link href="#rfc.references" rel="Chapter" title="9 References"/>
 <link href="#rfc.references.1" rel="Chapter" title="9.1 Normative References"/>
 <link href="#rfc.references.2" rel="Chapter" title="9.2 Informative References"/>
 <link href="#rfc.authors" rel="Chapter"/>
 
 
-  <meta name="generator" content="xml2rfc version 2.5.1 - http://tools.ietf.org/tools/xml2rfc" />
+  <meta name="generator" content="xml2rfc version 2.5.2 - http://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Tiloca, M., Selander, G., and F. Palombini" />
-  <meta name="dct.identifier" content="urn:ietf:id:draft-tiloca-core-multicast-oscoap-00" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-9-28" />
-  <meta name="dct.abstract" content="This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) " />
-  <meta name="description" content="This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) " />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-tiloca-core-multicast-oscoap-latest" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-10-11" />
+  <meta name="dct.abstract" content="This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast CoAP request messages and related unicast CoAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages." />
+  <meta name="description" content="This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast CoAP request messages and related unicast CoAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages." />
 
 </head>
 
@@ -315,7 +315,7 @@ li, p {
   <td class="right">G. Selander</td>
 </tr>
 <tr>
-  <td class="left">Expires: April 1, 2017</td>
+  <td class="left">Expires: April 14, 2017</td>
   <td class="right">F. Palombini</td>
 </tr>
 <tr>
@@ -324,7 +324,7 @@ li, p {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">September 28, 2016</td>
+  <td class="right">October 11, 2016</td>
 </tr>
 
     	
@@ -332,19 +332,19 @@ li, p {
   </table>
 
   <p class="title">Secure group communication for CoAP<br />
-  <span class="filename">draft-tiloca-core-multicast-oscoap-00</span></p>
+  <span class="filename">draft-tiloca-core-multicast-oscoap-latest</span></p>
   
   <h1 id="rfc.abstract">
   <a href="#rfc.abstract">Abstract</a>
 </h1>
-<p>This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a> and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast CoAP request messages and related unicast CoAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages.</p>
+<p>This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast CoAP request messages and related unicast CoAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages.</p>
 <h1 id="rfc.status">
   <a href="#rfc.status">Status of This Memo</a>
 </h1>
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on April 1, 2017.</p>
+<p>This Internet-Draft will expire on April 14, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -367,7 +367,7 @@ li, p {
 <ul><li>7.1.   <a href="#rfc.section.7.1">Group-level security</a></li>
 <li>7.2.   <a href="#rfc.section.7.2">Late joining endpoints</a></li>
 <li>7.3.   <a href="#rfc.section.7.3">Provisioning of public keys</a></li>
-</ul><li>8.   <a href="#rfc.section.8">Acknowledgments</a></li>
+</ul><li>8.   <a href="#rfc.section.8">IANA Considerations</a></li>
 <li>9.   <a href="#rfc.references">References</a></li>
 <ul><li>9.1.   <a href="#rfc.references.1">Normative References</a></li>
 <li>9.2.   <a href="#rfc.references.2">Informative References</a></li>
@@ -470,8 +470,8 @@ li, p {
 <p id="rfc.section.7.3.p.2">If not already stored in the Recipient Context associated to the sender endpoint, the recipient endpoint retrieves the public key from a trusted key repository. In such a case, the correct binding between the sender endpoint and the retrieved public key MUST be assured, for instance by means of public key certificates. Further details about how this requirement can be fulfilled are out of the scope of this document.</p>
 <p id="rfc.section.7.3.p.3">Alternatively, the Group Manager can be configured to store public keys of group members and provide them upon request. In such a case, upon joining a multicast group, an endpoint provides the Group Manager with its own public key, by means of the same secure channel used to carry out the join procedure. After that, the Group Manager MUST perform a proof-of-possession challenge-response with the joining endpoint, in order to verify that it actually owns the associated private key. In case of success, the Group Manager stores the received public key as associated to the joining endpoint and its endpoint ID. From then on, that public key will be available for secure and trusted delivery to other endpoints in the multicast group.</p>
 <p id="rfc.section.7.3.p.4">Note that in simple, less dynamic, multicast groups, it can be convenient for the Group Manager to provide an endpoint upon its joining with the public keys associated to all endpoints currently present in the group.</p>
-<h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#acknowledgments" id="acknowledgments">Acknowledgments</a></h1>
-<p id="rfc.section.8.p.1">TODO</p>
+<h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#iana" id="iana">IANA Considerations</a></h1>
+<p id="rfc.section.8.p.1">This document has no actions for IANA.</p>
 <h1 id="rfc.references"><a href="#rfc.references">9.</a> References</h1>
 <h1 id="rfc.references.1"><a href="#rfc.references.1">9.1.</a> Normative References</h1>
 <table>
@@ -480,7 +480,7 @@ li, p {
       <td class="reference">
         <b id="I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</b>
       </td>
-      <td class="top"><a>Schaad, J.</a>, "<a href="http://tools.ietf.org/html/draft-ietf-cose-msg-19">CBOR Object Signing and Encryption (COSE)</a>", Internet-Draft draft-ietf-cose-msg-19, September 2016.</td>
+      <td class="top"><a>Schaad, J.</a>, "<a href="http://tools.ietf.org/html/draft-ietf-cose-msg-20">CBOR Object Signing and Encryption (COSE)</a>", Internet-Draft draft-ietf-cose-msg-20, October 2016.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -499,12 +499,6 @@ li, p {
         <b id="RFC7252">[RFC7252]</b>
       </td>
       <td class="top"><a>Shelby, Z.</a>, <a>Hartke, K.</a> and <a>C. Bormann</a>, "<a href="http://tools.ietf.org/html/rfc7252">The Constrained Application Protocol (CoAP)</a>", RFC 7252, DOI 10.17487/RFC7252, June 2014.</td>
-    </tr>
-    <tr>
-      <td class="reference">
-        <b id="RFC7390">[RFC7390]</b>
-      </td>
-      <td class="top"><a>Rahman, A.</a> and <a>E. Dijk</a>, "<a href="http://tools.ietf.org/html/rfc7390">Group Communication for the Constrained Application Protocol (CoAP)</a>", RFC 7390, DOI 10.17487/RFC7390, October 2014.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -558,6 +552,12 @@ li, p {
         <b id="RFC7228">[RFC7228]</b>
       </td>
       <td class="top"><a>Bormann, C.</a>, <a>Ersue, M.</a> and <a>A. Keranen</a>, "<a href="http://tools.ietf.org/html/rfc7228">Terminology for Constrained-Node Networks</a>", RFC 7228, DOI 10.17487/RFC7228, May 2014.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC7390">[RFC7390]</b>
+      </td>
+      <td class="top"><a>Rahman, A.</a> and <a>E. Dijk</a>, "<a href="http://tools.ietf.org/html/rfc7390">Group Communication for the Constrained Application Protocol (CoAP)</a>", RFC 7390, DOI 10.17487/RFC7390, October 2014.</td>
     </tr>
   </tbody>
 </table>

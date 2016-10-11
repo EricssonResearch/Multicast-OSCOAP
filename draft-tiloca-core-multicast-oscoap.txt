@@ -5,27 +5,26 @@
 CoRE Working Group                                             M. Tiloca
 Internet-Draft                                          SICS Swedish ICT
 Intended status: Standards Track                             G. Selander
-Expires: April 1, 2017                                      F. Palombini
+Expires: April 14, 2017                                     F. Palombini
                                                              Ericsson AB
-                                                      September 28, 2016
+                                                        October 11, 2016
 
 
                   Secure group communication for CoAP
-                 draft-tiloca-core-multicast-oscoap-00
+               draft-tiloca-core-multicast-oscoap-latest
 
 Abstract
 
    This document describes a method for application layer protection of
    messages exchanged with the Constrained Application Protocol (CoAP)
    in a group communication context.  The proposed approach relies on
-   Object Security of CoAP (OSCOAP) [I-D.selander-ace-object-security]
-   and the CBOR Object Signing and Encryption (COSE) format.  All
-   security requirements fulfilled by OSCOAP are maintained for
-   multicast CoAP request messages and related unicast CoAP response
-   messages.  Source authentication of all messages exchanged within the
-   group is ensured, by means of digital signatures produced through
-   asymmetric private keys of sender devices and embedded in the
-   protected CoAP messages.
+   Object Security of CoAP (OSCOAP) and the CBOR Object Signing and
+   Encryption (COSE) format.  All security requirements fulfilled by
+   OSCOAP are maintained for multicast CoAP request messages and related
+   unicast CoAP response messages.  Source authentication of all
+   messages exchanged within the group is ensured, by means of digital
+   signatures produced through asymmetric private keys of sender devices
+   and embedded in the protected CoAP messages.
 
 Status of This Memo
 
@@ -42,24 +41,23 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 1, 2017.
+   This Internet-Draft will expire on April 14, 2017.
 
 Copyright Notice
 
    Copyright (c) 2016 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
-
-
-
-
-Tiloca, et al.            Expires April 1, 2017                 [Page 1]
-
-Internet-Draft     Secure group communication for CoAP    September 2016
-
-
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
+
+
+
+Tiloca, et al.           Expires April 14, 2017                 [Page 1]
+
+Internet-Draft     Secure group communication for CoAP      October 2016
+
+
    (http://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
@@ -81,7 +79,7 @@ Table of Contents
      7.1.  Group-level security  . . . . . . . . . . . . . . . . . .  11
      7.2.  Late joining endpoints  . . . . . . . . . . . . . . . . .  11
      7.3.  Provisioning of public keys . . . . . . . . . . . . . . .  12
-   8.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  13
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  13
    9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  13
      9.1.  Normative References  . . . . . . . . . . . . . . . . . .  13
      9.2.  Informative References  . . . . . . . . . . . . . . . . .  13
@@ -106,16 +104,16 @@ Table of Contents
    describes a security protocol based on the exchange of protected CoAP
    messages.  OSCOAP builds on CBOR Object Signing and Encryption (COSE)
    [I-D.ietf-cose-msg] and provides end-to-end encryption, integrity,
-
-
-
-Tiloca, et al.            Expires April 1, 2017                 [Page 2]
-
-Internet-Draft     Secure group communication for CoAP    September 2016
-
-
    and replay protection across intermediate modes.  To this end, a CoAP
    message is protected by including payload (if any), certain options,
+
+
+
+Tiloca, et al.           Expires April 14, 2017                 [Page 2]
+
+Internet-Draft     Secure group communication for CoAP      October 2016
+
+
    and header fields in a COSE object, which finally replaces the
    authenticated and encrypted fields in the protected message.
 
@@ -162,15 +160,16 @@ Internet-Draft     Secure group communication for CoAP    September 2016
       group, establishing and provisioning security contexts among
       authorized group members, and managing the joining of new group
       members.  This entity may also be responsible for renewing/
-
-
-
-Tiloca, et al.            Expires April 1, 2017                 [Page 3]
-
-Internet-Draft     Secure group communication for CoAP    September 2016
-
-
       updating security contexts and related keying material.  The GC is
+
+
+
+
+Tiloca, et al.           Expires April 14, 2017                 [Page 3]
+
+Internet-Draft     Secure group communication for CoAP      October 2016
+
+
       not required to be an actual member of the multicast group and to
       take part in the group communication.
 
@@ -218,15 +217,15 @@ Internet-Draft     Secure group communication for CoAP    September 2016
       instance, lighting devices and switches in a room or corridor can
       be configured as members of a single multicast group.  Switches
       are then used to control the lighting devices, by sending on/off/
-
-
-
-Tiloca, et al.            Expires April 1, 2017                 [Page 4]
-
-Internet-Draft     Secure group communication for CoAP    September 2016
-
-
       dimming commands to all lighting devices in a group. 6LoWPAN
+
+
+
+Tiloca, et al.           Expires April 14, 2017                 [Page 4]
+
+Internet-Draft     Secure group communication for CoAP      October 2016
+
+
       border routers that are connected to an IPv6 network backbone
       (which is also multicast-enabled) are used to interconnect 6LoWPAN
       routers in the building.  Consequently, this would also enable
@@ -273,17 +272,16 @@ Internet-Draft     Secure group communication for CoAP    September 2016
       about the execution of the update operation (e.g.  OK, failure,
       error) and their current operational status.
 
-
-
-
-
-Tiloca, et al.            Expires April 1, 2017                 [Page 5]
-
-Internet-Draft     Secure group communication for CoAP    September 2016
-
-
    o  Parameter and configuration update: by means of multicast
       communication, it is possible to update the settings of a group of
+
+
+
+Tiloca, et al.           Expires April 14, 2017                 [Page 5]
+
+Internet-Draft     Secure group communication for CoAP      October 2016
+
+
       similar devices, both simultaneously and efficiently.  Possible
       parameters are related, for instance, to network load management
       or network access controls.  Devices receiving parameter and
@@ -333,9 +331,11 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca, et al.            Expires April 1, 2017                 [Page 6]
+
+
+Tiloca, et al.           Expires April 14, 2017                 [Page 6]
 
-Internet-Draft     Secure group communication for CoAP    September 2016
+Internet-Draft     Secure group communication for CoAP      October 2016
 
 
    o  Backward security: a new device joining the multicast group should
@@ -389,9 +389,9 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca, et al.            Expires April 1, 2017                 [Page 7]
+Tiloca, et al.           Expires April 14, 2017                 [Page 7]
 
-Internet-Draft     Secure group communication for CoAP    September 2016
+Internet-Draft     Secure group communication for CoAP      October 2016
 
 
       the range of 2 to 100 devices.  Groups larger than that SHOULD be
@@ -445,9 +445,9 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca, et al.            Expires April 1, 2017                 [Page 8]
+Tiloca, et al.           Expires April 14, 2017                 [Page 8]
 
-Internet-Draft     Secure group communication for CoAP    September 2016
+Internet-Draft     Secure group communication for CoAP      October 2016
 
 
    unicast response messages.  Upon joining the group, endpoints are not
@@ -501,9 +501,9 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca, et al.            Expires April 1, 2017                 [Page 9]
+Tiloca, et al.           Expires April 14, 2017                 [Page 9]
 
-Internet-Draft     Secure group communication for CoAP    September 2016
+Internet-Draft     Secure group communication for CoAP      October 2016
 
 
        Context stores also the endpoint's asymmetric public-private key
@@ -557,9 +557,9 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca, et al.            Expires April 1, 2017                [Page 10]
+Tiloca, et al.           Expires April 14, 2017                [Page 10]
 
-Internet-Draft     Secure group communication for CoAP    September 2016
+Internet-Draft     Secure group communication for CoAP      October 2016
 
 
        counter signature, before proceeding with the verification and
@@ -613,9 +613,9 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca, et al.            Expires April 1, 2017                [Page 11]
+Tiloca, et al.           Expires April 14, 2017                [Page 11]
 
-Internet-Draft     Secure group communication for CoAP    September 2016
+Internet-Draft     Secure group communication for CoAP      October 2016
 
 
    listeners can initialize their last-seen sequence number in their
@@ -669,14 +669,14 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca, et al.            Expires April 1, 2017                [Page 12]
+Tiloca, et al.           Expires April 14, 2017                [Page 12]
 
-Internet-Draft     Secure group communication for CoAP    September 2016
+Internet-Draft     Secure group communication for CoAP      October 2016
 
 
-8.  Acknowledgments
+8.  IANA Considerations
 
-   TODO
+   This document has no actions for IANA.
 
 9.  References
 
@@ -684,7 +684,7 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
    [I-D.ietf-cose-msg]
               Schaad, J., "CBOR Object Signing and Encryption (COSE)",
-              draft-ietf-cose-msg-19 (work in progress), September 2016.
+              draft-ietf-cose-msg-20 (work in progress), October 2016.
 
    [I-D.selander-ace-object-security]
               Selander, G., Mattsson, J., Palombini, F., and L. Seitz,
@@ -700,11 +700,6 @@ Internet-Draft     Secure group communication for CoAP    September 2016
               Application Protocol (CoAP)", RFC 7252,
               DOI 10.17487/RFC7252, June 2014,
               <http://www.rfc-editor.org/info/rfc7252>.
-
-   [RFC7390]  Rahman, A., Ed. and E. Dijk, Ed., "Group Communication for
-              the Constrained Application Protocol (CoAP)", RFC 7390,
-              DOI 10.17487/RFC7390, October 2014,
-              <http://www.rfc-editor.org/info/rfc7390>.
 
    [RFC7641]  Hartke, K., "Observing Resources in the Constrained
               Application Protocol (CoAP)", RFC 7641,
@@ -722,18 +717,18 @@ Internet-Draft     Secure group communication for CoAP    September 2016
               Architecture", RFC 4046, DOI 10.17487/RFC4046, April 2005,
               <http://www.rfc-editor.org/info/rfc4046>.
 
-
-
-
-Tiloca, et al.            Expires April 1, 2017                [Page 13]
-
-Internet-Draft     Secure group communication for CoAP    September 2016
-
-
    [RFC4535]  Harney, H., Meth, U., Colegrove, A., and G. Gross,
               "GSAKMP: Group Secure Association Key Management
               Protocol", RFC 4535, DOI 10.17487/RFC4535, June 2006,
               <http://www.rfc-editor.org/info/rfc4535>.
+
+
+
+
+Tiloca, et al.           Expires April 14, 2017                [Page 13]
+
+Internet-Draft     Secure group communication for CoAP      October 2016
+
 
    [RFC4944]  Montenegro, G., Kushalnagar, N., Hui, J., and D. Culler,
               "Transmission of IPv6 Packets over IEEE 802.15.4
@@ -753,6 +748,11 @@ Internet-Draft     Secure group communication for CoAP    September 2016
               Constrained-Node Networks", RFC 7228,
               DOI 10.17487/RFC7228, May 2014,
               <http://www.rfc-editor.org/info/rfc7228>.
+
+   [RFC7390]  Rahman, A., Ed. and E. Dijk, Ed., "Group Communication for
+              the Constrained Application Protocol (CoAP)", RFC 7390,
+              DOI 10.17487/RFC7390, October 2014,
+              <http://www.rfc-editor.org/info/rfc7390>.
 
 Authors' Addresses
 
@@ -781,9 +781,9 @@ Authors' Addresses
 
 
 
-Tiloca, et al.            Expires April 1, 2017                [Page 14]
+Tiloca, et al.           Expires April 14, 2017                [Page 14]
 
-Internet-Draft     Secure group communication for CoAP    September 2016
+Internet-Draft     Secure group communication for CoAP      October 2016
 
 
    Francesca Palombini
@@ -837,4 +837,4 @@ Internet-Draft     Secure group communication for CoAP    September 2016
 
 
 
-Tiloca, et al.            Expires April 1, 2017                [Page 15]
+Tiloca, et al.           Expires April 14, 2017                [Page 15]
