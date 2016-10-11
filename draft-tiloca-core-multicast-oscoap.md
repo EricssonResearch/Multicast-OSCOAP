@@ -1,7 +1,7 @@
 ---
 title: Secure group communication for CoAP
 # abbrev: 
-docname: draft-tiloca-core-multicast-oscoap-00
+docname: draft-tiloca-core-multicast-oscoap-latest
 
 # stand_alone: true
 
@@ -55,7 +55,6 @@ normative:
   I-D.selander-ace-object-security:
   RFC2119:
   RFC7252:
-  RFC7390:
   RFC7641:
 
 informative:
@@ -67,10 +66,11 @@ informative:
   RFC4949:
   RFC6282:
   RFC7228:
+  RFC7390:
 
 --- abstract
 
-This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) {{I-D.selander-ace-object-security}} and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast CoAP request messages and related unicast CoAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages.
+This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast CoAP request messages and related unicast CoAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages.
 
 --- middle
 
@@ -214,10 +214,13 @@ Alternatively, the Group Manager can be configured to store public keys of group
 
 Note that in simple, less dynamic, multicast groups, it can be convenient for the Group Manager to provide an endpoint upon its joining with the public keys associated to all endpoints currently present in the group.
 
-# Acknowledgments #
+# IANA Considerations # {#iana}
 
+This document has no actions for IANA.
+
+<!--# Acknowledgments #
 TODO
-
+-->
 --- back
 
 
