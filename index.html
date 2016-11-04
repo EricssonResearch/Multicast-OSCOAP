@@ -280,9 +280,10 @@ li, p {
 <link href="#rfc.section.7.2" rel="Chapter" title="7.2 Late joining endpoints"/>
 <link href="#rfc.section.7.3" rel="Chapter" title="7.3 Provisioning of public keys"/>
 <link href="#rfc.section.8" rel="Chapter" title="8 IANA Considerations"/>
-<link href="#rfc.references" rel="Chapter" title="9 References"/>
-<link href="#rfc.references.1" rel="Chapter" title="9.1 Normative References"/>
-<link href="#rfc.references.2" rel="Chapter" title="9.2 Informative References"/>
+<link href="#rfc.section.9" rel="Chapter" title="9 Acknowledgments"/>
+<link href="#rfc.references" rel="Chapter" title="10 References"/>
+<link href="#rfc.references.1" rel="Chapter" title="10.1 Normative References"/>
+<link href="#rfc.references.2" rel="Chapter" title="10.2 Informative References"/>
 <link href="#rfc.authors" rel="Chapter"/>
 
 
@@ -291,7 +292,7 @@ li, p {
 
   <meta name="dct.creator" content="Tiloca, M., Selander, G., and F. Palombini" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-tiloca-core-multicast-oscoap-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-10-11" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-11-04" />
   <meta name="dct.abstract" content="This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast CoAP request messages and related unicast CoAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages." />
   <meta name="description" content="This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast CoAP request messages and related unicast CoAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages." />
 
@@ -315,7 +316,7 @@ li, p {
   <td class="right">G. Selander</td>
 </tr>
 <tr>
-  <td class="left">Expires: April 14, 2017</td>
+  <td class="left">Expires: May 8, 2017</td>
   <td class="right">F. Palombini</td>
 </tr>
 <tr>
@@ -324,7 +325,7 @@ li, p {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">October 11, 2016</td>
+  <td class="right">November 04, 2016</td>
 </tr>
 
     	
@@ -344,7 +345,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on April 14, 2017.</p>
+<p>This Internet-Draft will expire on May 8, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -368,9 +369,10 @@ li, p {
 <li>7.2.   <a href="#rfc.section.7.2">Late joining endpoints</a></li>
 <li>7.3.   <a href="#rfc.section.7.3">Provisioning of public keys</a></li>
 </ul><li>8.   <a href="#rfc.section.8">IANA Considerations</a></li>
-<li>9.   <a href="#rfc.references">References</a></li>
-<ul><li>9.1.   <a href="#rfc.references.1">Normative References</a></li>
-<li>9.2.   <a href="#rfc.references.2">Informative References</a></li>
+<li>9.   <a href="#rfc.section.9">Acknowledgments</a></li>
+<li>10.   <a href="#rfc.references">References</a></li>
+<ul><li>10.1.   <a href="#rfc.references.1">Normative References</a></li>
+<li>10.2.   <a href="#rfc.references.2">Informative References</a></li>
 </ul><li><a href="#rfc.authors">Authors' Addresses</a></li>
 
 
@@ -391,8 +393,8 @@ li, p {
 
 <ul>
   <li>Keying material: data that is necessary to establish and maintain secure communication among member of a multicast group. This includes, for instance, keys, key pairs, and IVs <a href="#RFC4949">[RFC4949]</a>.</li>
-  <li>Group Controller (GC): entity responsible for creating a multicast group, establishing and provisioning security contexts among authorized group members, and managing the joining of new group members. This entity may also be responsible for renewing/updating security contexts and related keying material. The GC is not required to be an actual member of the multicast group and to take part in the group communication.</li>
-  <li>Broadcaster: member of a multicast group that sends multicast CoAP messagges intended to all members of the group. In a 1-to-N multicast group, only a single broadcaster transmits data to the group; in an M-to-N multicast group (where M and N do not necessarily have the same value), M group members are broadcasters.</li>
+  <li>Group Manager (GM): entity responsible for creating a multicast group, establishing and provisioning security contexts among authorized group members, and managing the joining of new group members. This entity may also be responsible for renewing/updating security contexts and related keying material. The GM is not required to be an actual member of the multicast group and to take part in the group communication.</li>
+  <li>Broadcaster: member of a multicast group that sends multicast CoAP messagges intended for all members of the group. In a 1-to-N multicast group, only a single broadcaster transmits data to the group; in an M-to-N multicast group (where M and N do not necessarily have the same value), M group members are broadcasters.</li>
   <li>Listener: member of a multicast group that receives multicast CoAP messages when listening to the multicast IPv6 address associated to the multicast group. A listener MAY reply back, by sending a unicast response message to the broadcaster which has sent the multicast message.</li>
   <li>Group request: multicast CoAP request message sent by a broadcaster in the group to all listeners in the group through multicast IPv6.</li>
   <li>Group response: unicast CoAP response message sent back by a listener in the group as a response to a group request received from a broadcaster.</li>
@@ -415,7 +417,7 @@ li, p {
 <p/>
 
 <ul>
-  <li>Establishment of a security context: a secure mechanism must be used to distribute keying material, multicast security policies and security parameters to members of a multicast group. A security context must be established among the group members by the Group Controller which manages the multicast group. A 6LoWPAN border router, a device in the 6LoWPAN network, or a remote server outside the 6LoWPAN network, could play the role of the Group Controller. The actual establishment of the security context is out of the scope of this document, and it is anticipated that an activity in IETF dedicated to the design of a generic key management scheme for the LLN will include this feature preferably based on <a href="#RFC3740">[RFC3740]</a><a href="#RFC4046">[RFC4046]</a><a href="#RFC4535">[RFC4535]</a>.</li>
+  <li>Establishment of a security context: a secure mechanism must be used to distribute keying material, multicast security policies and security parameters to members of a multicast group. A security context must be established among the group members by the Group Manager which manages the multicast group. A 6LoWPAN border router, a device in the 6LoWPAN network, or a remote server outside the 6LoWPAN network, could play the role of the Group Manager. The actual establishment of the security context is out of the scope of this document, and it is anticipated that an activity in IETF dedicated to the design of a generic key management scheme for the LLN will include this feature preferably based on <a href="#RFC3740">[RFC3740]</a><a href="#RFC4046">[RFC4046]</a><a href="#RFC4535">[RFC4535]</a>.</li>
   <li>Multicast data security ciphersuite: all group members MUST agree on a ciphersuite to provide authenticity, integrity and confidentiality of messages in the multicast group. The ciphersuite is specified as part of the security context.</li>
   <li>Backward security: a new device joining the multicast group should not have access to any old security contexts used before its joining. This ensures that a new group member is not able to decrypt confidential data sent before it has joined the group. The adopted key management scheme should ensure that the security context is updated to ensure backward confidentiality. The actual mechanism to update the security context and renew the group keying material upon a group member's joining has to be defined as part of the group key management scheme.</li>
   <li>Forward security: entities that leave the multicast group should not have access to any future security contexts or message exchanged within the group after their leaving. This ensures that a former group member is not able to decrypt confidential data sent within the group anymore. Also, it ensures that a former member is not able to send encrypted and/or integrity protected messages to the group anymore. The actual mechanism to update the security context and renew the group keying material upon a group member's leaving has to be defined as part of the group key management scheme.</li>
@@ -434,16 +436,16 @@ li, p {
 <h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#scope" id="scope">Scope description</a></h1>
 <p id="rfc.section.4.p.1">An endpoint joins a multicast group by explicitly interacting with the responsible Group Manager. An endpoint registered as member of a group can behave as a broadcaster and/or as a listener. As a broadcaster, it can transmit multicast request messages to the group. As a listener, it receives multicast request messages from any broadcaster in the group, and possibly replies by transmitting unicast response messages. Upon joining the group, endpoints are not required to know how many and what endpoints are active in the same group.</p>
 <p id="rfc.section.4.p.2">An endpoint which is registered as member of a group is identified by an endpoint ID, which is not necessarily related to any protocol-relevant identifiers, such as IP addresses. The Group Manager generates and manages endpoint IDs in order to ensure their uniqueness within a same multicast group. That is, there cannot be multiple endpoints that belong to the same group and are associated to a same endpoint ID.</p>
-<p id="rfc.section.4.p.3">In order to participate in the secure group communication, an endpoint needs to maintain additional pieces of information, stored in its own security context. Those include keying material used to protect and verify group messages, as well as the public keys of other endpoints in the groups, in order to verify digital signatures of secure messages and ensure their source authenticity. These pieces of information are provided by the Group Manager through out-of-band means or other pre-established secure channels. Further details about establishment, revocation and renewal of the security context and keying material is out of the scope of this document.</p>
-<p id="rfc.section.4.p.4">According to <a href="#RFC7390">[RFC7390]</a>, any possible proxy entity is supposed to know about the broadcasters in the group and to not perform aggregation of response messages. Also, every broadcaster expects and is able to handle multiple unicast response messages associated to a same multicast request message.</p>
+<p id="rfc.section.4.p.3">In order to participate in the secure group communication, an endpoint needs to maintain additional information elements, stored in its own security context. Those include keying material used to protect and verify group messages, as well as the public keys of other endpoints in the groups, in order to verify digital signatures of secure messages and ensure their source authenticity. These pieces of information are provided by the Group Manager through out-of-band means or other pre-established secure channels. Further details about establishment, revocation and renewal of the security context and keying material is out of the scope of this document.</p>
+<p id="rfc.section.4.p.4">According to <a href="#RFC7390">[RFC7390]</a>, any possible proxy entity is supposed to know about the broadcasters in the group and to not perform aggregation of response messages. Also, every broadcaster expects and is able to handle multiple unicast response messages associated to a given multicast request message.</p>
 <h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#sec-context" id="sec-context">Security context</a></h1>
 <p id="rfc.section.5.p.1">To support multicast communication secured with OSCOAP, each endpoint registered as member of a multicast group maintains a security context as defined in Section 3 of <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>. In particular, each endpoint in a group stores:</p>
 <p/>
 
 <ol>
   <li>one Common Context, received upon joining the multicast group and shared by all the endpoints in the group. The Common Context contains the Context Identifier, the COSE AEAD algorithm and the Base Key used to derive endpoint-based keying material (Section 3.2 of <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>);</li>
-  <li>one Sender Context, used to secure outgoing messages. In particular, the Sender Context is initialized according to Section 3 of <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>, once the endpoint has joined the multicast group. Besides, in addition to what defined in <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>, the Sender Context stores also the endpoint's asymmetric public-private key pair;</li>
-  <li>one Recipient Context for each different endpoint from which messages are received, used to process such incoming secure messages. The endpoint creates a new Recipient Context upon receiving an incoming message from another endpoint in the group for the first time. Besides, in addition to what defined in <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>, each Recipient Context stores also the public key of the associated other endpoint from which secure messages are received.</li>
+  <li>one Sender Context, used to secure outgoing messages. In particular, the Sender Context is initialized according to Section 3 of <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>, once the endpoint has joined the multicast group. Besides, in addition to what is defined in <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>, the Sender Context stores also the endpoint's asymmetric public-private key pair;</li>
+  <li>one Recipient Context for each distinct endpoint from which messages are received, used to process such incoming secure messages. The endpoint creates a new Recipient Context upon receiving an incoming message from another endpoint in the group for the first time. Besides, in addition to what is defined in <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>, each Recipient Context stores also the public key of the associated other endpoint from which secure messages are received.</li>
 </ol>
 <p id="rfc.section.5.p.3">The Sender Key/IV stored in the Sender Context and the Recipient Keys/IVs stored in the Recipient Contexts are derived according to the same scheme defined in Section 3.2 of <a href="#I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</a>.</p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#mess-exchange" id="mess-exchange">Message exchange</a></h1>
@@ -464,7 +466,7 @@ li, p {
 <h1 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> <a href="#ssec-late-joining-endpoints" id="ssec-late-joining-endpoints">Late joining endpoints</a></h1>
 <p id="rfc.section.7.2.p.1">Upon joining the multicast group when the system is fully operative, listeners are not aware of the current sequence number values used by different broadcasters to transmit multicast request messages. This means that, when such listeners receive a secure multicast message from a broadcaster, they are not able to verify if that message is fresh and has not been replayed.</p>
 <p id="rfc.section.7.2.p.2">In order to address this issue, upon receiving a multicast message from a particular broadcaster for the first time, late joining listeners can initialize their last-seen sequence number in their Recipient Context associated to that broadcaster. However, after that they drop the message, without delivering it to the application layer. This provides a reference point to identify if future multicast messages from the same broadcaster are fresher than the last one seen. As an alternative, a late joining listener can directly contact the broadcaster, and explicitly request a confirmation of the sequence number in the first received multicast message.</p>
-<p id="rfc.section.7.2.p.3">A possible different approach considers the GC as an additional listener in the multicast group. Then, the GC can maintain the sequence number values of each broadcaster in the group. When late joiners send a request to the GC to join the group, the GC can provide them with the list of sequence number values to be stored in the Recipient Contexts associated to the appropriate broadcasters.</p>
+<p id="rfc.section.7.2.p.3">A possible different approach considers the GM as an additional listener in the multicast group. Then, the GM can maintain the sequence number values of each broadcaster in the group. When late joiners send a request to the GM to join the group, the GM can provide them with the list of sequence number values to be stored in the Recipient Contexts associated to the appropriate broadcasters.</p>
 <h1 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a> <a href="#ssec-provisioning-of-public-keys" id="ssec-provisioning-of-public-keys">Provisioning of public keys</a></h1>
 <p id="rfc.section.7.3.p.1">Upon receiving a secure CoAP message, a recipient endpoint relies on the sender endpoint's public key, in order to verify the counter signature conveyed in the COSE Object.</p>
 <p id="rfc.section.7.3.p.2">If not already stored in the Recipient Context associated to the sender endpoint, the recipient endpoint retrieves the public key from a trusted key repository. In such a case, the correct binding between the sender endpoint and the retrieved public key MUST be assured, for instance by means of public key certificates. Further details about how this requirement can be fulfilled are out of the scope of this document.</p>
@@ -472,21 +474,23 @@ li, p {
 <p id="rfc.section.7.3.p.4">Note that in simple, less dynamic, multicast groups, it can be convenient for the Group Manager to provide an endpoint upon its joining with the public keys associated to all endpoints currently present in the group.</p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#iana" id="iana">IANA Considerations</a></h1>
 <p id="rfc.section.8.p.1">This document has no actions for IANA.</p>
-<h1 id="rfc.references"><a href="#rfc.references">9.</a> References</h1>
-<h1 id="rfc.references.1"><a href="#rfc.references.1">9.1.</a> Normative References</h1>
+<h1 id="rfc.section.9"><a href="#rfc.section.9">9.</a> <a href="#acknowldegment" id="acknowldegment">Acknowledgments</a></h1>
+<p id="rfc.section.9.p.1">The authors sincerely thank Rolf Blom for his feedback and comments.</p>
+<h1 id="rfc.references"><a href="#rfc.references">10.</a> References</h1>
+<h1 id="rfc.references.1"><a href="#rfc.references.1">10.1.</a> Normative References</h1>
 <table>
   <tbody>
     <tr>
       <td class="reference">
         <b id="I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</b>
       </td>
-      <td class="top"><a>Schaad, J.</a>, "<a href="http://tools.ietf.org/html/draft-ietf-cose-msg-20">CBOR Object Signing and Encryption (COSE)</a>", Internet-Draft draft-ietf-cose-msg-20, October 2016.</td>
+      <td class="top"><a>Schaad, J.</a>, "<a href="http://tools.ietf.org/html/draft-ietf-cose-msg-23">CBOR Object Signing and Encryption (COSE)</a>", Internet-Draft draft-ietf-cose-msg-23, October 2016.</td>
     </tr>
     <tr>
       <td class="reference">
         <b id="I-D.selander-ace-object-security">[I-D.selander-ace-object-security]</b>
       </td>
-      <td class="top"><a>Selander, G.</a>, <a>Mattsson, J.</a>, <a>Palombini, F.</a> and <a>L. Seitz</a>, "<a href="http://tools.ietf.org/html/draft-selander-ace-object-security-05">Object Security of CoAP (OSCOAP)</a>", Internet-Draft draft-selander-ace-object-security-05, July 2016.</td>
+      <td class="top"><a>Selander, G.</a>, <a>Mattsson, J.</a>, <a>Palombini, F.</a> and <a>L. Seitz</a>, "<a href="http://tools.ietf.org/html/draft-selander-ace-object-security-06">Object Security of CoAP (OSCOAP)</a>", Internet-Draft draft-selander-ace-object-security-06, October 2016.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -508,7 +512,7 @@ li, p {
     </tr>
   </tbody>
 </table>
-<h1 id="rfc.references.2"><a href="#rfc.references.2">9.2.</a> Informative References</h1>
+<h1 id="rfc.references.2"><a href="#rfc.references.2">10.2.</a> Informative References</h1>
 <table>
   <tbody>
     <tr>
