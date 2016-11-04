@@ -98,9 +98,9 @@ This document refers also to the following terminology.
 
 * Keying material: data that is necessary to establish and maintain secure communication among member of a multicast group. This includes, for instance, keys, key pairs, and IVs {{RFC4949}}.
 
-* Group Controller (GC): entity responsible for creating a multicast group, establishing and provisioning security contexts among authorized group members, and managing the joining of new group members. This entity may also be responsible for renewing/updating security contexts and related keying material. The GC is not required to be an actual member of the multicast group and to take part in the group communication.
+* Group Manager (GM): entity responsible for creating a multicast group, establishing and provisioning security contexts among authorized group members, and managing the joining of new group members. This entity may also be responsible for renewing/updating security contexts and related keying material. The GM is not required to be an actual member of the multicast group and to take part in the group communication.
 
-* Broadcaster: member of a multicast group that sends multicast CoAP messagges intended to all members of the group. In a 1-to-N multicast group, only a single broadcaster transmits data to the group; in an M-to-N multicast group (where M and N do not necessarily have the same value), M group members are broadcasters.
+* Broadcaster: member of a multicast group that sends multicast CoAP messagges intended for all members of the group. In a 1-to-N multicast group, only a single broadcaster transmits data to the group; in an M-to-N multicast group (where M and N do not necessarily have the same value), M group members are broadcasters.
 
 * Listener: member of a multicast group that receives multicast CoAP messages when listening to the multicast IPv6 address associated to the multicast group. A listener MAY reply back, by sending a unicast response message to the broadcaster which has sent the multicast message.
 
@@ -130,7 +130,7 @@ Group Communication for CoAP {{RFC7390}} provides the necessary background for m
 
 The following security requirements are out of the scope of this document and are assumed to be already fulfilled.
 
-* Establishment of a security context: a secure mechanism must be used to distribute keying material, multicast security policies and security parameters to members of a multicast group. A security context must be established among the group members by the Group Controller which manages the multicast group. A 6LoWPAN border router, a device in the 6LoWPAN network, or a remote server outside the 6LoWPAN network, could play the role of the Group Controller. The actual establishment of the security context is out of the scope of this document, and it is anticipated that an activity in IETF dedicated to the design of a generic key management scheme for the LLN will include this feature preferably based on {{RFC3740}}{{RFC4046}}{{RFC4535}}.
+* Establishment of a security context: a secure mechanism must be used to distribute keying material, multicast security policies and security parameters to members of a multicast group. A security context must be established among the group members by the Group Manager which manages the multicast group. A 6LoWPAN border router, a device in the 6LoWPAN network, or a remote server outside the 6LoWPAN network, could play the role of the Group Manager. The actual establishment of the security context is out of the scope of this document, and it is anticipated that an activity in IETF dedicated to the design of a generic key management scheme for the LLN will include this feature preferably based on {{RFC3740}}{{RFC4046}}{{RFC4535}}.
 
 * Multicast data security ciphersuite: all group members MUST agree on a ciphersuite to provide authenticity, integrity and confidentiality of messages in the multicast group. The ciphersuite is specified as part of the security context.
 
@@ -158,9 +158,9 @@ An endpoint joins a multicast group by explicitly interacting with the responsib
 
 An endpoint which is registered as member of a group is identified by an endpoint ID, which is not necessarily related to any protocol-relevant identifiers, such as IP addresses. The Group Manager generates and manages endpoint IDs in order to ensure their uniqueness within a same multicast group. That is, there cannot be multiple endpoints that belong to the same group and are associated to a same endpoint ID.
 
-In order to participate in the secure group communication, an endpoint needs to maintain additional pieces of information, stored in its own security context. Those include keying material used to protect and verify group messages, as well as the public keys of other endpoints in the groups, in order to verify digital signatures of secure messages and ensure their source authenticity. These pieces of information are provided by the Group Manager through out-of-band means or other pre-established secure channels. Further details about establishment, revocation and renewal of the security context and keying material is out of the scope of this document.
+In order to participate in the secure group communication, an endpoint needs to maintain additional information elements, stored in its own security context. Those include keying material used to protect and verify group messages, as well as the public keys of other endpoints in the groups, in order to verify digital signatures of secure messages and ensure their source authenticity. These pieces of information are provided by the Group Manager through out-of-band means or other pre-established secure channels. Further details about establishment, revocation and renewal of the security context and keying material is out of the scope of this document.
 
-According to {{RFC7390}}, any possible proxy entity is supposed to know about the broadcasters in the group and to not perform aggregation of response messages. Also, every broadcaster expects and is able to handle multiple unicast response messages associated to a same multicast request message.
+According to {{RFC7390}}, any possible proxy entity is supposed to know about the broadcasters in the group and to not perform aggregation of response messages. Also, every broadcaster expects and is able to handle multiple unicast response messages associated to a given multicast request message.
 
 # Security context # {#sec-context}
 
@@ -168,9 +168,9 @@ To support multicast communication secured with OSCOAP, each endpoint registered
 
 1. one Common Context, received upon joining the multicast group and shared by all the endpoints in the group. The Common Context contains the Context Identifier, the COSE AEAD algorithm and the Base Key used to derive endpoint-based keying material (Section 3.2 of {{I-D.selander-ace-object-security}});
 
-2. one Sender Context, used to secure outgoing messages. In particular, the Sender Context is initialized according to Section 3 of {{I-D.selander-ace-object-security}}, once the endpoint has joined the multicast group. Besides, in addition to what defined in {{I-D.selander-ace-object-security}}, the Sender Context stores also the endpoint's asymmetric public-private key pair;
+2. one Sender Context, used to secure outgoing messages. In particular, the Sender Context is initialized according to Section 3 of {{I-D.selander-ace-object-security}}, once the endpoint has joined the multicast group. Besides, in addition to what is defined in {{I-D.selander-ace-object-security}}, the Sender Context stores also the endpoint's asymmetric public-private key pair;
 
-3. one Recipient Context for each different endpoint from which messages are received, used to process such incoming secure messages. The endpoint creates a new Recipient Context upon receiving an incoming message from another endpoint in the group for the first time. Besides, in addition to what defined in {{I-D.selander-ace-object-security}}, each Recipient Context stores also the public key of the associated other endpoint from which secure messages are received.
+3. one Recipient Context for each distinct endpoint from which messages are received, used to process such incoming secure messages. The endpoint creates a new Recipient Context upon receiving an incoming message from another endpoint in the group for the first time. Besides, in addition to what is defined in {{I-D.selander-ace-object-security}}, each Recipient Context stores also the public key of the associated other endpoint from which secure messages are received.
 
 The Sender Key/IV stored in the Sender Context and the Recipient Keys/IVs stored in the Recipient Contexts are derived according to the same scheme defined in Section 3.2 of {{I-D.selander-ace-object-security}}.
 
@@ -202,7 +202,7 @@ Upon joining the multicast group when the system is fully operative, listeners a
 
 In order to address this issue, upon receiving a multicast message from a particular broadcaster for the first time, late joining listeners can initialize their last-seen sequence number in their Recipient Context associated to that broadcaster. However, after that they drop the message, without delivering it to the application layer. This provides a reference point to identify if future multicast messages from the same broadcaster are fresher than the last one seen. As an alternative, a late joining listener can directly contact the broadcaster, and explicitly request a confirmation of the sequence number in the first received multicast message.
 
-A possible different approach considers the GC as an additional listener in the multicast group. Then, the GC can maintain the sequence number values of each broadcaster in the group. When late joiners send a request to the GC to join the group, the GC can provide them with the list of sequence number values to be stored in the Recipient Contexts associated to the appropriate broadcasters.
+A possible different approach considers the GM as an additional listener in the multicast group. Then, the GM can maintain the sequence number values of each broadcaster in the group. When late joiners send a request to the GM to join the group, the GM can provide them with the list of sequence number values to be stored in the Recipient Contexts associated to the appropriate broadcasters.
 
 ## Provisioning of public keys ## {#ssec-provisioning-of-public-keys}
 
@@ -218,9 +218,9 @@ Note that in simple, less dynamic, multicast groups, it can be convenient for th
 
 This document has no actions for IANA.
 
-<!--# Acknowledgments #
-TODO
--->
+# Acknowledgments # {#acknowldegment}
+The authors sincerely thank Rolf Blom for his feedback and comments.
+
 --- back
 
 
