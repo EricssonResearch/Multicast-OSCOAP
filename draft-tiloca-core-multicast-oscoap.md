@@ -213,7 +213,7 @@ Note that in simple, less dynamic, multicast groups, it can be convenient for th
 This document has no actions for IANA.
 
 # Acknowledgments # {#acknowldegment}
-The authors sincerely thank Rolf Blom, Carsten Bormann, John Mattsson, Jim Schaad and for their feedback and comments.
+The authors sincerely thank Rolf Blom, Carsten Bormann, John Mattsson and Jim Schaad for their feedback and comments.
 
 --- back
 
