@@ -52,19 +52,24 @@ author:
 normative:
 
   I-D.ietf-cose-msg:
-  I-D.selander-ace-object-security:
+  I-D.ietf-core-object-security:
   RFC2119:
   RFC7252:
   RFC7641:
 
 informative:
 
+  I-D.ietf-ace-oauth-authz:
+  I-D.seitz-ace-oscoap-profile:
+  I-D.selander-ace-cose-ecdhe:
   RFC3740:
   RFC4046:
   RFC4535:
   RFC4944:
   RFC4949:
   RFC6282:
+  RFC6347:
+  RFC6749:
   RFC7228:
   RFC7390:
 
@@ -80,7 +85,7 @@ The Constrained Application Protocol (CoAP) {{RFC7252}} is a web transfer protoc
 
 {{RFC7390}} enables group communication for CoAP, addressing use cases where deployed devices benefit from a group communication model for example to limit latencies and improve performance. Use cases include lighting control, integrated building control, software and firmware updates, parameter and configuration updates, commissioning of constrained networks, and emergency multicast. {{RFC7390}} recognizes the importance to introduce a secure mode for CoAP group communication. This specification defines such a mode.
 
-Object Security of CoAP (OSCOAP){{I-D.selander-ace-object-security}} describes a security protocol based on the exchange of protected CoAP messages. OSCOAP builds on CBOR Object Signing and Encryption (COSE) {{I-D.ietf-cose-msg}} and provides end-to-end encryption, integrity, and replay protection across intermediate modes. To this end, a CoAP message is protected by including payload (if any), certain options, and header fields in a COSE object, which finally replaces the authenticated and encrypted fields in the protected message.
+Object Security of CoAP (OSCOAP){{I-D.ietf-core-object-security}} describes a security protocol based on the exchange of protected CoAP messages. OSCOAP builds on CBOR Object Signing and Encryption (COSE) {{I-D.ietf-cose-msg}} and provides end-to-end encryption, integrity, and replay protection across intermediate modes. To this end, a CoAP message is protected by including payload (if any), certain options, and header fields in a COSE object, which finally replaces the authenticated and encrypted fields in the protected message.
 
 This document describes multicast OSCOAP, providing end-to-end security of CoAP messages exchanged between members of a multicast group. In particular, the described approach defines how OSCOAP should be used in a group communication context, while fulfilling the same security requirements. That is, end-to-end security is assured for multicast CoAP requests sent by multicaster nodes to the group and for related unicast CoAP responses sent as reply by multiple listener nodes. Multicast OSCOAP provides source authentication of all CoAP messages exchanged within the group, by means of digital signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages. As in OSCOAP, it is still possible to simultaneously rely on DTLS to protect hop-by-hop communication between a multicaster node and a proxy (and vice versa), and between a proxy and a listener node (and vice versa).
 
@@ -92,13 +97,13 @@ Readers are expected to be familiar with the terms and concepts described in {{R
 
 Terminology for constrained environments, such as "constrained device", "constrained-node network", is defined in {{RFC7228}}.
 
-Terminology for protection and processing of CoAP messages through OSCOAP, such as "Security Context", "Base Key", "Transaction Identifier", is defined in {{I-D.selander-ace-object-security}}.
+Terminology for protection and processing of CoAP messages through OSCOAP, such as "Security Context", "Base Key", "Transaction Identifier", is defined in {{I-D.ietf-core-object-security}}.
 
 This document refers also to the following terminology.
 
 * Keying material: data that is necessary to establish and maintain secure communication among member of a multicast group. This includes, for instance, keys, key pairs, and IVs {{RFC4949}}.
 
-* Group Manager (GM): entity responsible for creating a multicast group, establishing and provisioning security contexts among authorized group members, and managing the joining of new group members. This entity may also be responsible for renewing/updating security contexts and related keying material. The GM is not required to be an actual member of the multicast group and to take part in the group communication.
+* Group Manager (GM): entity responsible for creating a multicast group, establishing and provisioning security contexts among authorized group members, and managing the joining of new group members. A GM can be responsible for multiple multicast groups, while it is not required to be an actual group member and to take part in the group communication. The GM may also be responsible for renewing/updating security contexts and related keying material. Any message exchange with the GM MUST be secured and based on different secure channels for different endpoints.
 
 * Multicaster: member of a multicast group that sends multicast CoAP messagges intended for all members of the group. In a 1-to-N multicast group, only a single multicaster transmits data to the group; in an M-to-N multicast group (where M and N do not necessarily have the same value), M group members are multicasters.
 
@@ -114,7 +119,7 @@ This document refers also to the following terminology.
 
 The following security requirements are out of the scope of this document and are assumed to be already fulfilled.
 
-* Establishment of a security context: a secure mechanism must be used to distribute keying material, multicast security policies and security parameters to members of a multicast group. A security context must be established among the group members by the Group Manager which manages the multicast group. A 6LoWPAN border router, a device in the 6LoWPAN network, or a remote server outside the 6LoWPAN network, could play the role of the Group Manager. The actual establishment of the security context is out of the scope of this document, and it is anticipated that an activity in IETF dedicated to the design of a generic key management scheme for the LLN will include this feature preferably based on {{RFC3740}}{{RFC4046}}{{RFC4535}}.
+* Establishment and management of a security context: a security context must be established among the group members by the Group Manager which manages the multicast group. A secure mechanism must be used to generate, revoke and (re-)distribute keying material, multicast security policies and security parameters in the multicast group. The actual establishment and management of the security context is out of the scope of this document, and it is anticipated that an activity in IETF dedicated to the design of a generic key management scheme will include this feature, preferably based on {{RFC3740}}{{RFC4046}}{{RFC4535}}.
 
 * Multicast data security ciphersuite: all group members MUST agree on a ciphersuite to provide authenticity, integrity and confidentiality of messages in the multicast group. The ciphersuite is specified as part of the security context.
 
@@ -138,7 +143,9 @@ The following security requirements need to be fulfilled by the approach describ
 
 # Scope Description # {#scope}
 
-An endpoint joins a multicast group by explicitly interacting with the responsible Group Manager. An endpoint registered as member of a group can behave as a multicaster and/or as a listener. As a multicaster, it can transmit multicast request messages to the group. As a listener, it receives multicast request messages from any multicaster in the group, and possibly replies by transmitting unicast response messages. Upon joining the group, endpoints are not required to know how many and what endpoints are active in the same group.
+An endpoint joins a multicast group by explicitly interacting with the responsible Group Manager. The actual join process MAY be based on the ACE framework {{I-D.ietf-ace-oauth-authz}} and the OSCOAP profile of ACE {{I-D.seitz-ace-oscoap-profile}}, as discussed in {{join-ACE-framework}}.
+
+An endpoint registered as member of a group can behave as a multicaster and/or as a listener. As a multicaster, it can transmit multicast request messages to the group. As a listener, it receives multicast request messages from any multicaster in the group, and possibly replies by transmitting unicast response messages. A number of use cases that benefit from secure group communication are discussed in {{sec-use-cases}}. Upon joining the group, endpoints are not required to know how many and what endpoints are active in the same group.
 
 An endpoint which is registered as member of a group is identified by an endpoint ID, which is not necessarily related to any protocol-relevant identifiers, such as IP addresses. The Group Manager generates and manages endpoint IDs in order to ensure their uniqueness within a same multicast group. That is, there cannot be multiple endpoints that belong to the same group and are associated to a same endpoint ID.
 
@@ -148,29 +155,29 @@ According to {{RFC7390}}, any possible proxy entity is supposed to know about th
 
 # Security Context # {#sec-context}
 
-To support multicast communication secured with OSCOAP, each endpoint registered as member of a multicast group maintains a security context as defined in Section 3 of {{I-D.selander-ace-object-security}}. In particular, each endpoint in a group stores:
+To support multicast communication secured with OSCOAP, each endpoint registered as member of a multicast group maintains a security context as defined in Section 3 of {{I-D.ietf-core-object-security}}. In particular, each endpoint in a group stores:
 
-1. one Common Context, received upon joining the multicast group and shared by all the endpoints in the group. The Common Context contains the Context Identifier, the COSE AEAD algorithm, the counter signature algorithm, and the Base Key used to derive endpoint-based keying material (see Section 3.2 of {{I-D.selander-ace-object-security}}). In particular, all the endpoints in the group agree on the algorithms specified in the Common Context;
+1. one Common Context, received from the Group Manager upon joining the multicast group and shared by all the endpoints in the group. The Common Context contains the Context Identifier, the COSE AEAD algorithm, the counter signature algorithm, and the Base Key used to derive endpoint-based keying material (see Section 3.2 of {{I-D.ietf-core-object-security}}). In particular, all the endpoints in the group agree on the algorithms specified in the Common Context;
 
-2. one Sender Context, used to secure outgoing messages. In particular, the Sender Context is initialized according to Section 3 of {{I-D.selander-ace-object-security}}, once the endpoint has joined the multicast group. Besides, in addition to what is defined in {{I-D.selander-ace-object-security}}, the Sender Context stores also the endpoint's asymmetric public-private key pair;
+2. one Sender Context, used to secure outgoing messages. In particular, the Sender Context is initialized according to Section 3 of {{I-D.ietf-core-object-security}}, once the endpoint has joined the multicast group. Besides, in addition to what is defined in {{I-D.ietf-core-object-security}}, the Sender Context stores also the endpoint's asymmetric public-private key pair;
 
-3. one Recipient Context for each distinct endpoint from which messages are received, used to process such incoming secure messages. The endpoint creates a new Recipient Context upon receiving an incoming message from another endpoint in the group for the first time. Besides, in addition to what is defined in {{I-D.selander-ace-object-security}}, each Recipient Context stores also the public key of the associated other endpoint from which secure messages are received. Possible approaches to provision and retrieve public keys are discussed in Section {{ssec-provisioning-of-public-keys}}.
+3. one Recipient Context for each distinct endpoint from which messages are received, used to process such incoming secure messages. The endpoint creates a new Recipient Context upon receiving an incoming message from another endpoint in the group for the first time. Besides, in addition to what is defined in {{I-D.ietf-core-object-security}}, each Recipient Context stores also the public key of the associated other endpoint from which secure messages are received. Possible approaches to provision and retrieve public keys of group members are discussed in {{ssec-provisioning-of-public-keys}}.
 
-The Sender Key/IV stored in the Sender Context and the Recipient Keys/IVs stored in the Recipient Contexts are derived according to the same scheme defined in Section 3.2 of {{I-D.selander-ace-object-security}}.
+The Sender Key/IV stored in the Sender Context and the Recipient Keys/IVs stored in the Recipient Contexts are derived according to the same scheme defined in Section 3.2 of {{I-D.ietf-core-object-security}}.
 
 # Message Exchange # {#mess-exchange}
 
-Each multicast/unicast message is protected and processed as described in {{I-D.selander-ace-object-security}}, with the following modification: the Sender ID of the endpoint transmitting the message MUST be sent explicitely. That is, the Sender ID MUST be included in the header of the COSE object, as defined in Section 5 of {{I-D.selander-ace-object-security}}).
+Each multicast/unicast message is protected and processed as described in {{I-D.ietf-core-object-security}}, with the following modification: the Sender ID of the endpoint transmitting the message MUST be sent explicitely. That is, the Sender ID MUST be included in the header of the COSE object, as defined in Section 5 of {{I-D.ietf-core-object-security}}).
 
 The processing for securing multicast request messages and unicast response messages with OSCOAP is the same as in non-multicast communication, with the following two modifications.
 
-1. Upon receiving a secure CoAP message, the recipient endpoint retrieves the Sender ID from the header of the COSE object. Then, the Sender ID is used to retrieve the correct Recipient Context associated to the sender endpoint and used to process the received message. When receiving a secure CoAP message from that sender endpoint for the first time, the recipient node creates a new Recipient Context, initializes it according to Section 3 of {{I-D.selander-ace-object-security}}, and includes the sender endpoint's public key.
+1. Upon receiving a secure CoAP message, the recipient endpoint retrieves the Sender ID from the header of the COSE object. Then, the Sender ID is used to retrieve the correct Recipient Context associated to the sender endpoint and used to process the received message. When receiving a secure CoAP message from that sender endpoint for the first time, the recipient node creates a new Recipient Context, initializes it according to Section 3 of {{I-D.ietf-core-object-security}}, and includes the sender endpoint's public key.
 
 2. Before transmitting a secure CoAP message, the sender endpoint uses its own private key to create a counter signature of the COSE_Encrypt0 object (Appendix C.4 of {{I-D.ietf-cose-msg}}). Then, the counter signature is included in the Header of the COSE object in its "unprotected" field. The recipient endpoint retrieves the corresponding public key of the sender endpoint from the associated Recipient Context and uses it to verify the counter signature, before proceeding with the verification and decryption of the secure message.
 
-The mapping between unicast response messages from listener endpoints and the associated multicast request message from a multicaster endpoint relies on the same principle adopted in {{I-D.selander-ace-object-security}}. That is, it is based on the Transaction Identifier (Tid) associated to the secure multicast request message, which is considered by listener endpoints as part of the Additional Authenticated Data when protecting their own response message.
+The mapping between unicast response messages from listener endpoints and the associated multicast request message from a multicaster endpoint relies on the same principle adopted in {{I-D.ietf-core-object-security}}. That is, it is based on the Transaction Identifier (Tid) associated to the secure multicast request message, which is considered by listener endpoints as part of the Additional Authenticated Data when protecting their own response message.
 
-Furthermore, error handling and processing of invalid messages are performed according to the same principles adopted in {{I-D.selander-ace-object-security}}.
+Furthermore, error handling and processing of invalid messages are performed according to the same principles adopted in {{I-D.ietf-core-object-security}}.
 
 # Security Considerations  # {#sec-security-considerations} 
 
@@ -186,7 +193,7 @@ Furthermore, the presented approach SHOULD take into consideration the risk of c
 
 ## Management of Group Keying Material ## {#ssec-group-key-management}
 
-As stated in Section {{sec-requirements}}, it is important to adopt a group key management scheme that SHOULD update the security context and keying material in the group, before a new endpoint joins the group or after a currently present endpoint leaves the group. This is necessary in order to preserve backward confidentiality and forward confidentiality in the multicast group.
+As stated in {{sec-requirements}}, it is important to adopt a group key management scheme that SHOULD update the security context and keying material in the group, before a new endpoint joins the group or after a currently present endpoint leaves the group. This is necessary in order to preserve backward confidentiality and forward confidentiality in the multicast group.
 
 Especially in dynamic, large-scale, multicast groups where endpoints can join and leave at any time, it is important that the considered group key management scheme is efficient and highly scalable with the group size, in order to limit the impact on performance due to the security context and keying material update.
 
@@ -217,9 +224,25 @@ The authors sincerely thank Rolf Blom, Carsten Bormann, John Mattsson and Jim Sc
 
 --- back
 
-# Use Cases # {#sec-use-cases}
+# Group Joining Based on the ACE Framework # {#join-ACE-framework}
 
-Group Communication for CoAP {{RFC7390}} provides the necessary background for multicast-based CoAP communication, with particular reference to low-power and lossy networks (LLNs) and resource constrained environments. The interested reader is encouraged to first read {{RFC7390}} to understand the non-security related details. This section lists a number of possible use cases that benefit from secure group communication. Specific security requirements for these use cases are discussed in {{sec-requirements}}.
+The join process to register an endpoint as a new member of a multicast group MAY be based on the ACE framework {{I-D.ietf-ace-oauth-authz}} and the OSCOAP profile of ACE {{I-D.seitz-ace-oscoap-profile}}. With reference to the terminology defined in OAuth 2.0 {{RFC6749}}:
+
+* The joining endpoint acts as Client;
+
+* The Group Manager acts as Resource Server, exporting one join-resource for each multicast group it is responsible for;
+
+* An Authorization Server enables and enforces authorized access of the joining endpoint to the Group Manager and its join-resources.
+
+Then, in accordance with {{I-D.seitz-ace-oscoap-profile}}, the joining endpoint and the Group Manager rely on OSCOAP {{RFC7252}} for secure communication and consider Ephemeral Diffie-Hellman Over COSE (EDHOC) {{I-D.selander-ace-cose-ecdhe}} as a possible method to establish key material.
+
+The joining endpoint sends to the Group Manager an OSCOAP request to access the join-resource associated to the multicast group to join. The Group Manager replies with an OSCOAP response including the Common Context associated to that group (see {{sec-context}}). In case the Group Manager is configured to store the public keys of group members, the joining endpoint additionally provides the Group Manager with its own public key, and MAY request from the Group Manager the public keys of the endpoints currently present in the group (see {{ssec-provisioning-of-public-keys}}).
+
+Both the joining endpoint and the Group Manager MUST adopt secure communication also for any message exchange with the Authorization Server. To this end, different alternatives are possible, including OSCOAP and DTLS {{RFC6347}}.
+
+# List of Use Cases # {#sec-use-cases}
+
+Group Communication for CoAP {{RFC7390}} provides the necessary background for multicast-based CoAP communication, with particular reference to low-power and lossy networks (LLNs) and resource constrained environments. The interested reader is encouraged to first read {{RFC7390}} to understand the non-security related details. This section discusses a number of use cases that benefit from secure group communication. Specific security requirements for these use cases are discussed in {{sec-requirements}}.
 
 * Lighting control: consider a building equipped with IP-connected lighting devices, switches, and border routers. The devices are organized into groups according to their physical location in the building. For instance, lighting devices and switches in a room or corridor can be configured as members of a single multicast group. Switches are then used to control the lighting devices by sending on/off/dimming commands to all lighting devices in a group, while border routers connected to an IP network backbone (which is also multicast-enabled) can be used to interconnect routers in the building. Consequently, this would also enable logical multicast groups to be formed even if devices in the lighting group may be physically in different subnets (e.g. on wired and wireless networks). Connectivity between ligthing devices may be realized, for instance, by means of IPv6 and (border) routers supporting 6LoWPAN {{RFC4944}}{{RFC6282}}. Group communication enables synchronous operation of a group of connected lights, ensuring that the light preset (e.g. dimming level or color) of a large group of luminaires are changed at the same perceived time. This is especially useful for providing a visual synchronicity of light effects to the user. Devices may reply back to the switches that issue on/off/dimming commands, in order to report about the execution of the requested operation (e.g. OK, failure, error) and their current operational status.
 
