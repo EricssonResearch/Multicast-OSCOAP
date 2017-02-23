@@ -3,11 +3,11 @@
 
 
 CoRE Working Group                                             M. Tiloca
-Internet-Draft                                          SICS Swedish ICT
+Internet-Draft                                              RISE SICS AB
 Intended status: Standards Track                             G. Selander
-Expires: July 27, 2017                                      F. Palombini
+Expires: August 27, 2017                                    F. Palombini
                                                              Ericsson AB
-                                                        January 23, 2017
+                                                       February 23, 2017
 
 
                   Secure group communication for CoAP
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on July 27, 2017.
+   This Internet-Draft will expire on August 27, 2017.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Tiloca, et al.            Expires July 27, 2017                 [Page 1]
+Tiloca, et al.           Expires August 27, 2017                [Page 1]
 
-Internet-Draft     Secure group communication for CoAP      January 2017
+Internet-Draft     Secure group communication for CoAP     February 2017
 
 
    (http://trustee.ietf.org/license-info) in effect on the date of
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Tiloca, et al.            Expires July 27, 2017                 [Page 2]
+Tiloca, et al.           Expires August 27, 2017                [Page 2]
 
-Internet-Draft     Secure group communication for CoAP      January 2017
+Internet-Draft     Secure group communication for CoAP     February 2017
 
 
    [I-D.ietf-cose-msg] and provides end-to-end encryption, integrity,
@@ -165,9 +165,9 @@ Internet-Draft     Secure group communication for CoAP      January 2017
 
 
 
-Tiloca, et al.            Expires July 27, 2017                 [Page 3]
+Tiloca, et al.           Expires August 27, 2017                [Page 3]
 
-Internet-Draft     Secure group communication for CoAP      January 2017
+Internet-Draft     Secure group communication for CoAP     February 2017
 
 
       members.  A GM can be responsible for multiple multicast groups,
@@ -221,9 +221,9 @@ Internet-Draft     Secure group communication for CoAP      January 2017
 
 
 
-Tiloca, et al.            Expires July 27, 2017                 [Page 4]
+Tiloca, et al.           Expires August 27, 2017                [Page 4]
 
-Internet-Draft     Secure group communication for CoAP      January 2017
+Internet-Draft     Secure group communication for CoAP     February 2017
 
 
    o  Multicast data security ciphersuite: all group members MUST agree
@@ -277,9 +277,9 @@ Internet-Draft     Secure group communication for CoAP      January 2017
 
 
 
-Tiloca, et al.            Expires July 27, 2017                 [Page 5]
+Tiloca, et al.           Expires August 27, 2017                [Page 5]
 
-Internet-Draft     Secure group communication for CoAP      January 2017
+Internet-Draft     Secure group communication for CoAP     February 2017
 
 
       much smaller than the number of listeners (i.e. the controlled
@@ -333,9 +333,9 @@ Internet-Draft     Secure group communication for CoAP      January 2017
 
 
 
-Tiloca, et al.            Expires July 27, 2017                 [Page 6]
+Tiloca, et al.           Expires August 27, 2017                [Page 6]
 
-Internet-Draft     Secure group communication for CoAP      January 2017
+Internet-Draft     Secure group communication for CoAP     February 2017
 
 
 3.  Scope Description
@@ -389,9 +389,9 @@ Internet-Draft     Secure group communication for CoAP      January 2017
 
 
 
-Tiloca, et al.            Expires July 27, 2017                 [Page 7]
+Tiloca, et al.           Expires August 27, 2017                [Page 7]
 
-Internet-Draft     Secure group communication for CoAP      January 2017
+Internet-Draft     Secure group communication for CoAP     February 2017
 
 
    context as defined in Section 3 of [I-D.ietf-core-object-security].
@@ -445,9 +445,9 @@ Internet-Draft     Secure group communication for CoAP      January 2017
 
 
 
-Tiloca, et al.            Expires July 27, 2017                 [Page 8]
+Tiloca, et al.           Expires August 27, 2017                [Page 8]
 
-Internet-Draft     Secure group communication for CoAP      January 2017
+Internet-Draft     Secure group communication for CoAP     February 2017
 
 
    1.  Upon receiving a secure CoAP message, the recipient endpoint
@@ -501,9 +501,9 @@ Internet-Draft     Secure group communication for CoAP      January 2017
 
 
 
-Tiloca, et al.            Expires July 27, 2017                 [Page 9]
+Tiloca, et al.           Expires August 27, 2017                [Page 9]
 
-Internet-Draft     Secure group communication for CoAP      January 2017
+Internet-Draft     Secure group communication for CoAP     February 2017
 
 
    In addition, it is required that all group members are trusted, i.e.
@@ -557,9 +557,9 @@ Internet-Draft     Secure group communication for CoAP      January 2017
 
 
 
-Tiloca, et al.            Expires July 27, 2017                [Page 10]
+Tiloca, et al.           Expires August 27, 2017               [Page 10]
 
-Internet-Draft     Secure group communication for CoAP      January 2017
+Internet-Draft     Secure group communication for CoAP     February 2017
 
 
    confirmation of the sequence number in the first received multicast
@@ -613,9 +613,9 @@ Internet-Draft     Secure group communication for CoAP      January 2017
 
 
 
-Tiloca, et al.            Expires July 27, 2017                [Page 11]
+Tiloca, et al.           Expires August 27, 2017               [Page 11]
 
-Internet-Draft     Secure group communication for CoAP      January 2017
+Internet-Draft     Secure group communication for CoAP     February 2017
 
 
 8.  Acknowledgments
@@ -657,7 +657,7 @@ Internet-Draft     Secure group communication for CoAP      January 2017
               Seitz, L., Selander, G., Wahlstroem, E., Erdtman, S., and
               H. Tschofenig, "Authentication and Authorization for
               Constrained Environments (ACE)", draft-ietf-ace-oauth-
-              authz-04 (work in progress), October 2016.
+              authz-05 (work in progress), February 2017.
 
    [I-D.seitz-ace-oscoap-profile]
               Seitz, L. and F. Palombini, "OSCOAP profile of ACE",
@@ -669,9 +669,9 @@ Internet-Draft     Secure group communication for CoAP      January 2017
 
 
 
-Tiloca, et al.            Expires July 27, 2017                [Page 12]
+Tiloca, et al.           Expires August 27, 2017               [Page 12]
 
-Internet-Draft     Secure group communication for CoAP      January 2017
+Internet-Draft     Secure group communication for CoAP     February 2017
 
 
    [I-D.selander-ace-cose-ecdhe]
@@ -725,9 +725,9 @@ Internet-Draft     Secure group communication for CoAP      January 2017
 
 
 
-Tiloca, et al.            Expires July 27, 2017                [Page 13]
+Tiloca, et al.           Expires August 27, 2017               [Page 13]
 
-Internet-Draft     Secure group communication for CoAP      January 2017
+Internet-Draft     Secure group communication for CoAP     February 2017
 
 
    [RFC7390]  Rahman, A., Ed. and E. Dijk, Ed., "Group Communication for
@@ -752,8 +752,9 @@ Appendix A.  Group Joining Based on the ACE Framework
       the joining endpoint to the Group Manager and its join-resources.
 
    Then, in accordance with [I-D.seitz-ace-oscoap-profile], the joining
-   endpoint and the Group Manager rely on OSCOAP [RFC7252] for secure
-   communication and consider Ephemeral Diffie-Hellman Over COSE (EDHOC)
+   endpoint and the Group Manager rely on OSCOAP
+   [I-D.ietf-core-object-security] for secure communication and consider
+   Ephemeral Diffie-Hellman Over COSE (EDHOC)
    [I-D.selander-ace-cose-ecdhe] as a possible method to establish key
    material.
 
@@ -777,15 +778,15 @@ Appendix B.  List of Use Cases
    Group Communication for CoAP [RFC7390] provides the necessary
    background for multicast-based CoAP communication, with particular
    reference to low-power and lossy networks (LLNs) and resource
-   constrained environments.  The interested reader is encouraged to
 
 
 
-Tiloca, et al.            Expires July 27, 2017                [Page 14]
+Tiloca, et al.           Expires August 27, 2017               [Page 14]
 
-Internet-Draft     Secure group communication for CoAP      January 2017
+Internet-Draft     Secure group communication for CoAP     February 2017
 
 
+   constrained environments.  The interested reader is encouraged to
    first read [RFC7390] to understand the non-security related details.
    This section discusses a number of use cases that benefit from secure
    group communication.  Specific security requirements for these use
@@ -833,15 +834,15 @@ Internet-Draft     Secure group communication for CoAP      January 2017
       software and firmware updates as unicast messages to each
       individual device, multicasting such updated data to a larger
       group of devices at once displays a number of benefits.  For
-      instance, it can significantly reduce the network load and
 
 
 
-Tiloca, et al.            Expires July 27, 2017                [Page 15]
+Tiloca, et al.           Expires August 27, 2017               [Page 15]
 
-Internet-Draft     Secure group communication for CoAP      January 2017
+Internet-Draft     Secure group communication for CoAP     February 2017
 
 
+      instance, it can significantly reduce the network load and
       decrease the overall time latency for propagating this data to all
       devices.  Even if the complete whole update process itself is
       secured, securing the individual messages is important, in case
@@ -883,7 +884,7 @@ Internet-Draft     Secure group communication for CoAP      January 2017
 Authors' Addresses
 
    Marco Tiloca
-   SICS Swedish ICT
+   RISE SICS AB
    Isafjordsgatan 22
    Kista  SE-16440 Stockholm
    Sweden
@@ -892,10 +893,9 @@ Authors' Addresses
 
 
 
-
-Tiloca, et al.            Expires July 27, 2017                [Page 16]
+Tiloca, et al.           Expires August 27, 2017               [Page 16]
 
-Internet-Draft     Secure group communication for CoAP      January 2017
+Internet-Draft     Secure group communication for CoAP     February 2017
 
 
    Goeran Selander
@@ -949,4 +949,4 @@ Internet-Draft     Secure group communication for CoAP      January 2017
 
 
 
-Tiloca, et al.            Expires July 27, 2017                [Page 17]
+Tiloca, et al.           Expires August 27, 2017               [Page 17]

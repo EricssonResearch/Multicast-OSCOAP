@@ -303,7 +303,7 @@ address {
 
   <meta name="dct.creator" content="Tiloca, M., Selander, G., and F. Palombini" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-tiloca-core-multicast-oscoap-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-1-23" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-2-23" />
   <meta name="dct.abstract" content="This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast CoAP request messages and related unicast CoAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages." />
   <meta name="description" content="This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast CoAP request messages and related unicast CoAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages." />
 
@@ -320,14 +320,14 @@ address {
 </tr>
 <tr>
   <td class="left">Internet-Draft</td>
-  <td class="right">SICS Swedish ICT</td>
+  <td class="right">RISE SICS AB</td>
 </tr>
 <tr>
   <td class="left">Intended status: Standards Track</td>
   <td class="right">G. Selander</td>
 </tr>
 <tr>
-  <td class="left">Expires: July 27, 2017</td>
+  <td class="left">Expires: August 27, 2017</td>
   <td class="right">F. Palombini</td>
 </tr>
 <tr>
@@ -336,7 +336,7 @@ address {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">January 23, 2017</td>
+  <td class="right">February 23, 2017</td>
 </tr>
 
     	
@@ -356,7 +356,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on July 27, 2017.</p>
+<p>This Internet-Draft will expire on August 27, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -526,7 +526,7 @@ address {
       <td class="reference">
         <b id="I-D.ietf-ace-oauth-authz">[I-D.ietf-ace-oauth-authz]</b>
       </td>
-      <td class="top"><a>Seitz, L.</a>, <a>Selander, G.</a>, <a>Wahlstroem, E.</a>, <a>Erdtman, S.</a> and <a>H. Tschofenig</a>, "<a href="http://tools.ietf.org/html/draft-ietf-ace-oauth-authz-04">Authentication and Authorization for Constrained Environments (ACE)</a>", Internet-Draft draft-ietf-ace-oauth-authz-04, October 2016.</td>
+      <td class="top"><a>Seitz, L.</a>, <a>Selander, G.</a>, <a>Wahlstroem, E.</a>, <a>Erdtman, S.</a> and <a>H. Tschofenig</a>, "<a href="http://tools.ietf.org/html/draft-ietf-ace-oauth-authz-05">Authentication and Authorization for Constrained Environments (ACE)</a>", Internet-Draft draft-ietf-ace-oauth-authz-05, February 2017.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -611,7 +611,7 @@ address {
   <li>The Group Manager acts as Resource Server, exporting one join-resource for each multicast group it is responsible for;</li>
   <li>An Authorization Server enables and enforces authorized access of the joining endpoint to the Group Manager and its join-resources.</li>
 </ul>
-<p id="rfc.section.A.p.3">Then, in accordance with <a href="#I-D.seitz-ace-oscoap-profile">[I-D.seitz-ace-oscoap-profile]</a>, the joining endpoint and the Group Manager rely on OSCOAP <a href="#RFC7252">[RFC7252]</a> for secure communication and consider Ephemeral Diffie-Hellman Over COSE (EDHOC) <a href="#I-D.selander-ace-cose-ecdhe">[I-D.selander-ace-cose-ecdhe]</a> as a possible method to establish key material.</p>
+<p id="rfc.section.A.p.3">Then, in accordance with <a href="#I-D.seitz-ace-oscoap-profile">[I-D.seitz-ace-oscoap-profile]</a>, the joining endpoint and the Group Manager rely on OSCOAP <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a> for secure communication and consider Ephemeral Diffie-Hellman Over COSE (EDHOC) <a href="#I-D.selander-ace-cose-ecdhe">[I-D.selander-ace-cose-ecdhe]</a> as a possible method to establish key material.</p>
 <p id="rfc.section.A.p.4">The joining endpoint sends to the Group Manager an OSCOAP request to access the join-resource associated to the multicast group to join. The Group Manager replies with an OSCOAP response including the Common Context associated to that group (see <a href="#sec-context">Section 4</a>). In case the Group Manager is configured to store the public keys of group members, the joining endpoint additionally provides the Group Manager with its own public key, and MAY request from the Group Manager the public keys of the endpoints currently present in the group (see <a href="#ssec-provisioning-of-public-keys">Section 6.4</a>).</p>
 <p id="rfc.section.A.p.5">Both the joining endpoint and the Group Manager MUST adopt secure communication also for any message exchange with the Authorization Server. To this end, different alternatives are possible, including OSCOAP and DTLS <a href="#RFC6347">[RFC6347]</a>.</p>
 <h1 id="rfc.appendix.B"><a href="#rfc.appendix.B">Appendix B.</a> <a href="#sec-use-cases" id="sec-use-cases">List of Use Cases</a></h1>
@@ -637,7 +637,7 @@ address {
 		<span class="family-name">Tiloca</span>
 	  </span>
 	</span>
-	<span class="org vcardline">SICS Swedish ICT</span>
+	<span class="org vcardline">RISE SICS AB</span>
 	<span class="adr">
 	  <span class="vcardline">Isafjordsgatan 22</span>
 
