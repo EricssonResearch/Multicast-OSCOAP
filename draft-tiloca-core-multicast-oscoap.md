@@ -24,7 +24,7 @@ author:
       -
         ins: M. Tiloca
         name: Marco Tiloca
-        org: SICS Swedish ICT
+        org: RISE SICS AB
         street: Isafjordsgatan 22
         city: Kista
         code: SE-16440 Stockholm
@@ -234,7 +234,7 @@ The join process to register an endpoint as a new member of a multicast group MA
 
 * An Authorization Server enables and enforces authorized access of the joining endpoint to the Group Manager and its join-resources.
 
-Then, in accordance with {{I-D.seitz-ace-oscoap-profile}}, the joining endpoint and the Group Manager rely on OSCOAP {{RFC7252}} for secure communication and consider Ephemeral Diffie-Hellman Over COSE (EDHOC) {{I-D.selander-ace-cose-ecdhe}} as a possible method to establish key material.
+Then, in accordance with {{I-D.seitz-ace-oscoap-profile}}, the joining endpoint and the Group Manager rely on OSCOAP {{I-D.ietf-core-object-security}} for secure communication and consider Ephemeral Diffie-Hellman Over COSE (EDHOC) {{I-D.selander-ace-cose-ecdhe}} as a possible method to establish key material.
 
 The joining endpoint sends to the Group Manager an OSCOAP request to access the join-resource associated to the multicast group to join. The Group Manager replies with an OSCOAP response including the Common Context associated to that group (see {{sec-context}}). In case the Group Manager is configured to store the public keys of group members, the joining endpoint additionally provides the Group Manager with its own public key, and MAY request from the Group Manager the public keys of the endpoints currently present in the group (see {{ssec-provisioning-of-public-keys}}).
 
