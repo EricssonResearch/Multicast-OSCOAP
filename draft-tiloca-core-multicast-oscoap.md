@@ -169,7 +169,7 @@ To support multicast communication secured with OSCOAP, each endpoint registered
 
 The Sender Key/IV stored in the Sender Context and the Recipient Keys/IVs stored in the Recipient Contexts are derived according to the same scheme defined in Section 3.2 of {{I-D.ietf-core-object-security}}.
 
-Furthermore, the Transaction Identifier (Tid) specified in Section 3.1 of {{I-D.ietf-core-object-security}} is extended as the 3-tuple (Cid, Sender ID, Partial IV), i.e. it includes also the Context Identifier of the group's Security Context.
+The 3-tuple (Cid, Sender ID, Partial IV) is called Transaction Identifier (Tid), and SHALL be unique for each Base Key. The Tid is used as a unique challenge in the COSE object of the protected CoAP request. The Tid is part of the Additional Authenticated Data (AAD, see Section of 5.2 of {{I-D.ietf-core-object-security}}) of the protected CoAP response message, which is how unicast responses are bound to multicast requests.
 
 # Message Exchange # {#mess-exchange}
 
@@ -181,7 +181,7 @@ When creating a protected CoAP message, all the endpoints in the group compute t
 
 1. The "protected" field of the "Headers" field SHALL include also the following parameter:
 
-   * kid : its value is set to the Context Identifier of the group's Security Context. This parameter is optional if the message is a CoAP response.
+   * gid : its value is set to the Context Identifier (Cid) of the group's Security Context. This parameter is optional if the message is a CoAP response.
 
 2. The Additional Authenticated Data (AAD) considered to compute the COSE object is extended. In particular, the "external_aad_resp" considered for secure response messages and detailed in Figure 6 of {{I-D.ietf-core-object-security}} SHALL include also the following parameter:
 
@@ -203,7 +203,7 @@ A multicaster endpoint transmits a secure multicast request message as described
 
 Upon receiving a secure multicast request message, a listener endpoint proceeds as described in Section 6.3 of {{I-D.ietf-core-object-security}}, with the following modifications: 
 
-1. The listener endpoint retrieves the Context Identifier in the "kid" parameter of the received COSE object, and uses it to identify the correct group's Security Context.
+1. The listener endpoint retrieves the Context Identifier from the "gid" parameter of the received COSE object, and uses it to identify the correct group's Security Context.
 
 2. The listener endpoint retrieves the Sender ID from the header of the COSE object. Then, the Sender ID is used to retrieve the correct Recipient Context associated to the multicaster endpoint and used to process the request message. When receiving a secure multicast CoAP request message from that multicaster endpoint for the first time, the listener endpoint creates a new Recipient Context, initializes it according to Section 3 of {{I-D.ietf-core-object-security}}, and includes the multicaster endpoint's public key.
 
