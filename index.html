@@ -309,7 +309,7 @@ address {
 
   <meta name="dct.creator" content="Tiloca, M., Selander, G., and F. Palombini" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-tiloca-core-multicast-oscoap-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-2-25" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-3-01" />
   <meta name="dct.abstract" content="This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast CoAP request messages and related unicast CoAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages." />
   <meta name="description" content="This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast CoAP request messages and related unicast CoAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages." />
 
@@ -333,7 +333,7 @@ address {
   <td class="right">G. Selander</td>
 </tr>
 <tr>
-  <td class="left">Expires: August 29, 2017</td>
+  <td class="left">Expires: September 2, 2017</td>
   <td class="right">F. Palombini</td>
 </tr>
 <tr>
@@ -342,7 +342,7 @@ address {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">February 25, 2017</td>
+  <td class="right">March 01, 2017</td>
 </tr>
 
     	
@@ -362,7 +362,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on August 29, 2017.</p>
+<p>This Internet-Draft will expire on September 2, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -462,7 +462,7 @@ address {
   <li>one Recipient Context for each distinct endpoint from which messages are received, used to process such incoming secure messages. The endpoint creates a new Recipient Context upon receiving an incoming message from another endpoint in the group for the first time. Besides, in addition to what is defined in <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>, each Recipient Context stores also the public key of the associated other endpoint from which secure messages are received. Possible approaches to provision and retrieve public keys of group members are discussed in <a href="#ssec-provisioning-of-public-keys">Section 6.4</a>.</li>
 </ol>
 <p id="rfc.section.4.p.3">The Sender Key/IV stored in the Sender Context and the Recipient Keys/IVs stored in the Recipient Contexts are derived according to the same scheme defined in Section 3.2 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>.</p>
-<p id="rfc.section.4.p.4">Furthermore, the Transaction Identifier (Tid) specified in Section 3.1 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a> is extended as the 3-tuple (Cid, Sender ID, Partial IV), i.e. it includes also the Context Identifier of the group's Security Context.</p>
+<p id="rfc.section.4.p.4">The 3-tuple (Cid, Sender ID, Partial IV) is called Transaction Identifier (Tid), and SHALL be unique for each Base Key. The Tid is used as a unique challenge in the COSE object of the protected CoAP request. The Tid is part of the Additional Authenticated Data (AAD, see Section of 5.2 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>) of the protected CoAP response message, which is how unicast responses are bound to multicast requests.</p>
 <h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#mess-exchange" id="mess-exchange">Message Exchange</a></h1>
 <p id="rfc.section.5.p.1">Each multicast request message and unicast response message is protected and processed as specified in <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>, with the modifications described in following sections. Furthermore, error handling and processing of invalid messages are performed according to the same principles adopted in <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>.</p>
 <h1 id="rfc.section.5.1"><a href="#rfc.section.5.1">5.1.</a> <a href="#ssec-cose-object" id="ssec-cose-object">The COSE object</a></h1>
@@ -470,7 +470,7 @@ address {
 <p/>
 
 <ol>
-  <li>The "protected" field of the "Headers" field SHALL include also the following parameter:  <ul><li>kid : its value is set to the Context Identifier of the group's Security Context. This parameter is optional if the message is a CoAP response.</li></ul></li>
+  <li>The "protected" field of the "Headers" field SHALL include also the following parameter:  <ul><li>gid : its value is set to the Context Identifier (Cid) of the group's Security Context. This parameter is optional if the message is a CoAP response.</li></ul></li>
   <li>The Additional Authenticated Data (AAD) considered to compute the COSE object is extended. In particular, the "external_aad_resp" considered for secure response messages and detailed in Figure 6 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a> SHALL include also the following parameter:  <ul><li>cid : bstr, contains the Context Idenfier (Cid) of the Security Context considered to protect the request message (which is same as the Cid considered to protect the response message).</li></ul></li>
   <li>Before transmitting any secure CoAP message, the sender endpoint uses its own private key to create a counter signature of the COSE_Encrypt0 object (Appendix C.4 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>). Then, the counter signature is included in the Header of the COSE object in its "unprotected" field.</li>
 </ol>
@@ -488,7 +488,7 @@ address {
 <p/>
 
 <ol>
-  <li>The listener endpoint retrieves the Context Identifier in the "kid" parameter of the received COSE object, and uses it to identify the correct group's Security Context.</li>
+  <li>The listener endpoint retrieves the Context Identifier from the "gid" parameter of the received COSE object, and uses it to identify the correct group's Security Context.</li>
   <li>The listener endpoint retrieves the Sender ID from the header of the COSE object. Then, the Sender ID is used to retrieve the correct Recipient Context associated to the multicaster endpoint and used to process the request message. When receiving a secure multicast CoAP request message from that multicaster endpoint for the first time, the listener endpoint creates a new Recipient Context, initializes it according to Section 3 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>, and includes the multicaster endpoint's public key.</li>
   <li>The listener endpoint retrieves the corresponding public key of the multicaster  endpoint from the associated Recipient Context and uses it to verify the counter signature, before proceeding with the verification and decryption of the secure request message.</li>
 </ol>

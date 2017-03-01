@@ -5,9 +5,9 @@
 CoRE Working Group                                             M. Tiloca
 Internet-Draft                                              RISE SICS AB
 Intended status: Standards Track                             G. Selander
-Expires: August 29, 2017                                    F. Palombini
+Expires: September 2, 2017                                  F. Palombini
                                                              Ericsson AB
-                                                       February 25, 2017
+                                                          March 01, 2017
 
 
                   Secure group communication for CoAP
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 29, 2017.
+   This Internet-Draft will expire on September 2, 2017.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Tiloca, et al.           Expires August 29, 2017                [Page 1]
+Tiloca, et al.          Expires September 2, 2017               [Page 1]
 
-Internet-Draft     Secure group communication for CoAP     February 2017
+Internet-Draft     Secure group communication for CoAP        March 2017
 
 
    (http://trustee.ietf.org/license-info) in effect on the date of
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Tiloca, et al.           Expires August 29, 2017                [Page 2]
+Tiloca, et al.          Expires September 2, 2017               [Page 2]
 
-Internet-Draft     Secure group communication for CoAP     February 2017
+Internet-Draft     Secure group communication for CoAP        March 2017
 
 
    recognizes the importance to introduce a secure mode for CoAP group
@@ -165,9 +165,9 @@ Internet-Draft     Secure group communication for CoAP     February 2017
 
 
 
-Tiloca, et al.           Expires August 29, 2017                [Page 3]
+Tiloca, et al.          Expires September 2, 2017               [Page 3]
 
-Internet-Draft     Secure group communication for CoAP     February 2017
+Internet-Draft     Secure group communication for CoAP        March 2017
 
 
    o  Keying material: data that is necessary to establish and maintain
@@ -221,9 +221,9 @@ Internet-Draft     Secure group communication for CoAP     February 2017
 
 
 
-Tiloca, et al.           Expires August 29, 2017                [Page 4]
+Tiloca, et al.          Expires September 2, 2017               [Page 4]
 
-Internet-Draft     Secure group communication for CoAP     February 2017
+Internet-Draft     Secure group communication for CoAP        March 2017
 
 
       must be used to generate, revoke and (re-)distribute keying
@@ -277,9 +277,9 @@ Internet-Draft     Secure group communication for CoAP     February 2017
 
 
 
-Tiloca, et al.           Expires August 29, 2017                [Page 5]
+Tiloca, et al.          Expires September 2, 2017               [Page 5]
 
-Internet-Draft     Secure group communication for CoAP     February 2017
+Internet-Draft     Secure group communication for CoAP        March 2017
 
 
    o  Multicast group size: security solutions for group communication
@@ -333,9 +333,9 @@ Internet-Draft     Secure group communication for CoAP     February 2017
 
 
 
-Tiloca, et al.           Expires August 29, 2017                [Page 6]
+Tiloca, et al.          Expires September 2, 2017               [Page 6]
 
-Internet-Draft     Secure group communication for CoAP     February 2017
+Internet-Draft     Secure group communication for CoAP        March 2017
 
 
       other external entities which are not group members.  Message
@@ -389,9 +389,9 @@ Internet-Draft     Secure group communication for CoAP     February 2017
 
 
 
-Tiloca, et al.           Expires August 29, 2017                [Page 7]
+Tiloca, et al.          Expires September 2, 2017               [Page 7]
 
-Internet-Draft     Secure group communication for CoAP     February 2017
+Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 4.  Security Context
@@ -445,9 +445,9 @@ Internet-Draft     Secure group communication for CoAP     February 2017
 
 
 
-Tiloca, et al.           Expires August 29, 2017                [Page 8]
+Tiloca, et al.          Expires September 2, 2017               [Page 8]
 
-Internet-Draft     Secure group communication for CoAP     February 2017
+Internet-Draft     Secure group communication for CoAP        March 2017
 
 
        secure messages are received.  Possible approaches to provision
@@ -459,10 +459,13 @@ Internet-Draft     Secure group communication for CoAP     February 2017
    the same scheme defined in Section 3.2 of
    [I-D.ietf-core-object-security].
 
-   Furthermore, the Transaction Identifier (Tid) specified in
-   Section 3.1 of [I-D.ietf-core-object-security] is extended as the
-   3-tuple (Cid, Sender ID, Partial IV), i.e. it includes also the
-   Context Identifier of the group's Security Context.
+   The 3-tuple (Cid, Sender ID, Partial IV) is called Transaction
+   Identifier (Tid), and SHALL be unique for each Base Key. The Tid is
+   used as a unique challenge in the COSE object of the protected CoAP
+   request.  The Tid is part of the Additional Authenticated Data (AAD,
+   see Section of 5.2 of [I-D.ietf-core-object-security]) of the
+   protected CoAP response message, which is how unicast responses are
+   bound to multicast requests.
 
 5.  Message Exchange
 
@@ -482,7 +485,7 @@ Internet-Draft     Secure group communication for CoAP     February 2017
    1.  The "protected" field of the "Headers" field SHALL include also
        the following parameter:
 
-       *  kid : its value is set to the Context Identifier of the
+       *  gid : its value is set to the Context Identifier (Cid) of the
           group's Security Context.  This parameter is optional if the
           message is a CoAP response.
 
@@ -494,17 +497,17 @@ Internet-Draft     Secure group communication for CoAP     February 2017
 
        *  cid : bstr, contains the Context Idenfier (Cid) of the
           Security Context considered to protect the request message
+
+
+
+
+Tiloca, et al.          Expires September 2, 2017               [Page 9]
+
+Internet-Draft     Secure group communication for CoAP        March 2017
+
+
           (which is same as the Cid considered to protect the response
           message).
-
-
-
-
-
-Tiloca, et al.           Expires August 29, 2017                [Page 9]
-
-Internet-Draft     Secure group communication for CoAP     February 2017
-
 
    3.  Before transmitting any secure CoAP message, the sender endpoint
        uses its own private key to create a counter signature of the
@@ -534,8 +537,8 @@ Internet-Draft     Secure group communication for CoAP     February 2017
    endpoint proceeds as described in Section 6.3 of
    [I-D.ietf-core-object-security], with the following modifications:
 
-   1.  The listener endpoint retrieves the Context Identifier in the
-       "kid" parameter of the received COSE object, and uses it to
+   1.  The listener endpoint retrieves the Context Identifier from the
+       "gid" parameter of the received COSE object, and uses it to
        identify the correct group's Security Context.
 
    2.  The listener endpoint retrieves the Sender ID from the header of
@@ -551,16 +554,16 @@ Internet-Draft     Secure group communication for CoAP     February 2017
    3.  The listener endpoint retrieves the corresponding public key of
        the multicaster endpoint from the associated Recipient Context
        and uses it to verify the counter signature, before proceeding
+
+
+
+Tiloca, et al.          Expires September 2, 2017              [Page 10]
+
+Internet-Draft     Secure group communication for CoAP        March 2017
+
+
        with the verification and decryption of the secure request
        message.
-
-
-
-
-Tiloca, et al.           Expires August 29, 2017               [Page 10]
-
-Internet-Draft     Secure group communication for CoAP     February 2017
-
 
 5.2.3.  Protecting the Response
 
@@ -606,17 +609,17 @@ Internet-Draft     Secure group communication for CoAP     February 2017
    [I-D.ietf-core-object-security].  That is, it is based on the
    Transaction Identifier (Tid) associated to the secure multicast
    request message, which is considered by listener endpoints as part of
+
+
+
+
+Tiloca, et al.          Expires September 2, 2017              [Page 11]
+
+Internet-Draft     Secure group communication for CoAP        March 2017
+
+
    the Additional Authenticated Data when protecting their own response
    message.
-
-
-
-
-
-Tiloca, et al.           Expires August 29, 2017               [Page 11]
-
-Internet-Draft     Secure group communication for CoAP     February 2017
-
 
 6.  Security Considerations
 
@@ -666,12 +669,9 @@ Internet-Draft     Secure group communication for CoAP     February 2017
 
 
 
-
-
-
-Tiloca, et al.           Expires August 29, 2017               [Page 12]
+Tiloca, et al.          Expires September 2, 2017              [Page 12]
 
-Internet-Draft     Secure group communication for CoAP     February 2017
+Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 6.3.  Late Joining Endpoints
@@ -725,9 +725,9 @@ Internet-Draft     Secure group communication for CoAP     February 2017
 
 
 
-Tiloca, et al.           Expires August 29, 2017               [Page 13]
+Tiloca, et al.          Expires September 2, 2017              [Page 13]
 
-Internet-Draft     Secure group communication for CoAP     February 2017
+Internet-Draft     Secure group communication for CoAP        March 2017
 
 
    joining endpoint, in order to verify that it actually owns the
@@ -781,9 +781,9 @@ Internet-Draft     Secure group communication for CoAP     February 2017
 
 
 
-Tiloca, et al.           Expires August 29, 2017               [Page 14]
+Tiloca, et al.          Expires September 2, 2017              [Page 14]
 
-Internet-Draft     Secure group communication for CoAP     February 2017
+Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 9.2.  Informative References
@@ -837,9 +837,9 @@ Internet-Draft     Secure group communication for CoAP     February 2017
 
 
 
-Tiloca, et al.           Expires August 29, 2017               [Page 15]
+Tiloca, et al.          Expires September 2, 2017              [Page 15]
 
-Internet-Draft     Secure group communication for CoAP     February 2017
+Internet-Draft     Secure group communication for CoAP        March 2017
 
 
    [RFC6347]  Rescorla, E. and N. Modadugu, "Datagram Transport Layer
@@ -893,9 +893,9 @@ Appendix A.  Group Joining Based on the ACE Framework
 
 
 
-Tiloca, et al.           Expires August 29, 2017               [Page 16]
+Tiloca, et al.          Expires September 2, 2017              [Page 16]
 
-Internet-Draft     Secure group communication for CoAP     February 2017
+Internet-Draft     Secure group communication for CoAP        March 2017
 
 
    public keys of the endpoints currently present in the group (see
@@ -949,9 +949,9 @@ Appendix B.  List of Use Cases
 
 
 
-Tiloca, et al.           Expires August 29, 2017               [Page 17]
+Tiloca, et al.          Expires September 2, 2017              [Page 17]
 
-Internet-Draft     Secure group communication for CoAP     February 2017
+Internet-Draft     Secure group communication for CoAP        March 2017
 
 
       room can be configured as members of a single multicast group.
@@ -1005,9 +1005,9 @@ Internet-Draft     Secure group communication for CoAP     February 2017
 
 
 
-Tiloca, et al.           Expires August 29, 2017               [Page 18]
+Tiloca, et al.          Expires September 2, 2017              [Page 18]
 
-Internet-Draft     Secure group communication for CoAP     February 2017
+Internet-Draft     Secure group communication for CoAP        March 2017
 
 
       notifier, and relayed to multiple devices.  The latters may reply
@@ -1061,4 +1061,4 @@ Authors' Addresses
 
 
 
-Tiloca, et al.           Expires August 29, 2017               [Page 19]
+Tiloca, et al.          Expires September 2, 2017              [Page 19]
