@@ -5,9 +5,9 @@
 CoRE Working Group                                             M. Tiloca
 Internet-Draft                                              RISE SICS AB
 Intended status: Standards Track                             G. Selander
-Expires: September 2, 2017                                  F. Palombini
+Expires: September 3, 2017                                  F. Palombini
                                                              Ericsson AB
-                                                          March 01, 2017
+                                                          March 02, 2017
 
 
                   Secure group communication for CoAP
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 2, 2017.
+   This Internet-Draft will expire on September 3, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Tiloca, et al.          Expires September 2, 2017               [Page 1]
+Tiloca, et al.          Expires September 3, 2017               [Page 1]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Tiloca, et al.          Expires September 2, 2017               [Page 2]
+Tiloca, et al.          Expires September 3, 2017               [Page 2]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -156,8 +156,8 @@ Internet-Draft     Secure group communication for CoAP        March 2017
    device", "constrained-node network", is defined in [RFC7228].
 
    Terminology for protection and processing of CoAP messages through
-   OSCOAP, such as "Security Context", "Base Key", "Transaction
-   Identifier", is defined in [I-D.ietf-core-object-security].
+   OSCOAP, such as "Security Context", "Master Secret", "Master Salt",
+   is defined in [I-D.ietf-core-object-security].
 
    This document refers also to the following terminology.
 
@@ -165,7 +165,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 
-Tiloca, et al.          Expires September 2, 2017               [Page 3]
+Tiloca, et al.          Expires September 3, 2017               [Page 3]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -221,7 +221,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 
-Tiloca, et al.          Expires September 2, 2017               [Page 4]
+Tiloca, et al.          Expires September 3, 2017               [Page 4]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -277,7 +277,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 
-Tiloca, et al.          Expires September 2, 2017               [Page 5]
+Tiloca, et al.          Expires September 3, 2017               [Page 5]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -333,7 +333,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 
-Tiloca, et al.          Expires September 2, 2017               [Page 6]
+Tiloca, et al.          Expires September 3, 2017               [Page 6]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -377,7 +377,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
    pieces of information are provided by the Group Manager through out-
    of-band means or other pre-established secure channels.  Further
    details about establishment, revocation and renewal of the security
-   context and keying material is out of the scope of this document.
+   context and keying material are out of the scope of this document.
 
    According to [RFC7390], any possible proxy entity is supposed to know
    about the multicasters in the group and to not perform aggregation of
@@ -389,7 +389,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 
-Tiloca, et al.          Expires September 2, 2017               [Page 7]
+Tiloca, et al.          Expires September 3, 2017               [Page 7]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -403,13 +403,13 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
    1.  one Common Context, received from the Group Manager upon joining
        the multicast group and shared by all the endpoints in the group.
-       The Common Context contains the COSE AEAD algorithm and the Base
-       Key used to derive endpoint-based keying material (see
-       Section 3.2 of [I-D.ietf-core-object-security]).  All the
-       endpoints in the group agree on the same COSE AEAD algorithm.
-       Besides, in addition to what is defined in
-       [I-D.ietf-core-object-security], the Common Context stores the
-       following parameters:
+       The Common Context contains the COSE AEAD algorithm, the Master
+       Secret and, optionally, the Master Salt used to derive endpoint-
+       based keying material (see Section 3.2 of
+       [I-D.ietf-core-object-security]).  All the endpoints in the group
+       agree on the same COSE AEAD algorithm.  Besides, in addition to
+       what is defined in [I-D.ietf-core-object-security], the Common
+       Context stores the following parameters:
 
        *  Context Identifier (Cid).  Variable length byte string that
           identifies the Security Context.  The Cid used in a multicast
@@ -445,7 +445,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 
-Tiloca, et al.          Expires September 2, 2017               [Page 8]
+Tiloca, et al.          Expires September 3, 2017               [Page 8]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -460,10 +460,10 @@ Internet-Draft     Secure group communication for CoAP        March 2017
    [I-D.ietf-core-object-security].
 
    The 3-tuple (Cid, Sender ID, Partial IV) is called Transaction
-   Identifier (Tid), and SHALL be unique for each Base Key. The Tid is
-   used as a unique challenge in the COSE object of the protected CoAP
-   request.  The Tid is part of the Additional Authenticated Data (AAD,
-   see Section of 5.2 of [I-D.ietf-core-object-security]) of the
+   Identifier (Tid), and SHALL be unique for each Master Secret.  The
+   Tid is used as a unique challenge in the COSE object of the protected
+   CoAP request.  The Tid is part of the Additional Authenticated Data
+   (AAD, see Section of 5.2 of [I-D.ietf-core-object-security]) of the
    protected CoAP response message, which is how unicast responses are
    bound to multicast requests.
 
@@ -472,8 +472,8 @@ Internet-Draft     Secure group communication for CoAP        March 2017
    Each multicast request message and unicast response message is
    protected and processed as specified in
    [I-D.ietf-core-object-security], with the modifications described in
-   following sections.  Furthermore, error handling and processing of
-   invalid messages are performed according to the same principles
+   the following sections.  Furthermore, error handling and processing
+   of invalid messages are performed according to the same principles
    adopted in [I-D.ietf-core-object-security].
 
 5.1.  The COSE object
@@ -482,34 +482,41 @@ Internet-Draft     Secure group communication for CoAP        March 2017
    group compute the COSE object as defined in Section 5 of
    [I-D.ietf-core-object-security], with the following modifications.
 
-   1.  The "protected" field of the "Headers" field SHALL include also
+   1.  The value of the "Partial IV" parameter in the "protected" field
+       is set to the Sender Sequence Number and SHALL be present in both
+       multicast requests and unicast responses.  Specifically, a
+       multicaster endpoint sets the value of "Partial IV" to the Sender
+       Sequence Number from its own Sender Context, upon sending a
+       multicast request message.  Similarly, a listener endpoint sets
+       the value of "Partial IV" to the Sender Sequence Number from its
+       own Sender Context, upon sending a unicast response message.
+
+   2.  The "protected" field of the "Headers" field SHALL include also
        the following parameter:
 
        *  gid : its value is set to the Context Identifier (Cid) of the
           group's Security Context.  This parameter is optional if the
           message is a CoAP response.
 
-   2.  The Additional Authenticated Data (AAD) considered to compute the
-       COSE object is extended.  In particular, the "external_aad_resp"
-       considered for secure response messages and detailed in Figure 6
-       of [I-D.ietf-core-object-security] SHALL include also the
-       following parameter:
-
-       *  cid : bstr, contains the Context Idenfier (Cid) of the
-          Security Context considered to protect the request message
 
 
 
-
-Tiloca, et al.          Expires September 2, 2017               [Page 9]
+Tiloca, et al.          Expires September 3, 2017               [Page 9]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
 
+   3.  The Additional Authenticated Data (AAD) considered to compute the
+       COSE object is extended.  In particular, the "external_aad"
+       considered for secure response messages SHALL include also the
+       following parameter:
+
+       *  cid : bstr, contains the Context Idenfier (Cid) of the
+          Security Context considered to protect the request message
           (which is same as the Cid considered to protect the response
           message).
 
-   3.  Before transmitting any secure CoAP message, the sender endpoint
+   4.  Before transmitting any secure CoAP message, the sender endpoint
        uses its own private key to create a counter signature of the
        COSE_Encrypt0 object (Appendix C.4 of [I-D.ietf-cose-msg]).
        Then, the counter signature is included in the Header of the COSE
@@ -547,6 +554,14 @@ Internet-Draft     Secure group communication for CoAP        March 2017
        and used to process the request message.  When receiving a secure
        multicast CoAP request message from that multicaster endpoint for
        the first time, the listener endpoint creates a new Recipient
+
+
+
+Tiloca, et al.          Expires September 3, 2017              [Page 10]
+
+Internet-Draft     Secure group communication for CoAP        March 2017
+
+
        Context, initializes it according to Section 3 of
        [I-D.ietf-core-object-security], and includes the multicaster
        endpoint's public key.
@@ -554,14 +569,6 @@ Internet-Draft     Secure group communication for CoAP        March 2017
    3.  The listener endpoint retrieves the corresponding public key of
        the multicaster endpoint from the associated Recipient Context
        and uses it to verify the counter signature, before proceeding
-
-
-
-Tiloca, et al.          Expires September 2, 2017              [Page 10]
-
-Internet-Draft     Secure group communication for CoAP        March 2017
-
-
        with the verification and decryption of the secure request
        message.
 
@@ -603,21 +610,20 @@ Internet-Draft     Secure group communication for CoAP        March 2017
        with the verification and decryption of the secure response
        message.
 
+
+
+
+Tiloca, et al.          Expires September 3, 2017              [Page 11]
+
+Internet-Draft     Secure group communication for CoAP        March 2017
+
+
    The mapping between unicast response messages from listener endpoints
    and the associated multicast request message from a multicaster
    endpoint relies on the same principle adopted in
    [I-D.ietf-core-object-security].  That is, it is based on the
    Transaction Identifier (Tid) associated to the secure multicast
    request message, which is considered by listener endpoints as part of
-
-
-
-
-Tiloca, et al.          Expires September 2, 2017              [Page 11]
-
-Internet-Draft     Secure group communication for CoAP        March 2017
-
-
    the Additional Authenticated Data when protecting their own response
    message.
 
@@ -659,20 +665,20 @@ Internet-Draft     Secure group communication for CoAP        March 2017
    order to preserve backward confidentiality and forward
    confidentiality in the multicast group.
 
+
+
+
+
+Tiloca, et al.          Expires September 3, 2017              [Page 12]
+
+Internet-Draft     Secure group communication for CoAP        March 2017
+
+
    Especially in dynamic, large-scale, multicast groups where endpoints
    can join and leave at any time, it is important that the considered
    group key management scheme is efficient and highly scalable with the
    group size, in order to limit the impact on performance due to the
    security context and keying material update.
-
-
-
-
-
-Tiloca, et al.          Expires September 2, 2017              [Page 12]
-
-Internet-Draft     Secure group communication for CoAP        March 2017
-
 
 6.3.  Late Joining Endpoints
 
@@ -716,20 +722,20 @@ Internet-Draft     Secure group communication for CoAP        March 2017
    details about how this requirement can be fulfilled are out of the
    scope of this document.
 
+
+
+
+Tiloca, et al.          Expires September 3, 2017              [Page 13]
+
+Internet-Draft     Secure group communication for CoAP        March 2017
+
+
    Alternatively, the Group Manager can be configured to store public
    keys of group members and provide them upon request.  In such a case,
    upon joining a multicast group, an endpoint provides the Group
    Manager with its own public key, by means of the same secure channel
    used to carry out the join procedure.  After that, the Group Manager
    MUST perform a proof-of-possession challenge-response with the
-
-
-
-Tiloca, et al.          Expires September 2, 2017              [Page 13]
-
-Internet-Draft     Secure group communication for CoAP        March 2017
-
-
    joining endpoint, in order to verify that it actually owns the
    associated private key.  In case of success, the Group Manager stores
    the received public key as associated to the joining endpoint and its
@@ -769,6 +775,17 @@ Internet-Draft     Secure group communication for CoAP        March 2017
               DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
 
+
+
+
+
+
+
+Tiloca, et al.          Expires September 3, 2017              [Page 14]
+
+Internet-Draft     Secure group communication for CoAP        March 2017
+
+
    [RFC7252]  Shelby, Z., Hartke, K., and C. Bormann, "The Constrained
               Application Protocol (CoAP)", RFC 7252,
               DOI 10.17487/RFC7252, June 2014,
@@ -778,13 +795,6 @@ Internet-Draft     Secure group communication for CoAP        March 2017
               Application Protocol (CoAP)", RFC 7641,
               DOI 10.17487/RFC7641, September 2015,
               <http://www.rfc-editor.org/info/rfc7641>.
-
-
-
-Tiloca, et al.          Expires September 2, 2017              [Page 14]
-
-Internet-Draft     Secure group communication for CoAP        March 2017
-
 
 9.2.  Informative References
 
@@ -823,6 +833,15 @@ Internet-Draft     Secure group communication for CoAP        March 2017
               Networks", RFC 4944, DOI 10.17487/RFC4944, September 2007,
               <http://www.rfc-editor.org/info/rfc4944>.
 
+
+
+
+
+Tiloca, et al.          Expires September 3, 2017              [Page 15]
+
+Internet-Draft     Secure group communication for CoAP        March 2017
+
+
    [RFC4949]  Shirey, R., "Internet Security Glossary, Version 2",
               FYI 36, RFC 4949, DOI 10.17487/RFC4949, August 2007,
               <http://www.rfc-editor.org/info/rfc4949>.
@@ -831,16 +850,6 @@ Internet-Draft     Secure group communication for CoAP        March 2017
               Datagrams over IEEE 802.15.4-Based Networks", RFC 6282,
               DOI 10.17487/RFC6282, September 2011,
               <http://www.rfc-editor.org/info/rfc6282>.
-
-
-
-
-
-
-Tiloca, et al.          Expires September 2, 2017              [Page 15]
-
-Internet-Draft     Secure group communication for CoAP        March 2017
-
 
    [RFC6347]  Rescorla, E. and N. Modadugu, "Datagram Transport Layer
               Security Version 1.2", RFC 6347, DOI 10.17487/RFC6347,
@@ -880,6 +889,15 @@ Appendix A.  Group Joining Based on the ACE Framework
    endpoint and the Group Manager rely on OSCOAP
    [I-D.ietf-core-object-security] for secure communication and consider
    Ephemeral Diffie-Hellman Over COSE (EDHOC)
+
+
+
+
+Tiloca, et al.          Expires September 3, 2017              [Page 16]
+
+Internet-Draft     Secure group communication for CoAP        March 2017
+
+
    [I-D.selander-ace-cose-ecdhe] as a possible method to establish key
    material.
 
@@ -890,14 +908,6 @@ Appendix A.  Group Joining Based on the ACE Framework
    Group Manager is configured to store the public keys of group
    members, the joining endpoint additionally provides the Group Manager
    with its own public key, and MAY request from the Group Manager the
-
-
-
-Tiloca, et al.          Expires September 2, 2017              [Page 16]
-
-Internet-Draft     Secure group communication for CoAP        March 2017
-
-
    public keys of the endpoints currently present in the group (see
    Section 6.4).
 
@@ -936,6 +946,14 @@ Appendix B.  List of Use Cases
       connected lights, ensuring that the light preset (e.g. dimming
       level or color) of a large group of luminaires are changed at the
       same perceived time.  This is especially useful for providing a
+
+
+
+Tiloca, et al.          Expires September 3, 2017              [Page 17]
+
+Internet-Draft     Secure group communication for CoAP        March 2017
+
+
       visual synchronicity of light effects to the user.  Devices may
       reply back to the switches that issue on/off/dimming commands, in
       order to report about the execution of the requested operation
@@ -946,14 +964,6 @@ Appendix B.  List of Use Cases
       and air-conditioning units to pre-defined presets.  Controlled
       units can be organized into multicast groups in order to reflect
       their physical position in the building, e.g. devices in the same
-
-
-
-Tiloca, et al.          Expires September 2, 2017              [Page 17]
-
-Internet-Draft     Secure group communication for CoAP        March 2017
-
-
       room can be configured as members of a single multicast group.
       Furthermore, controlled units are expected to possibly reply back
       to the BACS issuing control commands, in order to report about the
@@ -992,6 +1002,14 @@ Internet-Draft     Secure group communication for CoAP        March 2017
    o  Commissioning of LLNs systems: a commissioning device is
       responsible for querying all devices in the local network or a
       selected subset of them, in order to discover their presence, and
+
+
+
+Tiloca, et al.          Expires September 3, 2017              [Page 18]
+
+Internet-Draft     Secure group communication for CoAP        March 2017
+
+
       be aware of their capabilities, default configuration, and
       operating conditions.  Queried devices displaying similarities in
       their capabilities and features, or sharing a common physical
@@ -1002,14 +1020,6 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
    o  Emergency multicast: a particular emergency related information
       (e.g. natural disaster) is generated and multicast by an emergency
-
-
-
-Tiloca, et al.          Expires September 2, 2017              [Page 18]
-
-Internet-Draft     Secure group communication for CoAP        March 2017
-
-
       notifier, and relayed to multiple devices.  The latters may reply
       back to the emergency notifier, in order to provide their feedback
       and local information related to the ongoing emergency.
@@ -1051,14 +1061,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-
-
-
-Tiloca, et al.          Expires September 2, 2017              [Page 19]
+Tiloca, et al.          Expires September 3, 2017              [Page 19]
