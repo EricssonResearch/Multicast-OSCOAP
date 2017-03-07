@@ -189,13 +189,11 @@ When creating a protected CoAP message, an endpoint in the group computes the CO
 
 5. Before transmitting any secure CoAP message, the sender endpoint uses its own private key to create a counter signature of the COSE_Encrypt0 object (Appendix C.4 of {{I-D.ietf-cose-msg}}). Then, the counter signature is included in the Header of the COSE object in its "unprotected" field.
 
-# Message Exchange # {#mess-exchange}
+# Message Processing # {#mess-processing}
 
 Each multicast request message and unicast response message is protected and processed as specified in {{I-D.ietf-core-object-security}}, with the modifications described in the following sections. Furthermore, error handling and processing of invalid messages are performed according to the same principles adopted in {{I-D.ietf-core-object-security}}.
 
-## Protecting CoAP Messages ## {#ssec-transmission}
-
-### Protecting the Request ### {#sssec-protect-request}
+## Protecting the Request ## {#ssec-protect-request}
 
 A multicaster endpoint transmits a secure multicast request message as described in Section 8.1 of {{I-D.ietf-core-object-security}}, with the following modifications:
 
@@ -203,7 +201,7 @@ A multicaster endpoint transmits a secure multicast request message as described
 
 2. The multicaster endpoint computes the COSE object as defined in {{sec-cose-object}} of this specification.
 
-### Verifying the Request ### {#ssec-verify-request}
+## Verifying the Request ## {#sec-verify-request}
 
 Upon receiving a secure multicast request message, a listener endpoint proceeds as described in Section 8.2 of {{I-D.ietf-core-object-security}}, with the following modifications: 
 
@@ -213,7 +211,7 @@ Upon receiving a secure multicast request message, a listener endpoint proceeds 
 
 3. The listener endpoint retrieves the corresponding public key of the multicaster  endpoint from the associated Recipient Context and uses it to verify the counter signature, before proceeding with the verification and decryption of the secure request message.
 
-### Protecting the Response ### {#sssec-protect-response}
+## Protecting the Response ## {#ssec-protect-response}
 
 A listener endpoint that has received a multicast request message MAY reply with a secure unicast response message, which is protected as described in Section 8.3 of {{I-D.ietf-core-object-security}}, with the following modifications:
 
@@ -221,7 +219,7 @@ A listener endpoint that has received a multicast request message MAY reply with
 
 2. The listener endpoint computes the COSE object as defined in {{sec-cose-object}} of this specification.
 
-### Verifying the Response ### {#ssec-verify-response}
+## Verifying the Response ## {#sec-verify-response}
 
 Upon receiving a secure unicast response message, a multicaster endpoint proceeds as described in Section 8.4 of {{I-D.ietf-core-object-security}}, with the following modifications: 
 
