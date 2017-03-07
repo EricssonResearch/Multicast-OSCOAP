@@ -283,12 +283,11 @@ address {
 <link href="#rfc.section.3" rel="Chapter" title="3 Scope Description"/>
 <link href="#rfc.section.4" rel="Chapter" title="4 Security Context"/>
 <link href="#rfc.section.5" rel="Chapter" title="5 The COSE Object"/>
-<link href="#rfc.section.6" rel="Chapter" title="6 Message Exchange"/>
-<link href="#rfc.section.6.1" rel="Chapter" title="6.1 Protecting CoAP Messages"/>
-<link href="#rfc.section.6.1.1" rel="Chapter" title="6.1.1 Protecting the Request"/>
-<link href="#rfc.section.6.1.2" rel="Chapter" title="6.1.2 Verifying the Request"/>
-<link href="#rfc.section.6.1.3" rel="Chapter" title="6.1.3 Protecting the Response"/>
-<link href="#rfc.section.6.1.4" rel="Chapter" title="6.1.4 Verifying the Response"/>
+<link href="#rfc.section.6" rel="Chapter" title="6 Message Processing"/>
+<link href="#rfc.section.6.1" rel="Chapter" title="6.1 Protecting the Request"/>
+<link href="#rfc.section.6.2" rel="Chapter" title="6.2 Verifying the Request"/>
+<link href="#rfc.section.6.3" rel="Chapter" title="6.3 Protecting the Response"/>
+<link href="#rfc.section.6.4" rel="Chapter" title="6.4 Verifying the Response"/>
 <link href="#rfc.section.7" rel="Chapter" title="7 Security Considerations"/>
 <link href="#rfc.section.7.1" rel="Chapter" title="7.1 Group-level Security"/>
 <link href="#rfc.section.7.2" rel="Chapter" title="7.2 Management of Group Keying Material"/>
@@ -380,13 +379,12 @@ address {
 <li>3.   <a href="#rfc.section.3">Scope Description</a></li>
 <li>4.   <a href="#rfc.section.4">Security Context</a></li>
 <li>5.   <a href="#rfc.section.5">The COSE Object</a></li>
-<li>6.   <a href="#rfc.section.6">Message Exchange</a></li>
-<ul><li>6.1.   <a href="#rfc.section.6.1">Protecting CoAP Messages</a></li>
-<ul><li>6.1.1.   <a href="#rfc.section.6.1.1">Protecting the Request</a></li>
-<li>6.1.2.   <a href="#rfc.section.6.1.2">Verifying the Request</a></li>
-<li>6.1.3.   <a href="#rfc.section.6.1.3">Protecting the Response</a></li>
-<li>6.1.4.   <a href="#rfc.section.6.1.4">Verifying the Response</a></li>
-</ul></ul><li>7.   <a href="#rfc.section.7">Security Considerations</a></li>
+<li>6.   <a href="#rfc.section.6">Message Processing</a></li>
+<ul><li>6.1.   <a href="#rfc.section.6.1">Protecting the Request</a></li>
+<li>6.2.   <a href="#rfc.section.6.2">Verifying the Request</a></li>
+<li>6.3.   <a href="#rfc.section.6.3">Protecting the Response</a></li>
+<li>6.4.   <a href="#rfc.section.6.4">Verifying the Response</a></li>
+</ul><li>7.   <a href="#rfc.section.7">Security Considerations</a></li>
 <ul><li>7.1.   <a href="#rfc.section.7.1">Group-level Security</a></li>
 <li>7.2.   <a href="#rfc.section.7.2">Management of Group Keying Material</a></li>
 <li>7.3.   <a href="#rfc.section.7.3">Late Joining Endpoints</a></li>
@@ -474,19 +472,18 @@ address {
   <li>The Additional Authenticated Data (AAD) considered to compute the COSE object is extended. In particular, the "external_aad" considered for secure response messages SHALL include also the following parameter:  <ul><li>cid : bstr, contains the Context Idenfier (Cid) of the Security Context considered to protect the request message (which is same as the Cid considered to protect the response message).</li></ul></li>
   <li>Before transmitting any secure CoAP message, the sender endpoint uses its own private key to create a counter signature of the COSE_Encrypt0 object (Appendix C.4 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>). Then, the counter signature is included in the Header of the COSE object in its "unprotected" field.</li>
 </ol>
-<h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#mess-exchange" id="mess-exchange">Message Exchange</a></h1>
+<h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#mess-processing" id="mess-processing">Message Processing</a></h1>
 <p id="rfc.section.6.p.1">Each multicast request message and unicast response message is protected and processed as specified in <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>, with the modifications described in the following sections. Furthermore, error handling and processing of invalid messages are performed according to the same principles adopted in <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>.</p>
-<h1 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a> <a href="#ssec-transmission" id="ssec-transmission">Protecting CoAP Messages</a></h1>
-<h1 id="rfc.section.6.1.1"><a href="#rfc.section.6.1.1">6.1.1.</a> <a href="#sssec-protect-request" id="sssec-protect-request">Protecting the Request</a></h1>
-<p id="rfc.section.6.1.1.p.1">A multicaster endpoint transmits a secure multicast request message as described in Section 8.1 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>, with the following modifications:</p>
+<h1 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a> <a href="#ssec-protect-request" id="ssec-protect-request">Protecting the Request</a></h1>
+<p id="rfc.section.6.1.p.1">A multicaster endpoint transmits a secure multicast request message as described in Section 8.1 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>, with the following modifications:</p>
 <p/>
 
 <ol>
   <li>The multicaster endpoint stores the association Token - Cid. That is, it SHALL be able to find the correct Security Context used to protect the multicast request and verify the unicast response(s) by using the CoAP Token considered in the message exchange.</li>
   <li>The multicaster endpoint computes the COSE object as defined in <a href="#sec-cose-object">Section 5</a> of this specification.</li>
 </ol>
-<h1 id="rfc.section.6.1.2"><a href="#rfc.section.6.1.2">6.1.2.</a> <a href="#ssec-verify-request" id="ssec-verify-request">Verifying the Request</a></h1>
-<p id="rfc.section.6.1.2.p.1">Upon receiving a secure multicast request message, a listener endpoint proceeds as described in Section 8.2 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>, with the following modifications:</p>
+<h1 id="rfc.section.6.2"><a href="#rfc.section.6.2">6.2.</a> <a href="#sec-verify-request" id="sec-verify-request">Verifying the Request</a></h1>
+<p id="rfc.section.6.2.p.1">Upon receiving a secure multicast request message, a listener endpoint proceeds as described in Section 8.2 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>, with the following modifications:</p>
 <p/>
 
 <ol>
@@ -494,16 +491,16 @@ address {
   <li>The listener endpoint retrieves the Sender ID from the header of the COSE object. Then, the Sender ID is used to retrieve the correct Recipient Context associated to the multicaster endpoint and used to process the request message. When receiving a secure multicast CoAP request message from that multicaster endpoint for the first time, the listener endpoint creates a new Recipient Context, initializes it according to Section 3 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>, and includes the multicaster endpoint's public key.</li>
   <li>The listener endpoint retrieves the corresponding public key of the multicaster  endpoint from the associated Recipient Context and uses it to verify the counter signature, before proceeding with the verification and decryption of the secure request message.</li>
 </ol>
-<h1 id="rfc.section.6.1.3"><a href="#rfc.section.6.1.3">6.1.3.</a> <a href="#sssec-protect-response" id="sssec-protect-response">Protecting the Response</a></h1>
-<p id="rfc.section.6.1.3.p.1">A listener endpoint that has received a multicast request message MAY reply with a secure unicast response message, which is protected as described in Section 8.3 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>, with the following modifications:</p>
+<h1 id="rfc.section.6.3"><a href="#rfc.section.6.3">6.3.</a> <a href="#ssec-protect-response" id="ssec-protect-response">Protecting the Response</a></h1>
+<p id="rfc.section.6.3.p.1">A listener endpoint that has received a multicast request message MAY reply with a secure unicast response message, which is protected as described in Section 8.3 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>, with the following modifications:</p>
 <p/>
 
 <ol>
   <li>The listener endpoint considers the Transaction Identifier (Tid) as defined in <a href="#sec-context">Section 4</a> of this specification.</li>
   <li>The listener endpoint computes the COSE object as defined in <a href="#sec-cose-object">Section 5</a> of this specification.</li>
 </ol>
-<h1 id="rfc.section.6.1.4"><a href="#rfc.section.6.1.4">6.1.4.</a> <a href="#ssec-verify-response" id="ssec-verify-response">Verifying the Response</a></h1>
-<p id="rfc.section.6.1.4.p.1">Upon receiving a secure unicast response message, a multicaster endpoint proceeds as described in Section 8.4 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>, with the following modifications:</p>
+<h1 id="rfc.section.6.4"><a href="#rfc.section.6.4">6.4.</a> <a href="#sec-verify-response" id="sec-verify-response">Verifying the Response</a></h1>
+<p id="rfc.section.6.4.p.1">Upon receiving a secure unicast response message, a multicaster endpoint proceeds as described in Section 8.4 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>, with the following modifications:</p>
 <p/>
 
 <ol>
@@ -511,7 +508,7 @@ address {
   <li>The multicaster endpoint retrieves the Sender ID from the header of the COSE object. Then, the Sender ID is used to retrieve the correct Recipient Context associated to the listener endpoint and used to process the response message. When receiving a secure CoAP response message from that listener endpoint for the first time, the multicaster endpoint creates a new Recipient Context, initializes it according to Section 3 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>, and includes the listener endpoint's public key.</li>
   <li>The multicaster endpoint retrieves the corresponding public key of the listener endpoint from the associated Recipient Context and uses it to verify the counter signature, before proceeding with the verification and decryption of the secure response message.</li>
 </ol>
-<p id="rfc.section.6.1.4.p.3">The mapping between unicast response messages from listener endpoints and the associated multicast request message from a multicaster endpoint relies on the same principle adopted in <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>. That is, it is based on the Transaction Identifier (Tid) associated to the secure multicast request message, which is considered by listener endpoints as part of the Additional Authenticated Data when protecting their own response message.</p>
+<p id="rfc.section.6.4.p.3">The mapping between unicast response messages from listener endpoints and the associated multicast request message from a multicaster endpoint relies on the same principle adopted in <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>. That is, it is based on the Transaction Identifier (Tid) associated to the secure multicast request message, which is considered by listener endpoints as part of the Additional Authenticated Data when protecting their own response message.</p>
 <h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#sec-security-considerations" id="sec-security-considerations">Security Considerations</a></h1>
 <p id="rfc.section.7.p.1">Specific security aspects to be taken into account are discussed below.</p>
 <h1 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a> <a href="#ssec-group-level-security" id="ssec-group-level-security">Group-level Security</a></h1>
