@@ -29,7 +29,7 @@ author:
         city: Kista
         code: SE-16440 Stockholm
         country: Sweden
-        email: marco@sics.se
+        email: marco.tiloca@ri.se
       -
         ins: G. Selander
         name: Goeran Selander
@@ -169,41 +169,43 @@ To support multicast communication secured with OSCOAP, each endpoint registered
 
 The Sender Key/IV stored in the Sender Context and the Recipient Keys/IVs stored in the Recipient Contexts are derived according to the same scheme defined in Section 3.2 of {{I-D.ietf-core-object-security}}.
 
-The 3-tuple (Cid, Sender ID, Partial IV) is called Transaction Identifier (Tid), and SHALL be unique for each Master Secret. The Tid is used as a unique challenge in the COSE object of the protected CoAP request. The Tid is part of the Additional Authenticated Data (AAD, see Section of 5.2 of {{I-D.ietf-core-object-security}}) of the protected CoAP response message, which is how unicast responses are bound to multicast requests.
+The 3-tuple (Cid, Sender ID, Partial IV) is called Transaction Identifier (Tid), and SHALL be unique for each Master Secret. The Tid is used as a unique challenge in the COSE object of the protected CoAP request. The Tid is part of the Additional Authenticated Data (AAD, see Section of 6.2 of {{I-D.ietf-core-object-security}}) of the protected CoAP response message, which is how unicast responses are bound to multicast requests.
+
+# The COSE Object # {#sec-cose-object}
+
+When creating a protected CoAP message, an endpoint in the group computes the COSE object as defined in Section 6 of {{I-D.ietf-core-object-security}}, with the following modifications.
+
+1. The value of the "Partial IV" parameter in the "protected" field is set to the Sender Sequence Number and SHALL be present in both multicast requests and unicast responses. Specifically, a multicaster endpoint sets the value of "Partial IV" to the Sender Sequence Number from its own Sender Context, upon sending a multicast request message. Similarly, a listener endpoint sets the value of "Partial IV" to the Sender Sequence Number from its own Sender Context, upon sending a unicast response message.
+
+2. The value of the "kid" parameter in the "protected" field is set to the Sender ID of the endpoint and SHALL be present in both multicast requests and unicast responses.
+
+3. The "protected" field of the "Headers" field SHALL include also the following parameter:
+
+   * gid : its value is set to the Context Identifier (Cid) of the group's Security Context. This parameter is optional if the message is a CoAP response.
+
+4. The Additional Authenticated Data (AAD) considered to compute the COSE object is extended. In particular, the "external_aad" considered for secure response messages SHALL include also the following parameter:
+
+   * cid : bstr, contains the Context Idenfier (Cid) of the Security Context considered to protect the request message (which is same as the Cid considered to protect the response message).
+
+5. Before transmitting any secure CoAP message, the sender endpoint uses its own private key to create a counter signature of the COSE_Encrypt0 object (Appendix C.4 of {{I-D.ietf-cose-msg}}). Then, the counter signature is included in the Header of the COSE object in its "unprotected" field.
 
 # Message Exchange # {#mess-exchange}
 
 Each multicast request message and unicast response message is protected and processed as specified in {{I-D.ietf-core-object-security}}, with the modifications described in the following sections. Furthermore, error handling and processing of invalid messages are performed according to the same principles adopted in {{I-D.ietf-core-object-security}}.
 
-## The COSE object## {#ssec-cose-object}
-
-When creating a protected CoAP message, all the endpoints in the group compute the COSE object as defined in Section 5 of {{I-D.ietf-core-object-security}}, with the following modifications.
-
-1. The value of the "Partial IV" parameter in the "protected" field is set to the Sender Sequence Number and SHALL be present in both multicast requests and unicast responses. Specifically, a multicaster endpoint sets the value of "Partial IV" to the Sender Sequence Number from its own Sender Context, upon sending a multicast request message. Similarly, a listener endpoint sets the value of "Partial IV" to the Sender Sequence Number from its own Sender Context, upon sending a unicast response message.
-
-2. The "protected" field of the "Headers" field SHALL include also the following parameter:
-
-   * gid : its value is set to the Context Identifier (Cid) of the group's Security Context. This parameter is optional if the message is a CoAP response.
-
-3. The Additional Authenticated Data (AAD) considered to compute the COSE object is extended. In particular, the "external_aad" considered for secure response messages SHALL include also the following parameter:
-
-   * cid : bstr, contains the Context Idenfier (Cid) of the Security Context considered to protect the request message (which is same as the Cid considered to protect the response message).
-
-4. Before transmitting any secure CoAP message, the sender endpoint uses its own private key to create a counter signature of the COSE_Encrypt0 object (Appendix C.4 of {{I-D.ietf-cose-msg}}). Then, the counter signature is included in the Header of the COSE object in its "unprotected" field.
-
 ## Protecting CoAP Messages ## {#ssec-transmission}
 
 ### Protecting the Request ### {#sssec-protect-request}
 
-A multicaster endpoint transmits a secure multicast request message as described in Section 6.2 of {{I-D.ietf-core-object-security}}, with the following modifications:
+A multicaster endpoint transmits a secure multicast request message as described in Section 8.1 of {{I-D.ietf-core-object-security}}, with the following modifications:
 
 1. The multicaster endpoint stores the association Token - Cid. That is, it SHALL be able to find the correct Security Context used to protect the multicast request and verify the unicast response(s) by using the CoAP Token considered in the message exchange.
 
-2. The multicaster endpoint computes the COSE object as defined in {{ssec-cose-object}} of this specification.
+2. The multicaster endpoint computes the COSE object as defined in {{sec-cose-object}} of this specification.
 
 ### Verifying the Request ### {#ssec-verify-request}
 
-Upon receiving a secure multicast request message, a listener endpoint proceeds as described in Section 6.3 of {{I-D.ietf-core-object-security}}, with the following modifications: 
+Upon receiving a secure multicast request message, a listener endpoint proceeds as described in Section 8.2 of {{I-D.ietf-core-object-security}}, with the following modifications: 
 
 1. The listener endpoint retrieves the Context Identifier from the "gid" parameter of the received COSE object, and uses it to identify the correct group's Security Context.
 
@@ -213,15 +215,15 @@ Upon receiving a secure multicast request message, a listener endpoint proceeds 
 
 ### Protecting the Response ### {#sssec-protect-response}
 
-A listener endpoint that has received a multicast request message MAY reply with a secure unicast response message, which is protected as described in Section 6.4 of {{I-D.ietf-core-object-security}}, with the following modifications:
+A listener endpoint that has received a multicast request message MAY reply with a secure unicast response message, which is protected as described in Section 8.3 of {{I-D.ietf-core-object-security}}, with the following modifications:
 
 1. The listener endpoint considers the Transaction Identifier (Tid) as defined in {{sec-context}} of this specification.
 
-2. The listener endpoint computes the COSE object as defined in {{ssec-cose-object}} of this specification.
+2. The listener endpoint computes the COSE object as defined in {{sec-cose-object}} of this specification.
 
 ### Verifying the Response ### {#ssec-verify-response}
 
-Upon receiving a secure unicast response message, a multicaster endpoint proceeds as described in Section 6.5 of {{I-D.ietf-core-object-security}}, with the following modifications: 
+Upon receiving a secure unicast response message, a multicaster endpoint proceeds as described in Section 8.4 of {{I-D.ietf-core-object-security}}, with the following modifications: 
 
 1. The multicaster endpoint considers the Security Context identified by the Token of the received response message.
 
