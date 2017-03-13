@@ -5,13 +5,13 @@
 CoRE Working Group                                             M. Tiloca
 Internet-Draft                                              RISE SICS AB
 Intended status: Standards Track                             G. Selander
-Expires: September 8, 2017                                  F. Palombini
+Expires: September 14, 2017                                 F. Palombini
                                                              Ericsson AB
-                                                          March 07, 2017
+                                                          March 13, 2017
 
 
                   Secure group communication for CoAP
-               draft-tiloca-core-multicast-oscoap-latest
+                 draft-tiloca-core-multicast-oscoap-01
 
 Abstract
 
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 8, 2017.
+   This Internet-Draft will expire on September 14, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Tiloca, et al.          Expires September 8, 2017               [Page 1]
+Tiloca, et al.         Expires September 14, 2017               [Page 1]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Tiloca, et al.          Expires September 8, 2017               [Page 2]
+Tiloca, et al.         Expires September 14, 2017               [Page 2]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -165,7 +165,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 
-Tiloca, et al.          Expires September 8, 2017               [Page 3]
+Tiloca, et al.         Expires September 14, 2017               [Page 3]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -221,7 +221,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 
-Tiloca, et al.          Expires September 8, 2017               [Page 4]
+Tiloca, et al.         Expires September 14, 2017               [Page 4]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -277,7 +277,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 
-Tiloca, et al.          Expires September 8, 2017               [Page 5]
+Tiloca, et al.         Expires September 14, 2017               [Page 5]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -333,7 +333,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 
-Tiloca, et al.          Expires September 8, 2017               [Page 6]
+Tiloca, et al.         Expires September 14, 2017               [Page 6]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -389,7 +389,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 
-Tiloca, et al.          Expires September 8, 2017               [Page 7]
+Tiloca, et al.         Expires September 14, 2017               [Page 7]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -445,7 +445,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 
-Tiloca, et al.          Expires September 8, 2017               [Page 8]
+Tiloca, et al.         Expires September 14, 2017               [Page 8]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -463,24 +463,24 @@ Internet-Draft     Secure group communication for CoAP        March 2017
    Identifier (Tid), and SHALL be unique for each Master Secret.  The
    Tid is used as a unique challenge in the COSE object of the protected
    CoAP request.  The Tid is part of the Additional Authenticated Data
-   (AAD, see Section of 6.2 of [I-D.ietf-core-object-security]) of the
+   (AAD, see Section of 5.2 of [I-D.ietf-core-object-security]) of the
    protected CoAP response message, which is how unicast responses are
    bound to multicast requests.
 
 5.  The COSE Object
 
    When creating a protected CoAP message, an endpoint in the group
-   computes the COSE object as defined in Section 6 of
+   computes the COSE object as defined in Section 5 of
    [I-D.ietf-core-object-security], with the following modifications.
 
    1.  The value of the "Partial IV" parameter in the "protected" field
-       is set to the Sender Sequence Number and SHALL be present in both
+       is set to the Sequence Number and SHALL be present in both
        multicast requests and unicast responses.  Specifically, a
-       multicaster endpoint sets the value of "Partial IV" to the Sender
+       multicaster endpoint sets the value of "Partial IV" to the
        Sequence Number from its own Sender Context, upon sending a
        multicast request message.  Similarly, a listener endpoint sets
-       the value of "Partial IV" to the Sender Sequence Number from its
-       own Sender Context, upon sending a unicast response message.
+       the value of "Partial IV" to the Sequence Number from its own
+       Sender Context, upon sending a unicast response message.
 
    2.  The value of the "kid" parameter in the "protected" field is set
        to the Sender ID of the endpoint and SHALL be present in both
@@ -501,7 +501,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 
-Tiloca, et al.          Expires September 8, 2017               [Page 9]
+Tiloca, et al.         Expires September 14, 2017               [Page 9]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -529,7 +529,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 6.1.  Protecting the Request
 
    A multicaster endpoint transmits a secure multicast request message
-   as described in Section 8.1 of [I-D.ietf-core-object-security], with
+   as described in Section 7.1 of [I-D.ietf-core-object-security], with
    the following modifications:
 
    1.  The multicaster endpoint stores the association Token - Cid. That
@@ -543,7 +543,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 6.2.  Verifying the Request
 
    Upon receiving a secure multicast request message, a listener
-   endpoint proceeds as described in Section 8.2 of
+   endpoint proceeds as described in Section 7.2 of
    [I-D.ietf-core-object-security], with the following modifications:
 
    1.  The listener endpoint retrieves the Context Identifier from the
@@ -557,7 +557,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 
-Tiloca, et al.          Expires September 8, 2017              [Page 10]
+Tiloca, et al.         Expires September 14, 2017              [Page 10]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -578,7 +578,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
    A listener endpoint that has received a multicast request message MAY
    reply with a secure unicast response message, which is protected as
-   described in Section 8.3 of [I-D.ietf-core-object-security], with the
+   described in Section 7.3 of [I-D.ietf-core-object-security], with the
    following modifications:
 
    1.  The listener endpoint considers the Transaction Identifier (Tid)
@@ -590,7 +590,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 6.4.  Verifying the Response
 
    Upon receiving a secure unicast response message, a multicaster
-   endpoint proceeds as described in Section 8.4 of
+   endpoint proceeds as described in Section 7.4 of
    [I-D.ietf-core-object-security], with the following modifications:
 
    1.  The multicaster endpoint considers the Security Context
@@ -613,7 +613,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 
-Tiloca, et al.          Expires September 8, 2017              [Page 11]
+Tiloca, et al.         Expires September 14, 2017              [Page 11]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -669,7 +669,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 
-Tiloca, et al.          Expires September 8, 2017              [Page 12]
+Tiloca, et al.         Expires September 14, 2017              [Page 12]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -725,7 +725,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 
-Tiloca, et al.          Expires September 8, 2017              [Page 13]
+Tiloca, et al.         Expires September 14, 2017              [Page 13]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -781,7 +781,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 
-Tiloca, et al.          Expires September 8, 2017              [Page 14]
+Tiloca, et al.         Expires September 14, 2017              [Page 14]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -802,7 +802,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
               Seitz, L., Selander, G., Wahlstroem, E., Erdtman, S., and
               H. Tschofenig, "Authentication and Authorization for
               Constrained Environments (ACE)", draft-ietf-ace-oauth-
-              authz-05 (work in progress), February 2017.
+              authz-06 (work in progress), March 2017.
 
    [I-D.seitz-ace-oscoap-profile]
               Seitz, L. and F. Palombini, "OSCOAP profile of ACE",
@@ -812,7 +812,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
    [I-D.selander-ace-cose-ecdhe]
               Selander, G., Mattsson, J., and F. Palombini, "Ephemeral
               Diffie-Hellman Over COSE (EDHOC)", draft-selander-ace-
-              cose-ecdhe-04 (work in progress), October 2016.
+              cose-ecdhe-05 (work in progress), March 2017.
 
    [RFC3740]  Hardjono, T. and B. Weis, "The Multicast Group Security
               Architecture", RFC 3740, DOI 10.17487/RFC3740, March 2004,
@@ -837,7 +837,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 
-Tiloca, et al.          Expires September 8, 2017              [Page 15]
+Tiloca, et al.         Expires September 14, 2017              [Page 15]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -893,7 +893,7 @@ Appendix A.  Group Joining Based on the ACE Framework
 
 
 
-Tiloca, et al.          Expires September 8, 2017              [Page 16]
+Tiloca, et al.         Expires September 14, 2017              [Page 16]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -949,7 +949,7 @@ Appendix B.  List of Use Cases
 
 
 
-Tiloca, et al.          Expires September 8, 2017              [Page 17]
+Tiloca, et al.         Expires September 14, 2017              [Page 17]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -1005,7 +1005,7 @@ Internet-Draft     Secure group communication for CoAP        March 2017
 
 
 
-Tiloca, et al.          Expires September 8, 2017              [Page 18]
+Tiloca, et al.         Expires September 14, 2017              [Page 18]
 
 Internet-Draft     Secure group communication for CoAP        March 2017
 
@@ -1061,4 +1061,4 @@ Authors' Addresses
 
 
 
-Tiloca, et al.          Expires September 8, 2017              [Page 19]
+Tiloca, et al.         Expires September 14, 2017              [Page 19]
