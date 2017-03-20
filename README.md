@@ -3,8 +3,8 @@
 This is the working area for the Individual internet-draft, "Secure group communication for CoAP".
 
 * [Editor's copy](https://EricssonResearch.github.io/Multicast-OSCOAP/)
-* [Individual Draft] (https://tools.ietf.org/html/draft-tiloca-core-multicast-oscoap)
-* [Compare Individual Draft and Editor's copy] (https://tools.ietf.org/rfcdiff?url1=https://tools.ietf.org/id/draft-tiloca-core-multicast-oscoap.txt&url2=https://EricssonResearch.github.io/Multicast-OSCOAP/draft-tiloca-core-multicast-oscoap.txt)
+* [Individual Draft](https://tools.ietf.org/html/draft-tiloca-core-multicast-oscoap)
+* [Compare Individual Draft and Editor's copy](https://tools.ietf.org/rfcdiff?url1=https://tools.ietf.org/id/draft-tiloca-core-multicast-oscoap.txt&url2=https://EricssonResearch.github.io/Multicast-OSCOAP/draft-tiloca-core-multicast-oscoap.txt)
 
 ## Building the Draft
 
