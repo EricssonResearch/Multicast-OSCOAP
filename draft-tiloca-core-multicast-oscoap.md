@@ -101,19 +101,21 @@ Terminology for protection and processing of CoAP messages through OSCOAP, such 
 
 This document refers also to the following terminology.
 
-* Keying material: data that is necessary to establish and maintain secure communication among member of a multicast group. This includes, for instance, keys, key pairs, and IVs {{RFC4949}}.
+* Keying material: data that is necessary to establish and maintain secure communication among member of a multicast group. This includes, for instance, keys and IVs {{RFC4949}}.
 
-* Group Manager (GM): entity responsible for creating a multicast group, establishing and provisioning security contexts among authorized group members, and managing the joining of new group members. A GM can be responsible for multiple multicast groups, while it is not required to be an actual group member and to take part in the group communication. The GM may also be responsible for renewing/updating security contexts and related keying material. Any message exchange with the GM MUST be secured and based on different secure channels for different endpoints.
+* Group Manager (GM): entity responsible for creating a multicast group, establishing and provisioning security contexts among authorized group members, and managing the joining of new group members. A GM can be responsible for multiple multicast groups. Besides, a GM is not required to be an actual group member and to take part in the group communication. The GM is also responsible for renewing/updating security contexts and related keying material in the multicast groups of its competence. Each endpoint in a multicast group securely communicates with the respective GM.
+
+Any message exchange with the GM MUST be secured and based on different secure channels for different endpoints.
 
 * Multicaster: member of a multicast group that sends multicast CoAP messagges intended for all members of the group. In a 1-to-N multicast group, only a single multicaster transmits data to the group; in an M-to-N multicast group (where M and N do not necessarily have the same value), M group members are multicasters.
 
 * Listener: member of a multicast group that receives multicast CoAP messages when listening to the multicast IP address associated to the multicast group. A listener MAY reply back, by sending a unicast response message to the multicaster which has sent the multicast message.
 
+* Pure listener: member of a multicast group that is configured as listener and never replies back to multicasters after receiving multicast messages.
+
 * Group request: multicast CoAP request message sent by a multicaster in the group to all listeners in the group through multicast IP.
 
-* Group response: unicast CoAP response message sent back by a listener in the group as a response to a group request received from a multicaster.
-
-* Source authentication: evidence that a received message in the group originated from a specifically identified group member. This also provides assurances that the message was not tampered with by any other group member or an adversary outside the group.
+* Source authentication: evidence that a received message in the group originated from a specifically identified group member. This also provides assurances that the message was not tampered with either by a different group member or by a non-group member.
     
 # Requirements # {#sec-requirements}
 
@@ -129,25 +131,27 @@ The following security requirements are out of the scope of this document and ar
 
 The following security requirements need to be fulfilled by the approach described in this document:
 
-* Multicast communication topology: this document considers both 1-to-N (one multicaster and multiple listeners) and M-to-N (multiple multicasters and multiple listeners) communication topologies. The 1-to-N communication topology is the simplest group communication scenario that would serve the needs of a typical LLN. For instance, in the lighting control use case, switches are the only entities responsible for sending commands to a group of lighting devices. In more advanced lighting control use cases, a M-to-N communication topology would be required, for instance in case multiple sensors (presence or day-light) are responsible to trigger events to a group of lighting devices.
+* Multicast communication topology: this document considers both 1-to-N (one multicaster and multiple listeners) and M-to-N (multiple multicasters and multiple listeners) communication topologies. The 1-to-N communication topology is the simplest group communication scenario that would serve the needs of a typical LLN. For instance, in a typical lighting control use case, a single switch is the only entity responsible for sending commands to a group of lighting devices. In more advanced lighting control use cases, a M-to-N communication topology would be required, for instance in case multiple sensors (presence or day-light) are responsible to trigger events to a group of lighting devices.
 
 * Multicast group size: security solutions for group communication SHOULD be able to adequately support different, possibly large, group sizes. Group size is the combination of the number of multicasters and listeners in a multicast group, with possible overlap (i.e. a multicaster MAY also be a listener at the same time). In the use cases mentioned in this document, the number of multicasters (normally the controlling devices) is expected to be much smaller than the number of listeners (i.e. the controlled devices). A security solution for group communication that supports 1 to 50 multicasters would be able to properly cover the group sizes required for most use cases that are relevant for this document. The total number of group members is expected to be in the range of 2 to 100 devices. Groups larger than that SHOULD be divided into smaller independent multicast groups, e.g. by grouping lights in a building on a per floor basis.
 
-* Data replay protection: it MUST NOT be possible to replay a group request message or a group response message, which would disrupt the correct communication in the group and the activity of group members.
+* Data replay protection: it MUST NOT be possible to replay a group request message or a response message, which would disrupt the correct communication in the group and the activity of group members.
 
-* Group-level data confidentiality: messages sent within the multicast group SHALL be encrypted. In fact, some control commands and/or associated responses could pose unforeseen security and privacy risks to the system users, when sent as plaintext. In particular, data confidentiality MAY be required if privacy sensitive data is exchanged in the group. This document considers group-level data confidentiality since messages are encrypted at a group level, i.e. in such a way that they can be decrypted by any member of the multicast group, but not by an external adversary or other external entities.
+* Group-level data confidentiality: messages sent within the multicast group SHOULD be encrypted. In particular, messages SHALL be encrypted if privacy sensitive data is exchanged within the group. In fact, some control commands and/or associated responses could pose unforeseen security and privacy risks to the system users, when sent as plaintext. This document considers group-level data confidentiality since messages are encrypted at a group level, i.e. in such a way that they can be decrypted by any member of the multicast group, but not by an external adversary or other external entities.
 
-* Source authentication: messages sent within the multicast group SHALL be authenticated. That is, it is essential to ensure that a message is originated by a member of the group in the first place (group authentication), and in particular by a specific member of the group (source authentication). The approach proposed in this document provides both group authentication and source authentication, both for group requests originated by multicasters and group responses originated by listeners. In order to provide source authentication, outgoing messages are signed by the respective originator group member by means of its own asymmetric private key. The resulting signature is included in the COSE object.
+* Source authentication: messages sent within the multicast group SHALL be authenticated. That is, it is essential to ensure that a message is originated by a member of the group in the first place (group authentication), and in particular by a specific member of the group (source authentication). The approach proposed in this document provides both group authentication and source authentication, both for group requests originated by multicasters and responses originated by listeners. In order to provide source authentication, outgoing messages are signed by the respective originator group member by means of its own asymmetric private key. The resulting signature is included in the COSE object.
 
-* Message integrity: messages sent within the multicast group SHOULD be integrity protected. That is, it is essential to ensure that a message has not been tampered with by an external adversary or other external entities which are not group members. Message integrity is provided through the same means used to provide source authentication.
+* Message integrity: messages sent within the multicast group SHALL be integrity protected. That is, it is essential to ensure that a message has not been tampered with by an external adversary or other external entities which are not group members. Message integrity is provided through the same means used to provide source authentication.
+
+* Message ordering: it MUST be possible to determine ordering of messages coming from a single sender endpoint. Instead, it is not required to determine ordering of messages from different sender endpoints.
 
 # Scope Description # {#scope}
 
-An endpoint joins a multicast group by explicitly interacting with the responsible Group Manager. The actual join process MAY be based on the ACE framework {{I-D.ietf-ace-oauth-authz}} and the OSCOAP profile of ACE {{I-D.seitz-ace-oscoap-profile}}, as discussed in {{join-ACE-framework}}.
+An endpoint joins a multicast group by explicitly interacting with the responsible Group Manager. The actual join process can be based on the ACE framework {{I-D.ietf-ace-oauth-authz}} and the OSCOAP profile of ACE {{I-D.seitz-ace-oscoap-profile}}, as discussed in {{join-ACE-framework}}.
 
-An endpoint registered as member of a group can behave as a multicaster and/or as a listener. As a multicaster, it can transmit multicast request messages to the group. As a listener, it receives multicast request messages from any multicaster in the group, and possibly replies by transmitting unicast response messages. A number of use cases that benefit from secure group communication are discussed in {{sec-use-cases}}. Upon joining the group, endpoints are not required to know how many and what endpoints are active in the same group.
+An endpoint registered as member of a group can behave as a multicaster and/or as a listener. As a multicaster, it can transmit multicast request messages to the group. As a listener, it receives multicast request messages from any multicaster in the group, and possibly replies by transmitting unicast response messages. A pure listener never replies to multicast request messages. A number of use cases that benefit from secure group communication are discussed in {{sec-use-cases}}. Upon joining the group, endpoints are not required to know how many and what endpoints are active in the same group.
 
-An endpoint which is registered as member of a group is identified by an endpoint ID, which is not necessarily related to any protocol-relevant identifiers, such as IP addresses. The Group Manager generates and manages endpoint IDs in order to ensure their uniqueness within a same multicast group. That is, there cannot be multiple endpoints that belong to the same group and are associated to a same endpoint ID.
+An endpoint is identified by an endpoint ID provided by the Group Manager upon joining the group, unless configured exclusively as pure listener. That is, pure listener endpoints are not associated to and are not provided with an endpoint ID. The Group Manager generates and manages endpoint IDs in order to ensure their uniqueness within a same multicast group. That is, within a single multicast group, the same endpoint ID cannot be associated to more endpoints at the same time. Endpoint IDs are not necessarily related to any protocol-relevant identifiers, such as IP addresses.
 
 In order to participate in the secure group communication, an endpoint needs to maintain additional information elements, stored in its own security context. Those include keying material used to protect and verify group messages, as well as the public keys of other endpoints in the groups, in order to verify digital signatures of secure messages and ensure their source authenticity. These pieces of information are provided by the Group Manager through out-of-band means or other pre-established secure channels. Further details about establishment, revocation and renewal of the security context and keying material are out of the scope of this document.
 
@@ -163,7 +167,7 @@ To support multicast communication secured with OSCOAP, each endpoint registered
 
    * Counter signature algorithm. Value that identifies the algorithm used for source authenticating messages sent within the group. Its value is immutable once the security context is established. All the endpoints in the group agree on the same counter signature algorithm.
 
-2. one Sender Context, used to secure outgoing messages. In particular, the Sender Context is initialized according to Section 3 of {{I-D.ietf-core-object-security}}, once the endpoint has joined the multicast group. Besides, in addition to what is defined in {{I-D.ietf-core-object-security}}, the Sender Context stores also the endpoint's asymmetric public-private key pair;
+2. one Sender Context, unless the endpoint is configured exclusively as pure listener. The Sender Context is used to secure outgoing messages and is initialized according to Section 3 of {{I-D.ietf-core-object-security}}, once the endpoint has joined the multicast group. In particular, the Sender ID in the Sender Context coincides with the endpoint ID received upon joining the group. As stated in {{scope}}, it is responsibility of the Group Manager to assign endpoint IDs to new joining endpoints in such a way that uniquess is ensured within the multicast group. Besides, in addition to what is defined in {{I-D.ietf-core-object-security}}, the Sender Context stores also the endpoint's asymmetric public-private key pair.
 
 3. one Recipient Context for each distinct endpoint from which messages are received, used to process such incoming secure messages. The endpoint creates a new Recipient Context upon receiving an incoming message from another endpoint in the group for the first time. Besides, in addition to what is defined in {{I-D.ietf-core-object-security}}, each Recipient Context stores also the public key of the associated other endpoint from which secure messages are received. Possible approaches to provision and retrieve public keys of group members are discussed in {{ssec-provisioning-of-public-keys}}.
 
@@ -175,19 +179,21 @@ The 3-tuple (Cid, Sender ID, Partial IV) is called Transaction Identifier (Tid),
 
 When creating a protected CoAP message, an endpoint in the group computes the COSE object as defined in Section 5 of {{I-D.ietf-core-object-security}}, with the following modifications.
 
-1. The value of the "Partial IV" parameter in the "protected" field is set to the Sequence Number and SHALL be present in both multicast requests and unicast responses. Specifically, a multicaster endpoint sets the value of "Partial IV" to the Sequence Number from its own Sender Context, upon sending a multicast request message. Similarly, a listener endpoint sets the value of "Partial IV" to the Sequence Number from its own Sender Context, upon sending a unicast response message.
+1. The value of the "Partial IV" parameter in the "unprotected" field is set to the Sequence Number and SHALL be present in both multicast requests and unicast responses. Specifically, a multicaster endpoint sets the value of "Partial IV" to the Sequence Number from its own Sender Context, upon sending a multicast request message. Unlike described in Section 5 of {{I-D.ietf-core-object-security}}, a listener endpoint explicitly sets the value of "Partial IV" to the Sequence Number from its own Sender Context, upon sending a unicast response message.
 
-2. The value of the "kid" parameter in the "protected" field is set to the Sender ID of the endpoint and SHALL be present in both multicast requests and unicast responses.
+2. The value of the "kid" parameter in the "unprotected" field is set to the Sender ID of the endpoint and SHALL be present in both multicast requests and unicast responses.
 
-3. The "protected" field of the "Headers" field SHALL include also the following parameter:
+3. The "unprotected" field of the "Headers" field SHALL include also the following parameter:
 
    * gid : its value is set to the Context Identifier (Cid) of the group's Security Context. This parameter is optional if the message is a CoAP response.
 
 4. The Additional Authenticated Data (AAD) considered to compute the COSE object is extended. In particular, the "external_aad" considered for secure response messages SHALL include also the following parameter:
 
-   * cid : bstr, contains the Context Idenfier (Cid) of the Security Context considered to protect the request message (which is same as the Cid considered to protect the response message).
+   * gid : bstr, contains the Context Idenfier (Cid) of the Security Context considered to protect the request message (which is same as the Cid considered to protect the response message).
 
-5. Before transmitting any secure CoAP message, the sender endpoint uses its own private key to create a counter signature of the COSE_Encrypt0 object (Appendix C.4 of {{I-D.ietf-cose-msg}}). Then, the counter signature is included in the Header of the COSE object in its "unprotected" field.
+   * cs : bstr, contains the counter signature of the COSE object.
+   
+5. Before transmitting any secure CoAP message, the sender endpoint uses its own private key to create a counter signature of the COSE_Encrypt0 object (Appendix C.4 of {{I-D.ietf-cose-msg}}). Then, the counter signature is included in the Header of the COSE object, in the "cs" paramenter of the "unprotected" field.
 
 # Message Processing # {#mess-processing}
 
@@ -209,7 +215,7 @@ Upon receiving a secure multicast request message, a listener endpoint proceeds 
 
 2. The listener endpoint retrieves the Sender ID from the header of the COSE object. Then, the Sender ID is used to retrieve the correct Recipient Context associated to the multicaster endpoint and used to process the request message. When receiving a secure multicast CoAP request message from that multicaster endpoint for the first time, the listener endpoint creates a new Recipient Context, initializes it according to Section 3 of {{I-D.ietf-core-object-security}}, and includes the multicaster endpoint's public key.
 
-3. The listener endpoint retrieves the corresponding public key of the multicaster  endpoint from the associated Recipient Context and uses it to verify the counter signature, before proceeding with the verification and decryption of the secure request message.
+3. The listener endpoint retrieves the corresponding public key of the multicaster endpoint from the associated Recipient Context. Then, it verifies the counter signature and unsecures the request message.
 
 ## Protecting the Response ## {#ssec-protect-response}
 
@@ -227,9 +233,9 @@ Upon receiving a secure unicast response message, a multicaster endpoint proceed
 
 2. The multicaster endpoint retrieves the Sender ID from the header of the COSE object. Then, the Sender ID is used to retrieve the correct Recipient Context associated to the listener endpoint and used to process the response message. When receiving a secure CoAP response message from that listener endpoint for the first time, the multicaster endpoint creates a new Recipient Context, initializes it according to Section 3 of {{I-D.ietf-core-object-security}}, and includes the listener endpoint's public key.
 
-3. The multicaster endpoint retrieves the corresponding public key of the listener endpoint from the associated Recipient Context and uses it to verify the counter signature, before proceeding with the verification and decryption of the secure response message.
+3. The multicaster endpoint retrieves the corresponding public key of the listener endpoint from the associated Recipient Context.Then, it verifies the counter signature and unsecures the response message.
 
-The mapping between unicast response messages from listener endpoints and the associated multicast request message from a multicaster endpoint relies on the same principle adopted in {{I-D.ietf-core-object-security}}. That is, it is based on the Transaction Identifier (Tid) associated to the secure multicast request message, which is considered by listener endpoints as part of the Additional Authenticated Data when protecting their own response message.
+The mapping between unicast response messages from listener endpoints and the associated multicast request message from a multicaster endpoint relies on the Transaction Identifier (Tid) associated to the secure multicast request message. The Tid is considered by listener endpoints as part of the Additional Authenticated Data when protecting their own response message, as described in Section {{sec-context}}.
 
 # Security Considerations  # {#sec-security-considerations} 
 
@@ -240,12 +246,12 @@ Specific security aspects to be taken into account are discussed below.
 The approach described in this document relies on commonly shared group keying material to protect communication within a multicast group. This means that messages are encrypted at a group level (group-level data confidentiality), i.e. they can be decrypted by any member of the multicast group, but not by an external adversary or other external entities.
 
 In addition, it is required that all group members are trusted, i.e. they do not forward the content of group messages to unauthorized entities. However, in many use cases, the devices in the multicast group belong to a common authority and are configured by a commissioner. For instance, in a professional lighting scenario, the roles of multicaster and listener are configured by the lighting commissioner, and devices strictly follow those roles.
-   
-Furthermore, the presented approach SHOULD take into consideration the risk of compromise of group members. Such a risk is reduced when multicast groups are deployed in physically secured locations, like lighting inside office buildings. The adoption of key management schemes for secure revocation and renewal of security contexts group keying material SHOULD be considered.
 
 ## Management of Group Keying Material ## {#ssec-group-key-management}
 
-As stated in {{sec-requirements}}, it is important to adopt a group key management scheme that SHOULD update the security context and keying material in the group, before a new endpoint joins the group or after a currently present endpoint leaves the group. This is necessary in order to preserve backward confidentiality and forward confidentiality in the multicast group.
+The presented approach should take into consideration the risk of compromise of group members. Such a risk is reduced when multicast groups are deployed in physically secured locations, like lighting inside office buildings. The adoption of key management schemes for secure revocation and renewal of security contexts and group keying material should be considered.
+
+As stated in {{sec-requirements}}, it is important to adopt a group key management scheme that SHOULD update the security context and keying material in the group, before a new endpoint joins the group or after a currently present endpoint leaves the group. This is necessary in order to preserve backward security and forward security in the multicast group.
 
 Especially in dynamic, large-scale, multicast groups where endpoints can join and leave at any time, it is important that the considered group key management scheme is efficient and highly scalable with the group size, in order to limit the impact on performance due to the security context and keying material update.
 
@@ -272,7 +278,7 @@ Note that in simple, less dynamic, multicast groups, it can be convenient for th
 This document has no actions for IANA.
 
 # Acknowledgments # {#acknowldegment}
-The authors sincerely thank Rolf Blom, Carsten Bormann, John Mattsson and Jim Schaad for their feedback and comments.
+The authors sincerely thank Rolf Blom, Carsten Bormann, John Mattsson, Jim Schaad and Stefan Beck for their feedback and comments.
 
 --- back
 
