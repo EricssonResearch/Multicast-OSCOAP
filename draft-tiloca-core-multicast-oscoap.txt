@@ -184,9 +184,6 @@ Internet-Draft     Secure group communication for CoAP        April 2017
       material in the multicast groups of its competence.  Each endpoint
       in a multicast group securely communicates with the respective GM.
 
-   Any message exchange with the GM MUST be secured and based on
-   different secure channels for different endpoints.
-
    o  Multicaster: member of a multicast group that sends multicast CoAP
       messagges intended for all members of the group.  In a 1-to-N
       multicast group, only a single multicaster transmits data to the
@@ -218,6 +215,9 @@ Internet-Draft     Secure group communication for CoAP        April 2017
    The following security requirements are out of the scope of this
    document and are assumed to be already fulfilled.
 
+   o  Establishment and management of a security context: a security
+      context must be established among the group members by the Group
+      Manager which manages the multicast group.  A secure mechanism
 
 
 
@@ -226,9 +226,6 @@ Tiloca, et al.          Expires November 1, 2017                [Page 4]
 Internet-Draft     Secure group communication for CoAP        April 2017
 
 
-   o  Establishment and management of a security context: a security
-      context must be established among the group members by the Group
-      Manager which manages the multicast group.  A secure mechanism
       must be used to generate, revoke and (re-)distribute keying
       material, multicast security policies and security parameters in
       the multicast group.  The actual establishment and management of
@@ -274,6 +271,9 @@ Internet-Draft     Secure group communication for CoAP        April 2017
       typical LLN.  For instance, in a typical lighting control use
       case, a single switch is the only entity responsible for sending
       commands to a group of lighting devices.  In more advanced
+      lighting control use cases, a M-to-N communication topology would
+      be required, for instance in case multiple sensors (presence or
+
 
 
 
@@ -282,8 +282,6 @@ Tiloca, et al.          Expires November 1, 2017                [Page 5]
 Internet-Draft     Secure group communication for CoAP        April 2017
 
 
-      lighting control use cases, a M-to-N communication topology would
-      be required, for instance in case multiple sensors (presence or
       day-light) are responsible to trigger events to a group of
       lighting devices.
 
@@ -330,6 +328,8 @@ Internet-Draft     Secure group communication for CoAP        April 2017
       authentication, outgoing messages are signed by the respective
       originator group member by means of its own asymmetric private
       key.  The resulting signature is included in the COSE object.
+
+
 
 
 
@@ -962,7 +962,7 @@ Internet-Draft     Secure group communication for CoAP        April 2017
 Appendix A.  Group Joining Based on the ACE Framework
 
    The join process to register an endpoint as a new member of a
-   multicast group MAY be based on the ACE framework
+   multicast group can be based on the ACE framework
    [I-D.ietf-ace-oauth-authz] and the OSCOAP profile of ACE
    [I-D.seitz-ace-oscoap-profile].  With reference to the terminology
    defined in OAuth 2.0 [RFC6749]:
