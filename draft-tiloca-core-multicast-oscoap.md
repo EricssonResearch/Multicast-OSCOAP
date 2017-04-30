@@ -179,21 +179,43 @@ The 3-tuple (Cid, Sender ID, Partial IV) is called Transaction Identifier (Tid),
 
 When creating a protected CoAP message, an endpoint in the group computes the COSE object as defined in Section 5 of {{I-D.ietf-core-object-security}}, with the following modifications.
 
-1. The value of the "Partial IV" parameter in the "unprotected" field is set to the Sequence Number and SHALL be present in both multicast requests and unicast responses. Specifically, a multicaster endpoint sets the value of "Partial IV" to the Sequence Number from its own Sender Context, upon sending a multicast request message. Unlike described in Section 5 of {{I-D.ietf-core-object-security}}, a listener endpoint explicitly sets the value of "Partial IV" to the Sequence Number from its own Sender Context, upon sending a unicast response message.
+1. The value of the "Partial IV" parameter in the "unprotected" field is set to the Sequence Number and SHALL always be present in both multicast requests and unicast responses. Specifically, a multicaster endpoint sets the value of "Partial IV" to the Sequence Number from its own Sender Context, upon sending a multicast request message. Furthermore, unlike described in Section 5 of {{I-D.ietf-core-object-security}}, a listener endpoint explicitly sets the value of "Partial IV" to the Sequence Number from its own Sender Context, upon sending a unicast response message.
 
-2. The value of the "kid" parameter in the "unprotected" field is set to the Sender ID of the endpoint and SHALL be present in both multicast requests and unicast responses.
+2. The value of the "kid" parameter in the "unprotected" field is set to the Sender ID of the endpoint and SHALL always be present in both multicast requests and unicast responses.
 
 3. The "unprotected" field of the "Headers" field SHALL include also the following parameter:
 
    * gid : its value is set to the Context Identifier (Cid) of the group's Security Context. This parameter is optional if the message is a CoAP response.
 
+   * cs : its value is set to the counter signature of the COSE_Encrypt0 object (Appendix C.4 of {{I-D.ietf-cose-msg}}), computed by the endpoint by means of its own private key.
+
 4. The Additional Authenticated Data (AAD) considered to compute the COSE object is extended. In particular, the "external_aad" considered for secure response messages SHALL include also the following parameter:
 
    * gid : bstr, contains the Context Idenfier (Cid) of the Security Context considered to protect the request message (which is same as the Cid considered to protect the response message).
 
-   * cs : bstr, contains the counter signature of the COSE object.
-   
-5. Before transmitting any secure CoAP message, the sender endpoint uses its own private key to create a counter signature of the COSE_Encrypt0 object (Appendix C.4 of {{I-D.ietf-cose-msg}}). Then, the counter signature is included in the Header of the COSE object, in the "cs" paramenter of the "unprotected" field.
+5. The compressed version of COSE defined in Section 8 of {{I-D.ietf-core-object-security}} is used, with the following additions for the encoding of the Object-Security option.
+
+   * The three least significant bit of the first byte SHALL NOT have value 0, since the "Partial IV" parameter is always present the compressed message for both multicast requests and unicast responses.
+
+   * The fourth least significant bit of the first byte SHALL be set to 1, to indicate the presence of the "kid" parameter in the compressed message for both multicast requests and unicast responses.
+
+   * The fifth least significant bit of the first byte SHALL be set to 1, to indicate the presence of the "gid" parameter in the compressed message for both multicast requests and unicast responses.
+
+   * The sixth least significant bit of the first byte SHALL be set to 1, to indicate the presence of the "cs" parameter including the counter signature of the COSE object.
+
+   * The following n bytes (n being the value of the Partial IV size in the first byte) encode the value of the "Partial IV", which is always present in the compressed message.
+
+   * The following byte encodes the size of the "kid" parameter and SHALL NOT have value 0.
+
+   * The following m bytes (m given by the previous byte) encode the value of the "kid" parameter.
+
+   * The following byte encodes the size of the "gid" parameter and SHALL NOT have value 0.
+
+   * The following p bytes (p given by the previous byte) encode the value of the "gid" parameter.
+
+   * The following q bytes (q given by the counter signature algorithm specified in the Security Context) encode the value of the "cs" parameter including the counter signature of the COSE object.
+
+   * The remainining bytes encode the ciphertext.
 
 # Message Processing # {#mess-processing}
 
@@ -206,6 +228,8 @@ A multicaster endpoint transmits a secure multicast request message as described
 1. The multicaster endpoint stores the association Token - Cid. That is, it SHALL be able to find the correct Security Context used to protect the multicast request and verify the unicast response(s) by using the CoAP Token considered in the message exchange.
 
 2. The multicaster endpoint computes the COSE object as defined in {{sec-cose-object}} of this specification.
+
+3. Before transmitting the multicast request message, the multicaster endpoint uses its own private key to create a counter signature of the COSE_Encrypt0 object (Appendix C.4 of {{I-D.ietf-cose-msg}}). Then, the counter signature is included in the Header of the COSE object, in the "cs" paramenter of the "unprotected" field.
 
 ## Verifying the Request ## {#sec-verify-request}
 
@@ -225,6 +249,8 @@ A listener endpoint that has received a multicast request message MAY reply with
 
 2. The listener endpoint computes the COSE object as defined in {{sec-cose-object}} of this specification.
 
+3. Before transmitting the unicast response message, the listener endpoint uses its own private key to create a counter signature of the COSE_Encrypt0 object (Appendix C.4 of {{I-D.ietf-cose-msg}}). Then, the counter signature is included in the Header of the COSE object, in the "cs" paramenter of the "unprotected" field.
+
 ## Verifying the Response ## {#sec-verify-response}
 
 Upon receiving a secure unicast response message, a multicaster endpoint proceeds as described in Section 7.4 of {{I-D.ietf-core-object-security}}, with the following modifications: 
@@ -233,7 +259,7 @@ Upon receiving a secure unicast response message, a multicaster endpoint proceed
 
 2. The multicaster endpoint retrieves the Sender ID from the header of the COSE object. Then, the Sender ID is used to retrieve the correct Recipient Context associated to the listener endpoint and used to process the response message. When receiving a secure CoAP response message from that listener endpoint for the first time, the multicaster endpoint creates a new Recipient Context, initializes it according to Section 3 of {{I-D.ietf-core-object-security}}, and includes the listener endpoint's public key.
 
-3. The multicaster endpoint retrieves the corresponding public key of the listener endpoint from the associated Recipient Context.Then, it verifies the counter signature and unsecures the response message.
+3. The multicaster endpoint retrieves the corresponding public key of the listener endpoint from the associated Recipient Context. Then, it verifies the counter signature and unsecures the response message.
 
 The mapping between unicast response messages from listener endpoints and the associated multicast request message from a multicaster endpoint relies on the Transaction Identifier (Tid) associated to the secure multicast request message. The Tid is considered by listener endpoints as part of the Additional Authenticated Data when protecting their own response message, as described in Section {{sec-context}}.
 
