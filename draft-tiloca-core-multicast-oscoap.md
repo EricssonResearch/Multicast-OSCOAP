@@ -105,8 +105,6 @@ This document refers also to the following terminology.
 
 * Group Manager (GM): entity responsible for creating a multicast group, establishing and provisioning security contexts among authorized group members, and managing the joining of new group members. A GM can be responsible for multiple multicast groups. Besides, a GM is not required to be an actual group member and to take part in the group communication. The GM is also responsible for renewing/updating security contexts and related keying material in the multicast groups of its competence. Each endpoint in a multicast group securely communicates with the respective GM.
 
-Any message exchange with the GM MUST be secured and based on different secure channels for different endpoints.
-
 * Multicaster: member of a multicast group that sends multicast CoAP messagges intended for all members of the group. In a 1-to-N multicast group, only a single multicaster transmits data to the group; in an M-to-N multicast group (where M and N do not necessarily have the same value), M group members are multicasters.
 
 * Listener: member of a multicast group that receives multicast CoAP messages when listening to the multicast IP address associated to the multicast group. A listener MAY reply back, by sending a unicast response message to the multicaster which has sent the multicast message.
@@ -310,7 +308,7 @@ The authors sincerely thank Rolf Blom, Carsten Bormann, John Mattsson, Jim Schaa
 
 # Group Joining Based on the ACE Framework # {#join-ACE-framework}
 
-The join process to register an endpoint as a new member of a multicast group MAY be based on the ACE framework {{I-D.ietf-ace-oauth-authz}} and the OSCOAP profile of ACE {{I-D.seitz-ace-oscoap-profile}}. With reference to the terminology defined in OAuth 2.0 {{RFC6749}}:
+The join process to register an endpoint as a new member of a multicast group can be based on the ACE framework {{I-D.ietf-ace-oauth-authz}} and the OSCOAP profile of ACE {{I-D.seitz-ace-oscoap-profile}}. With reference to the terminology defined in OAuth 2.0 {{RFC6749}}:
 
 * The joining endpoint acts as Client;
 
