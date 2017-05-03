@@ -63,6 +63,7 @@ informative:
   I-D.ietf-ace-oauth-authz:
   I-D.seitz-ace-oscoap-profile:
   I-D.selander-ace-cose-ecdhe:
+  I-D.somaraju-ace-multicast:
   RFC3740:
   RFC4046:
   RFC4535:
@@ -198,9 +199,9 @@ When creating a protected CoAP message, an endpoint in the group computes the CO
 
    * The fourth least significant bit of the first byte SHALL be set to 1, to indicate the presence of the "kid" parameter in the compressed message for both multicast requests and unicast responses.
 
-   * The fifth least significant bit of the first byte is set to 1 if the "gid" parameter is present, or to 0 otherwise. In order to enable group communication as described in this specification, this bit SHALL be set to 1.
+   * The fifth least significant bit of the first byte is set to 1 if the "gid" parameter is present, or to 0 otherwise. In order to enable secure group communication as described in this specification, this bit SHALL be set to 1.
 
-   * The sixth least significant bit of the first byte is set to 1 if the "cs" parameter is present, or to 0 otherwise. In order to ensure source message authentication as described in this specification, this bit SHALL be set to 1.
+   * The sixth least significant bit of the first byte is set to 1 if the "cs" parameter is present, or to 0 otherwise. In order to ensure source authentication of group messages as described in this specification, this bit SHALL be set to 1.
 
    * The following n bytes (n being the value of the Partial IV size in the first byte) encode the value of the "Partial IV", which is always present in the compressed message.
 
@@ -216,6 +217,8 @@ When creating a protected CoAP message, an endpoint in the group computes the CO
 
    * The remainining bytes encode the ciphertext.
 
+Possible alternative configurations for the encoding of the Object-Security option are discussed in {{sec-no-source-auth}}. However, their usage is NOT RECOMMENDED by this specification.
+
 # Message Processing # {#mess-processing}
 
 Each multicast request message and unicast response message is protected and processed as specified in {{I-D.ietf-core-object-security}}, with the modifications described in the following sections. Furthermore, error handling and processing of invalid messages are performed according to the same principles adopted in {{I-D.ietf-core-object-security}}.
@@ -230,7 +233,7 @@ A multicaster endpoint transmits a secure multicast request message as described
 
 3. Before transmitting the multicast request message, the multicaster endpoint uses its own private key to create a counter signature of the COSE_Encrypt0 object (Appendix C.4 of {{I-D.ietf-cose-msg}}). Then, the counter signature is included in the Header of the COSE object, in the "cs" paramenter of the "unprotected" field.
 
-## Verifying the Request ## {#sec-verify-request}
+## Verifying the Request ## {#ssec-verify-request}
 
 Upon receiving a secure multicast request message, a listener endpoint proceeds as described in Section 7.2 of {{I-D.ietf-core-object-security}}, with the following modifications: 
 
@@ -250,7 +253,7 @@ A listener endpoint that has received a multicast request message MAY reply with
 
 3. Before transmitting the unicast response message, the listener endpoint uses its own private key to create a counter signature of the COSE_Encrypt0 object (Appendix C.4 of {{I-D.ietf-cose-msg}}). Then, the counter signature is included in the Header of the COSE object, in the "cs" paramenter of the "unprotected" field.
 
-## Verifying the Response ## {#sec-verify-response}
+## Verifying the Response ## {#ssec-verify-response}
 
 Upon receiving a secure unicast response message, a multicaster endpoint proceeds as described in Section 7.4 of {{I-D.ietf-core-object-security}}, with the following modifications: 
 
@@ -339,3 +342,18 @@ Group Communication for CoAP {{RFC7390}} provides the necessary background for m
 
 * Emergency multicast: a particular emergency related information (e.g. natural disaster) is generated and multicast by an emergency notifier, and relayed to multiple devices. The latters may reply back to the emergency notifier, in order to provide their feedback and local information related to the ongoing emergency.
 
+# No Source Authentication # {#sec-no-source-auth}
+
+Some application scenarios based on group communication can display particularly strict requirements, for instance limited message latency in non-emergency lighting applications {{I-D.somaraju-ace-multicast}}. For such and similar applications, it can be inconvenient or even infeasible to ensure source authentication of group messages through approaches based on digital signatures.
+
+Due to such performance contraints and given the more relaxed security requirements of such non-crytical applications, it can be acceptable to provide only group authentication of messages exchanged within the group. This can be achieved by authenticating group messages through a key which either is commonly shared among group members or can be derived by any of them. As a result, there is evidence that a given message has been originated by a group member, although not specifically identifiable.
+
+Although this is NOT RECOMMENDED by this specification, it is possible to avoid digital signatures of group messages and provide only their group authentication as follows.
+
+* In every Security Context ({{sec-context}}): the Common Context has the "Counter signature algorithm" field set to NULL; the Sender Context does not include the asymmetric key pair associated to the endpoint; each Recipient Contexts does not include the public key associated to the respective endpoint.
+
+* When encoding the Object-Security option of a group message ({{sec-cose-object}}), the sixth least significant bit of the first byte is set to 0, to indicate that the "cs" parameter including the counter signature of the COSE object is not present.
+
+* No counter signature is computed when securing a multicast request ({{ssec-protect-request}}) or a unicast response ({{ssec-protect-response}}), while no counter signature is verified upon receiving a multicast request ({{ssec-verify-request}}) or a unicast response ({{ssec-verify-response}}).
+
+As a consequence, each message is group-authenticated by means of the AEAD algorithm and the Sender Key/IV used by the sender endpoint. Note that such Sender Key/IV can be derived by all the group members from the Sender ID and the commonly shared Master Secret and Master Salt.
