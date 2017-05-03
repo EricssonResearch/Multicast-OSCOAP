@@ -590,8 +590,8 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
        *  The remainining bytes encode the ciphertext.
 
-   Possible alternative configurations for the encoding of the Object-
-   Security option are discussed in Appendix C.  However, their usage is
+   A possible alternative configuration for the encoding of the Object-
+   Security option is discussed in Appendix C.  However, its usage is
    NOT RECOMMENDED by this specification.
 
 6.  Message Processing
