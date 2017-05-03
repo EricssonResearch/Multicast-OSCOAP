@@ -300,6 +300,7 @@ address {
 <link href="#rfc.references.2" rel="Chapter" title="10.2 Informative References"/>
 <link href="#rfc.appendix.A" rel="Chapter" title="A Group Joining Based on the ACE Framework"/>
 <link href="#rfc.appendix.B" rel="Chapter" title="B List of Use Cases"/>
+<link href="#rfc.appendix.C" rel="Chapter" title="C No Source Authentication"/>
 <link href="#rfc.authors" rel="Chapter"/>
 
 
@@ -396,6 +397,7 @@ address {
 <li>10.2.   <a href="#rfc.references.2">Informative References</a></li>
 </ul><li>Appendix A.   <a href="#rfc.appendix.A">Group Joining Based on the ACE Framework</a></li>
 <li>Appendix B.   <a href="#rfc.appendix.B">List of Use Cases</a></li>
+<li>Appendix C.   <a href="#rfc.appendix.C">No Source Authentication</a></li>
 <li><a href="#rfc.authors">Authors' Addresses</a></li>
 
 
@@ -471,8 +473,9 @@ address {
   <li>The value of the "kid" parameter in the "unprotected" field is set to the Sender ID of the endpoint and SHALL always be present in both multicast requests and unicast responses.</li>
   <li>The "unprotected" field of the "Headers" field SHALL include also the following parameter:  <ul><li>gid : its value is set to the Context Identifier (Cid) of the group's Security Context. This parameter is optional if the message is a CoAP response.</li><li>cs : its value is set to the counter signature of the COSE_Encrypt0 object (Appendix C.4 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>), computed by the endpoint by means of its own private key.</li></ul></li>
   <li>The Additional Authenticated Data (AAD) considered to compute the COSE object is extended. In particular, the "external_aad" considered for secure response messages SHALL include also the following parameter:  <ul><li>gid : bstr, contains the Context Idenfier (Cid) of the Security Context considered to protect the request message (which is same as the Cid considered to protect the response message).</li></ul></li>
-  <li>The compressed version of COSE defined in Section 8 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a> is used, with the following additions for the encoding of the Object-Security option.  <ul><li>The three least significant bit of the first byte SHALL NOT have value 0, since the "Partial IV" parameter is always present the compressed message for both multicast requests and unicast responses.</li><li>The fourth least significant bit of the first byte SHALL be set to 1, to indicate the presence of the "kid" parameter in the compressed message for both multicast requests and unicast responses.</li><li>The fifth least significant bit of the first byte is set to 1 if the "gid" parameter is present, or to 0 otherwise. In order to enable group communication as described in this specification, this bit SHALL be set to 1.</li><li>The sixth least significant bit of the first byte is set to 1 if the "cs" parameter is present, or to 0 otherwise. In order to ensure source message authentication as described in this specification, this bit SHALL be set to 1.</li><li>The following n bytes (n being the value of the Partial IV size in the first byte) encode the value of the "Partial IV", which is always present in the compressed message.</li><li>The following byte encodes the size of the "kid" parameter and SHALL NOT have value 0.</li><li>The following m bytes (m given by the previous byte) encode the value of the "kid" parameter.</li><li>The following byte encodes the size of the "gid" parameter and SHALL NOT have value 0.</li><li>The following p bytes (p given by the previous byte) encode the value of the "gid" parameter.</li><li>The following q bytes (q given by the counter signature algorithm specified in the Security Context) encode the value of the "cs" parameter including the counter signature of the COSE object.</li><li>The remainining bytes encode the ciphertext.</li></ul></li>
+  <li>The compressed version of COSE defined in Section 8 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a> is used, with the following additions for the encoding of the Object-Security option.  <ul><li>The three least significant bit of the first byte SHALL NOT have value 0, since the "Partial IV" parameter is always present the compressed message for both multicast requests and unicast responses.</li><li>The fourth least significant bit of the first byte SHALL be set to 1, to indicate the presence of the "kid" parameter in the compressed message for both multicast requests and unicast responses.</li><li>The fifth least significant bit of the first byte is set to 1 if the "gid" parameter is present, or to 0 otherwise. In order to enable secure group communication as described in this specification, this bit SHALL be set to 1.</li><li>The sixth least significant bit of the first byte is set to 1 if the "cs" parameter is present, or to 0 otherwise. In order to ensure source authentication of group messages as described in this specification, this bit SHALL be set to 1.</li><li>The following n bytes (n being the value of the Partial IV size in the first byte) encode the value of the "Partial IV", which is always present in the compressed message.</li><li>The following byte encodes the size of the "kid" parameter and SHALL NOT have value 0.</li><li>The following m bytes (m given by the previous byte) encode the value of the "kid" parameter.</li><li>The following byte encodes the size of the "gid" parameter and SHALL NOT have value 0.</li><li>The following p bytes (p given by the previous byte) encode the value of the "gid" parameter.</li><li>The following q bytes (q given by the counter signature algorithm specified in the Security Context) encode the value of the "cs" parameter including the counter signature of the COSE object.</li><li>The remainining bytes encode the ciphertext.</li></ul></li>
 </ol>
+<p id="rfc.section.5.p.3">Possible alternative configurations for the encoding of the Object-Security option are discussed in <a href="#sec-no-source-auth">Appendix C</a>. However, their usage is NOT RECOMMENDED by this specification.</p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#mess-processing" id="mess-processing">Message Processing</a></h1>
 <p id="rfc.section.6.p.1">Each multicast request message and unicast response message is protected and processed as specified in <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>, with the modifications described in the following sections. Furthermore, error handling and processing of invalid messages are performed according to the same principles adopted in <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>.</p>
 <h1 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a> <a href="#ssec-protect-request" id="ssec-protect-request">Protecting the Request</a></h1>
@@ -484,7 +487,7 @@ address {
   <li>The multicaster endpoint computes the COSE object as defined in <a href="#sec-cose-object">Section 5</a> of this specification.</li>
   <li>Before transmitting the multicast request message, the multicaster endpoint uses its own private key to create a counter signature of the COSE_Encrypt0 object (Appendix C.4 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>). Then, the counter signature is included in the Header of the COSE object, in the "cs" paramenter of the "unprotected" field.</li>
 </ol>
-<h1 id="rfc.section.6.2"><a href="#rfc.section.6.2">6.2.</a> <a href="#sec-verify-request" id="sec-verify-request">Verifying the Request</a></h1>
+<h1 id="rfc.section.6.2"><a href="#rfc.section.6.2">6.2.</a> <a href="#ssec-verify-request" id="ssec-verify-request">Verifying the Request</a></h1>
 <p id="rfc.section.6.2.p.1">Upon receiving a secure multicast request message, a listener endpoint proceeds as described in Section 7.2 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>, with the following modifications:</p>
 <p/>
 
@@ -502,7 +505,7 @@ address {
   <li>The listener endpoint computes the COSE object as defined in <a href="#sec-cose-object">Section 5</a> of this specification.</li>
   <li>Before transmitting the unicast response message, the listener endpoint uses its own private key to create a counter signature of the COSE_Encrypt0 object (Appendix C.4 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>). Then, the counter signature is included in the Header of the COSE object, in the "cs" paramenter of the "unprotected" field.</li>
 </ol>
-<h1 id="rfc.section.6.4"><a href="#rfc.section.6.4">6.4.</a> <a href="#sec-verify-response" id="sec-verify-response">Verifying the Response</a></h1>
+<h1 id="rfc.section.6.4"><a href="#rfc.section.6.4">6.4.</a> <a href="#ssec-verify-response" id="ssec-verify-response">Verifying the Response</a></h1>
 <p id="rfc.section.6.4.p.1">Upon receiving a secure unicast response message, a multicaster endpoint proceeds as described in Section 7.4 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>, with the following modifications:</p>
 <p/>
 
@@ -542,7 +545,7 @@ address {
       <td class="reference">
         <b id="I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</b>
       </td>
-      <td class="top"><a>Selander, G.</a>, <a>Mattsson, J.</a>, <a>Palombini, F.</a> and <a>L. Seitz</a>, "<a href="http://tools.ietf.org/html/draft-ietf-core-object-security-02">Object Security of CoAP (OSCOAP)</a>", Internet-Draft draft-ietf-core-object-security-02, March 2017.</td>
+      <td class="top"><a>Selander, G.</a>, <a>Mattsson, J.</a>, <a>Palombini, F.</a> and <a>L. Seitz</a>, "<a href="http://tools.ietf.org/html/draft-ietf-core-object-security-03">Object Security of CoAP (OSCOAP)</a>", Internet-Draft draft-ietf-core-object-security-03, May 2017.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -589,13 +592,19 @@ address {
       <td class="reference">
         <b id="I-D.seitz-ace-oscoap-profile">[I-D.seitz-ace-oscoap-profile]</b>
       </td>
-      <td class="top"><a>Seitz, L.</a> and <a>F. Palombini</a>, "<a href="http://tools.ietf.org/html/draft-seitz-ace-oscoap-profile-01">OSCOAP profile of ACE</a>", Internet-Draft draft-seitz-ace-oscoap-profile-01, October 2016.</td>
+      <td class="top"><a>Seitz, L.</a>, <a>Gunnarsson, M.</a> and <a>F. Palombini</a>, "<a href="http://tools.ietf.org/html/draft-seitz-ace-oscoap-profile-02">OSCOAP profile of ACE</a>", Internet-Draft draft-seitz-ace-oscoap-profile-02, May 2017.</td>
     </tr>
     <tr>
       <td class="reference">
         <b id="I-D.selander-ace-cose-ecdhe">[I-D.selander-ace-cose-ecdhe]</b>
       </td>
       <td class="top"><a>Selander, G.</a>, <a>Mattsson, J.</a> and <a>F. Palombini</a>, "<a href="http://tools.ietf.org/html/draft-selander-ace-cose-ecdhe-06">Ephemeral Diffie-Hellman Over COSE (EDHOC)</a>", Internet-Draft draft-selander-ace-cose-ecdhe-06, April 2017.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.somaraju-ace-multicast">[I-D.somaraju-ace-multicast]</b>
+      </td>
+      <td class="top"><a>Somaraju, A.</a>, <a>Kumar, S.</a>, <a>Tschofenig, H.</a> and <a>W. Werner</a>, "<a href="http://tools.ietf.org/html/draft-somaraju-ace-multicast-02">Security for Low-Latency Group Communication</a>", Internet-Draft draft-somaraju-ace-multicast-02, October 2016.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -683,6 +692,18 @@ address {
   <li>Commissioning of LLNs systems: a commissioning device is responsible for querying all devices in the local network or a selected subset of them, in order to discover their presence, and be aware of their capabilities, default configuration, and operating conditions. Queried devices displaying similarities in their capabilities and features, or sharing a common physical location can be configured as members of a single multicast group. Queried devices are expected to reply back to the commissioning device, in order to notify their presence, and provide the requested information and their current operational status.</li>
   <li>Emergency multicast: a particular emergency related information (e.g. natural disaster) is generated and multicast by an emergency notifier, and relayed to multiple devices. The latters may reply back to the emergency notifier, in order to provide their feedback and local information related to the ongoing emergency.</li>
 </ul>
+<h1 id="rfc.appendix.C"><a href="#rfc.appendix.C">Appendix C.</a> <a href="#sec-no-source-auth" id="sec-no-source-auth">No Source Authentication</a></h1>
+<p id="rfc.section.C.p.1">Some application scenarios based on group communication can display particularly strict requirements, for instance limited message latency in non-emergency lighting applications <a href="#I-D.somaraju-ace-multicast">[I-D.somaraju-ace-multicast]</a>. For such and similar applications, it can be inconvenient or even infeasible to ensure source authentication of group messages through approaches based on digital signatures.</p>
+<p id="rfc.section.C.p.2">Due to such performance contraints and given the more relaxed security requirements of such non-crytical applications, it can be acceptable to provide only group authentication of messages exchanged within the group. This can be achieved by authenticating group messages through a key which either is commonly shared among group members or can be derived by any of them. As a result, there is evidence that a given message has been originated by a group member, although not specifically identifiable.</p>
+<p id="rfc.section.C.p.3">Although this is NOT RECOMMENDED by this specification, it is possible to avoid digital signatures of group messages and provide only their group authentication as follows.</p>
+<p/>
+
+<ul>
+  <li>In every Security Context (<a href="#sec-context">Section 4</a>): the Common Context has the "Counter signature algorithm" field set to NULL; the Sender Context does not include the asymmetric key pair associated to the endpoint; each Recipient Contexts does not include the public key associated to the respective endpoint.</li>
+  <li>When encoding the Object-Security option of a group message (<a href="#sec-cose-object">Section 5</a>), the sixth least significant bit of the first byte is set to 0, to indicate that the "cs" parameter including the counter signature of the COSE object is not present.</li>
+  <li>No counter signature is computed when securing a multicast request (<a href="#ssec-protect-request">Section 6.1</a>) or a unicast response (<a href="#ssec-protect-response">Section 6.3</a>), while no counter signature is verified upon receiving a multicast request (<a href="#ssec-verify-request">Section 6.2</a>) or a unicast response (<a href="#ssec-verify-response">Section 6.4</a>).</li>
+</ul>
+<p id="rfc.section.C.p.5">As a consequence, each message is group-authenticated by means of the AEAD algorithm and the Sender Key/IV used by the sender endpoint. Note that such Sender Key/IV can be derived by all the group members from the Sender ID and the commonly shared Master Secret and Master Salt.</p>
 <h1 id="rfc.authors">
   <a href="#rfc.authors">Authors' Addresses</a>
 </h1>
