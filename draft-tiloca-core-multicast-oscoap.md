@@ -217,7 +217,7 @@ When creating a protected CoAP message, an endpoint in the group computes the CO
 
    * The remainining bytes encode the ciphertext.
 
-Possible alternative configurations for the encoding of the Object-Security option are discussed in {{sec-no-source-auth}}. However, their usage is NOT RECOMMENDED by this specification.
+A possible alternative configuration for the encoding of the Object-Security option is discussed in {{sec-no-source-auth}}. However, its usage is NOT RECOMMENDED by this specification.
 
 # Message Processing # {#mess-processing}
 
