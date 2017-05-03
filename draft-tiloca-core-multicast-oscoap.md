@@ -56,6 +56,7 @@ normative:
   RFC2119:
   RFC7252:
   RFC7641:
+  RFC8032:
 
 informative:
 
@@ -163,7 +164,7 @@ To support multicast communication secured with OSCOAP, each endpoint registered
 
    * Context Identifier (Cid). Variable length byte string that identifies the Security Context. The Cid used in a multicast group is determined by the responsible Group Manager and does not change over time. A Cid MUST be unique in the sets of all the multicast groups associated to the same Group Manager. The choice of the Cid for a given group's Security Context is application specific, but it is RECOMMENDED to use 64-bit long pseudo-random Cids, in order to have globally unique Context Identifiers. It is the role of the application to specify how to handle possible collisions.
 
-   * Counter signature algorithm. Value that identifies the algorithm used for source authenticating messages sent within the group. Its value is immutable once the security context is established. All the endpoints in the group agree on the same counter signature algorithm.
+   * Counter signature algorithm. Value that identifies the algorithm used for source authenticating messages sent within the group. Its value is immutable once the security context is established. All the endpoints in the group agree on the same counter signature algorithm. In the absence of an application profile standard specifying otherwise, a compliant application MUST implement the EdDSA signature algorithm ed25519 {{RFC8032}}.
 
 2. one Sender Context, unless the endpoint is configured exclusively as pure listener. The Sender Context is used to secure outgoing messages and is initialized according to Section 3 of {{I-D.ietf-core-object-security}}, once the endpoint has joined the multicast group. In particular, the Sender ID in the Sender Context coincides with the endpoint ID received upon joining the group. As stated in {{scope}}, it is responsibility of the Group Manager to assign endpoint IDs to new joining endpoints in such a way that uniquess is ensured within the multicast group. Besides, in addition to what is defined in {{I-D.ietf-core-object-security}}, the Sender Context stores also the endpoint's asymmetric public-private key pair.
 
@@ -197,9 +198,9 @@ When creating a protected CoAP message, an endpoint in the group computes the CO
 
    * The fourth least significant bit of the first byte SHALL be set to 1, to indicate the presence of the "kid" parameter in the compressed message for both multicast requests and unicast responses.
 
-   * The fifth least significant bit of the first byte SHALL be set to 1, to indicate the presence of the "gid" parameter in the compressed message for both multicast requests and unicast responses.
+   * The fifth least significant bit of the first byte is set to 1 if the "gid" parameter is present, or to 0 otherwise. In order to enable group communication as described in this specification, this bit SHALL be set to 1.
 
-   * The sixth least significant bit of the first byte SHALL be set to 1, to indicate the presence of the "cs" parameter including the counter signature of the COSE object.
+   * The sixth least significant bit of the first byte is set to 1 if the "cs" parameter is present, or to 0 otherwise. In order to ensure source message authentication as described in this specification, this bit SHALL be set to 1.
 
    * The following n bytes (n being the value of the Partial IV size in the first byte) encode the value of the "Partial IV", which is always present in the compressed message.
 
