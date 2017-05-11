@@ -291,7 +291,7 @@ address {
 <link href="#rfc.section.7" rel="Chapter" title="7 Security Considerations"/>
 <link href="#rfc.section.7.1" rel="Chapter" title="7.1 Group-level Security"/>
 <link href="#rfc.section.7.2" rel="Chapter" title="7.2 Management of Group Keying Material"/>
-<link href="#rfc.section.7.3" rel="Chapter" title="7.3 Late Joining Endpoints"/>
+<link href="#rfc.section.7.3" rel="Chapter" title="7.3 Synchronization of Sequence Numbers"/>
 <link href="#rfc.section.7.4" rel="Chapter" title="7.4 Provisioning of Public Keys"/>
 <link href="#rfc.section.8" rel="Chapter" title="8 IANA Considerations"/>
 <link href="#rfc.section.9" rel="Chapter" title="9 Acknowledgments"/>
@@ -389,7 +389,7 @@ address {
 </ul><li>7.   <a href="#rfc.section.7">Security Considerations</a></li>
 <ul><li>7.1.   <a href="#rfc.section.7.1">Group-level Security</a></li>
 <li>7.2.   <a href="#rfc.section.7.2">Management of Group Keying Material</a></li>
-<li>7.3.   <a href="#rfc.section.7.3">Late Joining Endpoints</a></li>
+<li>7.3.   <a href="#rfc.section.7.3">Synchronization of Sequence Numbers</a></li>
 <li>7.4.   <a href="#rfc.section.7.4">Provisioning of Public Keys</a></li>
 </ul><li>8.   <a href="#rfc.section.8">IANA Considerations</a></li>
 <li>9.   <a href="#rfc.section.9">Acknowledgments</a></li>
@@ -424,7 +424,7 @@ address {
   <li>Multicaster: member of a multicast group that sends multicast CoAP messagges intended for all members of the group. In a 1-to-N multicast group, only a single multicaster transmits data to the group; in an M-to-N multicast group (where M and N do not necessarily have the same value), M group members are multicasters.</li>
   <li>Listener: member of a multicast group that receives multicast CoAP messages when listening to the multicast IP address associated to the multicast group. A listener MAY reply back, by sending a unicast response message to the multicaster which has sent the multicast message.</li>
   <li>Pure listener: member of a multicast group that is configured as listener and never replies back to multicasters after receiving multicast messages.</li>
-  <li>Group request: multicast CoAP request message sent by a multicaster in the group to all listeners in the group through multicast IP.</li>
+  <li>Group request: multicast CoAP request message sent by a multicaster in the group to all listeners in the group through multicast IP, unless otherwise specified.</li>
   <li>Source authentication: evidence that a received message in the group originated from a specifically identified group member. This also provides assurances that the message was not tampered with either by a different group member or by a non-group member.</li>
 </ul>
 <h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> <a href="#sec-requirements" id="sec-requirements">Requirements</a></h1>
@@ -471,7 +471,7 @@ address {
 <p/>
 
 <ol>
-  <li>The value of the "Partial IV" parameter in the "unprotected" field is set to the Sequence Number and SHALL always be present in both multicast requests and unicast responses. Specifically, a multicaster endpoint sets the value of "Partial IV" to the Sequence Number from its own Sender Context, upon sending a multicast request message. Furthermore, unlike described in Section 5 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>, a listener endpoint explicitly sets the value of "Partial IV" to the Sequence Number from its own Sender Context, upon sending a unicast response message.</li>
+  <li>The value of the "Partial IV" parameter in the "unprotected" field is set to the Sequence Number used to protect the message, and SHALL always be present in both multicast requests and unicast responses. Specifically, a multicaster endpoint sets the value of "Partial IV" to the Sequence Number from its own Sender Context, upon sending a multicast request message. Furthermore, unlike described in Section 5 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>, a listener endpoint explicitly sets the value of "Partial IV" to the Sequence Number from its own Sender Context, upon sending a unicast response message.</li>
   <li>The value of the "kid" parameter in the "unprotected" field is set to the Sender ID of the endpoint and SHALL always be present in both multicast requests and unicast responses.</li>
   <li>The "unprotected" field of the "Headers" field SHALL include also the following parameter:  <ul><li>gid : its value is set to the Context Identifier (Cid) of the group's Security Context. This parameter is optional if the message is a CoAP response.</li><li>cs : its value is set to the counter signature of the COSE_Encrypt0 object (Appendix C.4 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>), computed by the endpoint by means of its own private key.</li></ul></li>
   <li>The Additional Authenticated Data (AAD) considered to compute the COSE object is extended. In particular, the "external_aad" considered for secure response messages SHALL include also the following parameter:  <ul><li>gid : bstr, contains the Context Idenfier (Cid) of the Security Context considered to protect the request message (which is same as the Cid considered to protect the response message).</li></ul></li>
@@ -527,10 +527,13 @@ address {
 <p id="rfc.section.7.2.p.1">The presented approach should take into consideration the risk of compromise of group members. Such a risk is reduced when multicast groups are deployed in physically secured locations, like lighting inside office buildings. The adoption of key management schemes for secure revocation and renewal of security contexts and group keying material should be considered.</p>
 <p id="rfc.section.7.2.p.2">As stated in <a href="#sec-requirements">Section 2</a>, it is important to adopt a group key management scheme that SHOULD update the security context and keying material in the group, before a new endpoint joins the group or after a currently present endpoint leaves the group. This is necessary in order to preserve backward security and forward security in the multicast group.</p>
 <p id="rfc.section.7.2.p.3">Especially in dynamic, large-scale, multicast groups where endpoints can join and leave at any time, it is important that the considered group key management scheme is efficient and highly scalable with the group size, in order to limit the impact on performance due to the security context and keying material update.</p>
-<h1 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a> <a href="#ssec-late-joining-endpoints" id="ssec-late-joining-endpoints">Late Joining Endpoints</a></h1>
-<p id="rfc.section.7.3.p.1">Upon joining the multicast group when the system is fully operative, listeners are not aware of the current sequence number values used by different multicasters to transmit multicast request messages. This means that, when such listeners receive a secure multicast message from a multicaster, they are not able to verify if that message is fresh and has not been replayed.</p>
-<p id="rfc.section.7.3.p.2">In order to address this issue, upon receiving a multicast message from a particular multicaster for the first time, late joining listeners can initialize their last-seen sequence number in their Recipient Context associated to that multicaster. However, after that they drop the message, without delivering it to the application layer. This provides a reference point to identify if future multicast messages from the same multicaster are fresher than the last one seen. As an alternative, a late joining listener can directly contact the multicaster, and explicitly request a confirmation of the sequence number in the first received multicast message.</p>
-<p id="rfc.section.7.3.p.3">A possible different approach considers the GM as an additional listener in the multicast group. Then, the GM can maintain the sequence number values of each multicaster in the group. When late joiners send a request to the GM to join the group, the GM can provide them with the list of sequence number values to be stored in the Recipient Contexts associated to the appropriate multicasters.</p>
+<h1 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a> <a href="#ssec-synch-seq-num" id="ssec-synch-seq-num">Synchronization of Sequence Numbers</a></h1>
+<p id="rfc.section.7.3.p.1">Upon joining the multicast group, new listeners are not aware of the sequence number values currently used by different multicasters to transmit multicast request messages. This means that, when such listeners receive a secure multicast request from a given multicaster for the first time, they are not able to verify if that request is fresh and has not been replayed. In order to address this issue, a listener can perform a challenge-response exchange with a multicaster, by using the Repeat Option for CoAP described in Section 3 of <a href="#I-D.mattsson-core-coap-actuators">[I-D.mattsson-core-coap-actuators]</a>.</p>
+<p id="rfc.section.7.3.p.2">That is, upon receiving a multicast request from a particular multicaster for the first time, the listener processes the message and, even if valid, does not deliver it to the application. Instead, the listener replies to the multicaster with a 4.03 Forbidden response message including a Repeat Option, and stores the option value included therein.</p>
+<p id="rfc.section.7.3.p.3">Upon receiving a 4.03 Forbidden response including the Repeat Option, a multicaster MUST resend the same group request as a unicast message addressed to the same listener, echoing the Repeat Option value. Note that the resent unicast message is correctly treated and processed as a group message, since the "gid" field including the Context Identifier of the OSCOAP group is still present in the Object-Security Option as part of the COSE object (see <a href="#sec-cose-object">Section 5</a>).</p>
+<p id="rfc.section.7.3.p.4">Then, upon receiving the (unicast) group request including the Repeat Option, the listener verifies that the option value equals the stored and previously sent value. In such a case, the request is further processed and delivered to the application, otherwise it is silently discarded. Furthermore, if it does not receive a valid group request including the Repeat Option within a configurable timeout period, the listener node SHOULD perform the same challenge-response upon receiving the next multicast request from that same multicaster.</p>
+<p id="rfc.section.7.3.p.5">A listener SHOULD NOT deliver group request messages from a given multicaster to the application until one group request from that same multicaster has not been verified as fresh. Also, a listener MAY perform the challenge-response described above at any time, if synchronization with sequence numbers of multicasters is (believed to be) lost, for instance after a device reboot. A multicaster MUST always be ready to perform the challenge-response based on the Repeat Option in case a listener starts it.</p>
+<p id="rfc.section.7.3.p.6">Finally, note that endpoints configured as pure listeners are not able to perform the challenge-response described above, as they do not store a Sender Context to secure the 4.03 Forbidden response to the multicaster. Therefore, pure listeners SHOULD adopt alternative approaches to achieve and maintain synchronization with sequence numbers of multicasters.</p>
 <h1 id="rfc.section.7.4"><a href="#rfc.section.7.4">7.4.</a> <a href="#ssec-provisioning-of-public-keys" id="ssec-provisioning-of-public-keys">Provisioning of Public Keys</a></h1>
 <p id="rfc.section.7.4.p.1">Upon receiving a secure CoAP message, a recipient endpoint relies on the sender endpoint's public key, in order to verify the counter signature conveyed in the COSE Object.</p>
 <p id="rfc.section.7.4.p.2">If not already stored in the Recipient Context associated to the sender endpoint, the recipient endpoint retrieves the public key from a trusted key repository. In such a case, the correct binding between the sender endpoint and the retrieved public key MUST be assured, for instance by means of public key certificates. Further details about how this requirement can be fulfilled are out of the scope of this document.</p>
@@ -590,6 +593,12 @@ address {
         <b id="I-D.ietf-ace-oauth-authz">[I-D.ietf-ace-oauth-authz]</b>
       </td>
       <td class="top"><a>Seitz, L.</a>, <a>Selander, G.</a>, <a>Wahlstroem, E.</a>, <a>Erdtman, S.</a> and <a>H. Tschofenig</a>, "<a href="http://tools.ietf.org/html/draft-ietf-ace-oauth-authz-06">Authentication and Authorization for Constrained Environments (ACE)</a>", Internet-Draft draft-ietf-ace-oauth-authz-06, March 2017.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.mattsson-core-coap-actuators">[I-D.mattsson-core-coap-actuators]</b>
+      </td>
+      <td class="top"><a>Mattsson, J.</a>, <a>Fornehed, J.</a>, <a>Selander, G.</a> and <a>F. Palombini</a>, "<a href="http://tools.ietf.org/html/draft-mattsson-core-coap-actuators-02">Controlling Actuators with CoAP</a>", Internet-Draft draft-mattsson-core-coap-actuators-02, November 2016.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -714,18 +723,7 @@ address {
 
 <ul>
   <li>Each of the two endpoint stores in the Security Context: i) the respective public-private key pair; ii) the other endpoint's public key; iii) a "Counter signature algorithm" field as defined in Section <a href="#sec-context">Section 4</a> of this specification.</li>
-  <li>The Object-Security option of OSCOAP messages is encoded as described in Section 8.1 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>, with the following differences.</li>
-</ul>
-<p/>
-
-<ol>
-  <li>The fifth least significant bit of the first byte is set to 0, to indicate that the "gid" parameter introduced in this specification and including the group identifier of an OSCOAP group is not present.</li>
-  <li>The sixth least significant bit of the first byte is set to 1, to indicate the presence of the "cs" parameter introduced in this specification and including the counter signature of the COSE object.</li>
-  <li>The q bytes before the "ciphertext" field (q given by the counter signature algorithm specified in the Security Context) encode the value of the "cs" parameter including the counter signature of the COSE object.</li>
-</ol>
-<p/>
-
-<ul>
+  <li>The Object-Security option of OSCOAP messages is encoded as described in Section 8.1 of <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>, with the following differences.  <ul><li>The fifth least significant bit of the first byte is set to 0, to indicate that the "gid" parameter introduced in this specification and including the Context Identifier of an OSCOAP group is not present.</li><li>The sixth least significant bit of the first byte is set to 1, to indicate the presence of the "cs" parameter introduced in this specification and including the counter signature of the COSE object.</li><li>The q bytes before the "ciphertext" field (q given by the counter signature algorithm specified in the Security Context) encode the value of the "cs" parameter including the counter signature of the COSE object.</li></ul></li>
   <li>Before transmitting an OSCOAP message, a sender endpoint uses its own private key to create a counter signature of the COSE_Encrypt0 object (Appendix C.4 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>). Then, the counter signature is included in the Header of the COSE object, in the "cs" paramenter of the "unprotected" field.</li>
   <li>Upon receiving an OSCOAP message, the receiver endpoint retrieves the corresponding public key of the sender endpoint from the Security Context. Then, it verifies the counter signature and unsecures the message according to the cryptographic algorithm specified in the Security Context.</li>
 </ul>
