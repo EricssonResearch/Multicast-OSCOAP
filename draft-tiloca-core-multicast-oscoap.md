@@ -217,7 +217,9 @@ When creating a protected CoAP message, an endpoint in the group computes the CO
 
    * The remainining bytes encode the ciphertext.
 
-A possible alternative configuration for the encoding of the Object-Security option is discussed in {{sec-no-source-auth}}. However, its usage is NOT RECOMMENDED by this specification.
+{{sec-no-source-auth}} discusses a possible alternative configuration of the Object-Security option, to avoid the usage of digital signatures and provide only group authentication of secure CoAP messages. However, its usage is NOT RECOMMENDED by this specification.
+
+{{sec-unicast-with-signature}} discusses a possible alternative configuration of the Object-Security option, to include digital signatures in OSCOAP messages exchanged between two endpoints engaging pure unicast communication.
 
 # Message Processing # {#mess-processing}
 
@@ -357,3 +359,23 @@ Although this is NOT RECOMMENDED by this specification, it is possible to avoid 
 * No counter signature is computed when securing a multicast request ({{ssec-protect-request}}) or a unicast response ({{ssec-protect-response}}), while no counter signature is verified upon receiving a multicast request ({{ssec-verify-request}}) or a unicast response ({{ssec-verify-response}}).
 
 As a consequence, each message is group-authenticated by means of the AEAD algorithm and the Sender Key/IV used by the sender endpoint. Note that such Sender Key/IV can be derived by all the group members from the Sender ID and the commonly shared Master Secret and Master Salt.
+
+# Unicast OSCOAP messages with digital signature # {#sec-unicast-with-signature}
+
+Two endpoints engaging pure unicast communication secured with OSCOAP can benefit from exchanging digitally signed messages. This especially applies to scenarios where end-to-end confidentiality is not a security requirement to fulfill, and thus proxies are able to fully inspect, process and aggregate messages, while still not able to alter them.
+
+With reference to two endpoints using OSCOAP {{I-D.ietf-core-object-security}} for pure unicast communication, digital signing of exchanged messages can be used as follows.
+
+* Each of the two endpoint stores in the Security Context: i) the respective public-private key pair; ii) the other endpoint's public key; iii) a "Counter signature algorithm" field as defined in Section {{sec-context}} of this specification.
+
+* The Object-Security option of OSCOAP messages is encoded as described in Section 8.1 of {{I-D.ietf-core-object-security}}, with the following differences.
+
+1. The fifth least significant bit of the first byte is set to 0, to indicate that the "gid" parameter introduced in this specification and including the group identifier of an OSCOAP group is not present.
+
+2. The sixth least significant bit of the first byte is set to 1, to indicate the presence of the "cs" parameter introduced in this specification and including the counter signature of the COSE object.
+
+3. The q bytes before the "ciphertext" field (q given by the counter signature algorithm specified in the Security Context) encode the value of the "cs" parameter including the counter signature of the COSE object.
+
+* Before transmitting an OSCOAP message, a sender endpoint uses its own private key to create a counter signature of the COSE_Encrypt0 object (Appendix C.4 of {{I-D.ietf-cose-msg}}). Then, the counter signature is included in the Header of the COSE object, in the "cs" paramenter of the "unprotected" field.
+
+* Upon receiving an OSCOAP message, the receiver endpoint retrieves the corresponding public key of the sender endpoint from the Security Context. Then, it verifies the counter signature and unsecures the message according to the cryptographic algorithm specified in the Security Context.
