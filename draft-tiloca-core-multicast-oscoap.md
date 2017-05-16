@@ -296,7 +296,7 @@ Upon receiving a 4.03 Forbidden response including the Repeat Option, a multicas
 
 Then, upon receiving the (unicast) group request including the Repeat Option, the listener verifies that the option value equals the stored and previously sent value. In such a case, the request is further processed and delivered to the application, otherwise it is silently discarded. Furthermore, if it does not receive a valid group request including the Repeat Option within a configurable timeout period, the listener node SHOULD perform the same challenge-response upon receiving the next multicast request from that same multicaster.
 
-A listener SHOULD NOT deliver group request messages from a given multicaster to the application until one group request from that same multicaster has not been verified as fresh. Also, a listener MAY perform the challenge-response described above at any time, if synchronization with sequence numbers of multicasters is (believed to be) lost, for instance after a device reboot. A multicaster MUST always be ready to perform the challenge-response based on the Repeat Option in case a listener starts it.
+A listener SHOULD NOT deliver group request messages from a given multicaster to the application until one group request from that same multicaster has been verified as fresh. Also, a listener MAY perform the challenge-response described above at any time, if synchronization with sequence numbers of multicasters is (believed to be) lost, for instance after a device reboot. A multicaster MUST always be ready to perform the challenge-response based on the Repeat Option in case a listener starts it.
 
 Finally, note that endpoints configured as pure listeners are not able to perform the challenge-response described above, as they do not store a Sender Context to secure the 4.03 Forbidden response to the multicaster. Therefore, pure listeners SHOULD adopt alternative approaches to achieve and maintain synchronization with sequence numbers of multicasters.
 
@@ -315,7 +315,7 @@ Note that in simple, less dynamic, multicast groups, it can be convenient for th
 This document has no actions for IANA.
 
 # Acknowledgments # {#acknowldegment}
-The authors sincerely thank Rolf Blom, Carsten Bormann, John Mattsson, Jim Schaad and Stefan Beck for their feedback and comments.
+The authors sincerely thank Rolf Blom, Carsten Bormann, John Mattsson, Jim Schaad, Stefan Beck and Richard Kelsey for their feedback and comments.
 
 --- back
 
