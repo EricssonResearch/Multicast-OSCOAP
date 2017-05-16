@@ -5,9 +5,9 @@
 CoRE Working Group                                             M. Tiloca
 Internet-Draft                                              RISE SICS AB
 Intended status: Standards Track                             G. Selander
-Expires: November 12, 2017                                  F. Palombini
+Expires: November 17, 2017                                  F. Palombini
                                                              Ericsson AB
-                                                            May 11, 2017
+                                                            May 16, 2017
 
 
                   Secure group communication for CoAP
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on November 12, 2017.
+   This Internet-Draft will expire on November 17, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Tiloca, et al.          Expires November 12, 2017               [Page 1]
+Tiloca, et al.          Expires November 17, 2017               [Page 1]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Tiloca, et al.          Expires November 12, 2017               [Page 2]
+Tiloca, et al.          Expires November 17, 2017               [Page 2]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -165,7 +165,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 12, 2017               [Page 3]
+Tiloca, et al.          Expires November 17, 2017               [Page 3]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -221,7 +221,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 12, 2017               [Page 4]
+Tiloca, et al.          Expires November 17, 2017               [Page 4]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -277,7 +277,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 12, 2017               [Page 5]
+Tiloca, et al.          Expires November 17, 2017               [Page 5]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -333,7 +333,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 12, 2017               [Page 6]
+Tiloca, et al.          Expires November 17, 2017               [Page 6]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -389,7 +389,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 12, 2017               [Page 7]
+Tiloca, et al.          Expires November 17, 2017               [Page 7]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -445,7 +445,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 12, 2017               [Page 8]
+Tiloca, et al.          Expires November 17, 2017               [Page 8]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -501,7 +501,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 12, 2017               [Page 9]
+Tiloca, et al.          Expires November 17, 2017               [Page 9]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -557,7 +557,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 12, 2017              [Page 10]
+Tiloca, et al.          Expires November 17, 2017              [Page 10]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -613,7 +613,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 12, 2017              [Page 11]
+Tiloca, et al.          Expires November 17, 2017              [Page 11]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -669,7 +669,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 12, 2017              [Page 12]
+Tiloca, et al.          Expires November 17, 2017              [Page 12]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -725,7 +725,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 12, 2017              [Page 13]
+Tiloca, et al.          Expires November 17, 2017              [Page 13]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -781,7 +781,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 12, 2017              [Page 14]
+Tiloca, et al.          Expires November 17, 2017              [Page 14]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -824,8 +824,8 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
    A listener SHOULD NOT deliver group request messages from a given
    multicaster to the application until one group request from that same
-   multicaster has not been verified as fresh.  Also, a listener MAY
-   perform the challenge-response described above at any time, if
+   multicaster has been verified as fresh.  Also, a listener MAY perform
+   the challenge-response described above at any time, if
    synchronization with sequence numbers of multicasters is (believed to
    be) lost, for instance after a device reboot.  A multicaster MUST
    always be ready to perform the challenge-response based on the Repeat
@@ -837,7 +837,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 12, 2017              [Page 15]
+Tiloca, et al.          Expires November 17, 2017              [Page 15]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -885,15 +885,15 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 9.  Acknowledgments
 
    The authors sincerely thank Rolf Blom, Carsten Bormann, John
-   Mattsson, Jim Schaad and Stefan Beck for their feedback and comments.
+   Mattsson, Jim Schaad, Stefan Beck and Richard Kelsey for their
+   feedback and comments.
 
 
 
 
 
 
-
-Tiloca, et al.          Expires November 12, 2017              [Page 16]
+Tiloca, et al.          Expires November 17, 2017              [Page 16]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -949,7 +949,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 12, 2017              [Page 17]
+Tiloca, et al.          Expires November 17, 2017              [Page 17]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -1005,7 +1005,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 12, 2017              [Page 18]
+Tiloca, et al.          Expires November 17, 2017              [Page 18]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -1061,7 +1061,7 @@ Appendix A.  Group Joining Based on the ACE Framework
 
 
 
-Tiloca, et al.          Expires November 12, 2017              [Page 19]
+Tiloca, et al.          Expires November 17, 2017              [Page 19]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -1117,7 +1117,7 @@ Appendix B.  List of Use Cases
 
 
 
-Tiloca, et al.          Expires November 12, 2017              [Page 20]
+Tiloca, et al.          Expires November 17, 2017              [Page 20]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -1173,7 +1173,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 12, 2017              [Page 21]
+Tiloca, et al.          Expires November 17, 2017              [Page 21]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -1229,7 +1229,7 @@ Appendix C.  No Source Authentication
 
 
 
-Tiloca, et al.          Expires November 12, 2017              [Page 22]
+Tiloca, et al.          Expires November 17, 2017              [Page 22]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -1285,7 +1285,7 @@ Appendix D.  Unicast OSCOAP messages with digital signature
 
 
 
-Tiloca, et al.          Expires November 12, 2017              [Page 23]
+Tiloca, et al.          Expires November 17, 2017              [Page 23]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -1341,4 +1341,4 @@ Authors' Addresses
 
 
 
-Tiloca, et al.          Expires November 12, 2017              [Page 24]
+Tiloca, et al.          Expires November 17, 2017              [Page 24]
