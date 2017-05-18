@@ -55,7 +55,6 @@ normative:
   I-D.ietf-core-object-security:
   RFC2119:
   RFC7252:
-  RFC7641:
   RFC8032:
 
 informative:
@@ -96,7 +95,7 @@ This document describes multicast OSCOAP, providing end-to-end security of CoAP 
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in {{RFC2119}}. These words may also appear in this document in lowercase, absent their normative meanings.
 
-Readers are expected to be familiar with the terms and concepts described in {{RFC7252}}, {{RFC7390}} and {{RFC7641}}.
+Readers are expected to be familiar with the terms and concepts described in {{RFC7252}} and {{RFC7390}}.
 
 Terminology for constrained environments, such as "constrained device", "constrained-node network", is defined in {{RFC7228}}.
 
