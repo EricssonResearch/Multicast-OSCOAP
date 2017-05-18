@@ -310,7 +310,7 @@ address {
 
   <meta name="dct.creator" content="Tiloca, M., Selander, G., and F. Palombini" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-tiloca-core-multicast-oscoap-01" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-5-16" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-5-18" />
   <meta name="dct.abstract" content="This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast CoAP request messages and related unicast CoAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages." />
   <meta name="description" content="This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast CoAP request messages and related unicast CoAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages." />
 
@@ -334,7 +334,7 @@ address {
   <td class="right">G. Selander</td>
 </tr>
 <tr>
-  <td class="left">Expires: November 17, 2017</td>
+  <td class="left">Expires: November 19, 2017</td>
   <td class="right">F. Palombini</td>
 </tr>
 <tr>
@@ -343,7 +343,7 @@ address {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">May 16, 2017</td>
+  <td class="right">May 18, 2017</td>
 </tr>
 
     	
@@ -363,7 +363,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on November 17, 2017.</p>
+<p>This Internet-Draft will expire on November 19, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -412,7 +412,7 @@ address {
 <p id="rfc.section.1.p.4">This document describes multicast OSCOAP, providing end-to-end security of CoAP messages exchanged between members of a multicast group. In particular, the described approach defines how OSCOAP should be used in a group communication context, while fulfilling the same security requirements. That is, end-to-end security is assured for multicast CoAP requests sent by multicaster nodes to the group and for related unicast CoAP responses sent as reply by multiple listener nodes. Multicast OSCOAP provides source authentication of all CoAP messages exchanged within the group, by means of digital signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages. As in OSCOAP, it is still possible to simultaneously rely on DTLS to protect hop-by-hop communication between a multicaster node and a proxy (and vice versa), and between a proxy and a listener node (and vice versa).</p>
 <h1 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a> <a href="#terminology" id="terminology">Terminology</a></h1>
 <p id="rfc.section.1.1.p.1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <a href="#RFC2119">[RFC2119]</a>. These words may also appear in this document in lowercase, absent their normative meanings.</p>
-<p id="rfc.section.1.1.p.2">Readers are expected to be familiar with the terms and concepts described in <a href="#RFC7252">[RFC7252]</a>, <a href="#RFC7390">[RFC7390]</a> and <a href="#RFC7641">[RFC7641]</a>.</p>
+<p id="rfc.section.1.1.p.2">Readers are expected to be familiar with the terms and concepts described in <a href="#RFC7252">[RFC7252]</a> and <a href="#RFC7390">[RFC7390]</a>.</p>
 <p id="rfc.section.1.1.p.3">Terminology for constrained environments, such as "constrained device", "constrained-node network", is defined in <a href="#RFC7228">[RFC7228]</a>.</p>
 <p id="rfc.section.1.1.p.4">Terminology for protection and processing of CoAP messages through OSCOAP, such as "Security Context", "Master Secret", "Master Salt", is defined in <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>.</p>
 <p id="rfc.section.1.1.p.5">This document refers also to the following terminology.</p>
@@ -570,12 +570,6 @@ address {
         <b id="RFC7252">[RFC7252]</b>
       </td>
       <td class="top"><a>Shelby, Z.</a>, <a>Hartke, K.</a> and <a>C. Bormann</a>, "<a href="http://tools.ietf.org/html/rfc7252">The Constrained Application Protocol (CoAP)</a>", RFC 7252, DOI 10.17487/RFC7252, June 2014.</td>
-    </tr>
-    <tr>
-      <td class="reference">
-        <b id="RFC7641">[RFC7641]</b>
-      </td>
-      <td class="top"><a>Hartke, K.</a>, "<a href="http://tools.ietf.org/html/rfc7641">Observing Resources in the Constrained Application Protocol (CoAP)</a>", RFC 7641, DOI 10.17487/RFC7641, September 2015.</td>
     </tr>
     <tr>
       <td class="reference">
