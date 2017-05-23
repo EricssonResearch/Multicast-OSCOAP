@@ -310,7 +310,7 @@ address {
 
   <meta name="dct.creator" content="Tiloca, M., Selander, G., and F. Palombini" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-tiloca-core-multicast-oscoap-01" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-5-19" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-5-23" />
   <meta name="dct.abstract" content="This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast CoAP request messages and related unicast CoAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages." />
   <meta name="description" content="This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast CoAP request messages and related unicast CoAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages." />
 
@@ -334,7 +334,7 @@ address {
   <td class="right">G. Selander</td>
 </tr>
 <tr>
-  <td class="left">Expires: November 20, 2017</td>
+  <td class="left">Expires: November 24, 2017</td>
   <td class="right">F. Palombini</td>
 </tr>
 <tr>
@@ -343,7 +343,7 @@ address {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">May 19, 2017</td>
+  <td class="right">May 23, 2017</td>
 </tr>
 
     	
@@ -363,7 +363,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on November 20, 2017.</p>
+<p>This Internet-Draft will expire on November 24, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -538,8 +538,9 @@ address {
 <h1 id="rfc.section.7.4"><a href="#rfc.section.7.4">7.4.</a> <a href="#ssec-provisioning-of-public-keys" id="ssec-provisioning-of-public-keys">Provisioning of Public Keys</a></h1>
 <p id="rfc.section.7.4.p.1">Upon receiving a secure CoAP message, a recipient endpoint relies on the sender endpoint's public key, in order to verify the counter signature conveyed in the COSE Object.</p>
 <p id="rfc.section.7.4.p.2">If not already stored in the Recipient Context associated to the sender endpoint, the recipient endpoint retrieves the public key from a trusted key repository. In such a case, the correct binding between the sender endpoint and the retrieved public key MUST be assured, for instance by means of public key certificates. Further details about how this requirement can be fulfilled are out of the scope of this document.</p>
-<p id="rfc.section.7.4.p.3">Alternatively, the Group Manager can be configured to store public keys of group members and provide them upon request. In such a case, upon joining a multicast group, an endpoint provides the Group Manager with its own public key, by means of the same secure channel used to carry out the join procedure. After that, the Group Manager MUST perform a proof-of-possession challenge-response with the joining endpoint, in order to verify that it actually owns the associated private key. In case of success, the Group Manager stores the received public key as associated to the joining endpoint and its endpoint ID. From then on, that public key will be available for secure and trusted delivery to other endpoints in the multicast group.</p>
-<p id="rfc.section.7.4.p.4">Note that in simple, less dynamic, multicast groups, it can be convenient for the Group Manager to provide an endpoint upon its joining with the public keys associated to all endpoints currently present in the group.</p>
+<p id="rfc.section.7.4.p.3">Alternatively, the Group Manager can be configured to store public keys of group members and provide them upon request. In such a case, upon joining a multicast group, an endpoint provides its own public key to the Group Manager, by means of the same secure channel used to carry out the join procedure. After that, the Group Manager MUST verify that the joining endpoint actually owns the associated private key, for instance by performing a proof-of-possession challenge-response. In case of success, the Group Manager stores the received public key as associated to the joining endpoint and its endpoint ID. From then on, that public key will be available for secure and trusted delivery to other endpoints in the multicast group.</p>
+<p id="rfc.section.7.4.p.4">Note that a joining endpoint is not required to provide its own public key to the Group Manager in the following two cases. First, the endpoint is joining the multicast group exclusively as pure listener. Second, the endpoint has already provided its own public key, upon previously joining a multicast group under the same Group Manager.</p>
+<p id="rfc.section.7.4.p.5">Furthermore, in simple, less dynamic, multicast groups, it can be convenient for the Group Manager to provide an endpoint upon its joining with the public keys associated to the endpoints currently present in the group.</p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#iana" id="iana">IANA Considerations</a></h1>
 <p id="rfc.section.8.p.1">This document has no actions for IANA.</p>
 <h1 id="rfc.section.9"><a href="#rfc.section.9">9.</a> <a href="#acknowldegment" id="acknowldegment">Acknowledgments</a></h1>

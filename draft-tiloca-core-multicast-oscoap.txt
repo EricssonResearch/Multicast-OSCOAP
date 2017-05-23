@@ -5,9 +5,9 @@
 CoRE Working Group                                             M. Tiloca
 Internet-Draft                                              RISE SICS AB
 Intended status: Standards Track                             G. Selander
-Expires: November 20, 2017                                  F. Palombini
+Expires: November 24, 2017                                  F. Palombini
                                                              Ericsson AB
-                                                            May 19, 2017
+                                                            May 23, 2017
 
 
                   Secure group communication for CoAP
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on November 20, 2017.
+   This Internet-Draft will expire on November 24, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Tiloca, et al.          Expires November 20, 2017               [Page 1]
+Tiloca, et al.          Expires November 24, 2017               [Page 1]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Tiloca, et al.          Expires November 20, 2017               [Page 2]
+Tiloca, et al.          Expires November 24, 2017               [Page 2]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -165,7 +165,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 20, 2017               [Page 3]
+Tiloca, et al.          Expires November 24, 2017               [Page 3]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -221,7 +221,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 20, 2017               [Page 4]
+Tiloca, et al.          Expires November 24, 2017               [Page 4]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -277,7 +277,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 20, 2017               [Page 5]
+Tiloca, et al.          Expires November 24, 2017               [Page 5]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -333,7 +333,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 20, 2017               [Page 6]
+Tiloca, et al.          Expires November 24, 2017               [Page 6]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -389,7 +389,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 20, 2017               [Page 7]
+Tiloca, et al.          Expires November 24, 2017               [Page 7]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -445,7 +445,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 20, 2017               [Page 8]
+Tiloca, et al.          Expires November 24, 2017               [Page 8]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -501,7 +501,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 20, 2017               [Page 9]
+Tiloca, et al.          Expires November 24, 2017               [Page 9]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -557,7 +557,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 20, 2017              [Page 10]
+Tiloca, et al.          Expires November 24, 2017              [Page 10]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -613,7 +613,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 20, 2017              [Page 11]
+Tiloca, et al.          Expires November 24, 2017              [Page 11]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -669,7 +669,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 20, 2017              [Page 12]
+Tiloca, et al.          Expires November 24, 2017              [Page 12]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -725,7 +725,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 20, 2017              [Page 13]
+Tiloca, et al.          Expires November 24, 2017              [Page 13]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -781,7 +781,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 20, 2017              [Page 14]
+Tiloca, et al.          Expires November 24, 2017              [Page 14]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -837,7 +837,7 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
 
 
-Tiloca, et al.          Expires November 20, 2017              [Page 15]
+Tiloca, et al.          Expires November 24, 2017              [Page 15]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
@@ -882,28 +882,35 @@ Internet-Draft     Secure group communication for CoAP          May 2017
 
    Alternatively, the Group Manager can be configured to store public
    keys of group members and provide them upon request.  In such a case,
-   upon joining a multicast group, an endpoint provides the Group
-   Manager with its own public key, by means of the same secure channel
-   used to carry out the join procedure.  After that, the Group Manager
-   MUST perform a proof-of-possession challenge-response with the
-   joining endpoint, in order to verify that it actually owns the
-   associated private key.  In case of success, the Group Manager stores
-   the received public key as associated to the joining endpoint and its
-   endpoint ID.  From then on, that public key will be available for
+   upon joining a multicast group, an endpoint provides its own public
+   key to the Group Manager, by means of the same secure channel used to
+   carry out the join procedure.  After that, the Group Manager MUST
+   verify that the joining endpoint actually owns the associated private
+   key, for instance by performing a proof-of-possession challenge-
+   response.  In case of success, the Group Manager stores the received
+   public key as associated to the joining endpoint and its endpoint ID.
 
 
 
-Tiloca, et al.          Expires November 20, 2017              [Page 16]
+
+Tiloca, et al.          Expires November 24, 2017              [Page 16]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
 
-   secure and trusted delivery to other endpoints in the multicast
-   group.
+   From then on, that public key will be available for secure and
+   trusted delivery to other endpoints in the multicast group.
 
-   Note that in simple, less dynamic, multicast groups, it can be
+   Note that a joining endpoint is not required to provide its own
+   public key to the Group Manager in the following two cases.  First,
+   the endpoint is joining the multicast group exclusively as pure
+   listener.  Second, the endpoint has already provided its own public
+   key, upon previously joining a multicast group under the same Group
+   Manager.
+
+   Furthermore, in simple, less dynamic, multicast groups, it can be
    convenient for the Group Manager to provide an endpoint upon its
-   joining with the public keys associated to all endpoints currently
+   joining with the public keys associated to the endpoints currently
    present in the group.
 
 8.  IANA Considerations
@@ -939,20 +946,18 @@ Internet-Draft     Secure group communication for CoAP          May 2017
               DOI 10.17487/RFC7252, June 2014,
               <http://www.rfc-editor.org/info/rfc7252>.
 
+
+
+
+Tiloca, et al.          Expires November 24, 2017              [Page 17]
+
+Internet-Draft     Secure group communication for CoAP          May 2017
+
+
    [RFC8032]  Josefsson, S. and I. Liusvaara, "Edwards-Curve Digital
               Signature Algorithm (EdDSA)", RFC 8032,
               DOI 10.17487/RFC8032, January 2017,
               <http://www.rfc-editor.org/info/rfc8032>.
-
-
-
-
-
-
-Tiloca, et al.          Expires November 20, 2017              [Page 17]
-
-Internet-Draft     Secure group communication for CoAP          May 2017
-
 
 10.2.  Informative References
 
@@ -998,17 +1003,17 @@ Internet-Draft     Secure group communication for CoAP          May 2017
               Protocol", RFC 4535, DOI 10.17487/RFC4535, June 2006,
               <http://www.rfc-editor.org/info/rfc4535>.
 
+
+
+Tiloca, et al.          Expires November 24, 2017              [Page 18]
+
+Internet-Draft     Secure group communication for CoAP          May 2017
+
+
    [RFC4944]  Montenegro, G., Kushalnagar, N., Hui, J., and D. Culler,
               "Transmission of IPv6 Packets over IEEE 802.15.4
               Networks", RFC 4944, DOI 10.17487/RFC4944, September 2007,
               <http://www.rfc-editor.org/info/rfc4944>.
-
-
-
-Tiloca, et al.          Expires November 20, 2017              [Page 18]
-
-Internet-Draft     Secure group communication for CoAP          May 2017
-
 
    [RFC4949]  Shirey, R., "Internet Security Glossary, Version 2",
               FYI 36, RFC 4949, DOI 10.17487/RFC4949, August 2007,
@@ -1053,19 +1058,18 @@ Appendix A.  Group Joining Based on the ACE Framework
    o  An Authorization Server enables and enforces authorized access of
       the joining endpoint to the Group Manager and its join-resources.
 
-   Then, in accordance with [I-D.seitz-ace-oscoap-profile], the joining
-   endpoint and the Group Manager rely on OSCOAP
-   [I-D.ietf-core-object-security] for secure communication and consider
-   Ephemeral Diffie-Hellman Over COSE (EDHOC)
 
 
 
-
-Tiloca, et al.          Expires November 20, 2017              [Page 19]
+Tiloca, et al.          Expires November 24, 2017              [Page 19]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
 
+   Then, in accordance with [I-D.seitz-ace-oscoap-profile], the joining
+   endpoint and the Group Manager rely on OSCOAP
+   [I-D.ietf-core-object-security] for secure communication and consider
+   Ephemeral Diffie-Hellman Over COSE (EDHOC)
    [I-D.selander-ace-cose-ecdhe] as a possible method to establish key
    material.
 
@@ -1110,18 +1114,18 @@ Appendix B.  List of Use Cases
       wired and wireless networks).  Connectivity between ligthing
       devices may be realized, for instance, by means of IPv6 and
       (border) routers supporting 6LoWPAN [RFC4944][RFC6282].  Group
-      communication enables synchronous operation of a group of
-      connected lights, ensuring that the light preset (e.g. dimming
-      level or color) of a large group of luminaires are changed at the
-      same perceived time.  This is especially useful for providing a
 
 
 
-Tiloca, et al.          Expires November 20, 2017              [Page 20]
+Tiloca, et al.          Expires November 24, 2017              [Page 20]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
 
+      communication enables synchronous operation of a group of
+      connected lights, ensuring that the light preset (e.g. dimming
+      level or color) of a large group of luminaires are changed at the
+      same perceived time.  This is especially useful for providing a
       visual synchronicity of light effects to the user.  Devices may
       reply back to the switches that issue on/off/dimming commands, in
       order to report about the execution of the requested operation
@@ -1167,17 +1171,16 @@ Internet-Draft     Secure group communication for CoAP          May 2017
       provide a feedback about the execution of the update operation
       (e.g.  OK, failure, error) and their current operational status.
 
-   o  Commissioning of LLNs systems: a commissioning device is
-      responsible for querying all devices in the local network or a
-      selected subset of them, in order to discover their presence, and
 
 
-
-Tiloca, et al.          Expires November 20, 2017              [Page 21]
+Tiloca, et al.          Expires November 24, 2017              [Page 21]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
 
+   o  Commissioning of LLNs systems: a commissioning device is
+      responsible for querying all devices in the local network or a
+      selected subset of them, in order to discover their presence, and
       be aware of their capabilities, default configuration, and
       operating conditions.  Queried devices displaying similarities in
       their capabilities and features, or sharing a common physical
@@ -1223,16 +1226,16 @@ Appendix C.  No Source Authentication
 
    o  When encoding the Object-Security option of a group message
       (Section 5), the sixth least significant bit of the first byte is
-      set to 0, to indicate that the "cs" parameter including the
-      counter signature of the COSE object is not present.
 
 
 
-
-Tiloca, et al.          Expires November 20, 2017              [Page 22]
+Tiloca, et al.          Expires November 24, 2017              [Page 22]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
+
+      set to 0, to indicate that the "cs" parameter including the
+      counter signature of the COSE object is not present.
 
    o  No counter signature is computed when securing a multicast request
       (Section 6.1) or a unicast response (Section 6.3), while no
@@ -1279,16 +1282,16 @@ Appendix D.  Unicast OSCOAP messages with digital signature
 
       *  The q bytes before the "ciphertext" field (q given by the
          counter signature algorithm specified in the Security Context)
-         encode the value of the "cs" parameter including the counter
-         signature of the COSE object.
 
 
 
-
-Tiloca, et al.          Expires November 20, 2017              [Page 23]
+Tiloca, et al.          Expires November 24, 2017              [Page 23]
 
 Internet-Draft     Secure group communication for CoAP          May 2017
 
+
+         encode the value of the "cs" parameter including the counter
+         signature of the COSE object.
 
    o  Before transmitting an OSCOAP message, a sender endpoint uses its
       own private key to create a counter signature of the COSE_Encrypt0
@@ -1338,7 +1341,4 @@ Authors' Addresses
 
 
 
-
-
-
-Tiloca, et al.          Expires November 20, 2017              [Page 24]
+Tiloca, et al.          Expires November 24, 2017              [Page 24]
