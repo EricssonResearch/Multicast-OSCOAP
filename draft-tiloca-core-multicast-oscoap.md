@@ -77,7 +77,7 @@ informative:
 
 --- abstract
 
-This document describes a method for application layer protection of messages exchanged with the Constrained Application Protocol (CoAP) in a group communication context. The proposed approach relies on Object Security of CoAP (OSCOAP) and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast CoAP request messages and related unicast CoAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages.
+This document describes a method for protecting group communication over the Constrained Application Protocol (CoAP). The proposed approach relies on Object Security of CoAP (OSCOAP) and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast OSCOAP request messages and related unicast OSCOAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through private keys of sender devices and embedded in the protected CoAP messages.
 
 --- middle
 
@@ -85,11 +85,11 @@ This document describes a method for application layer protection of messages ex
 
 The Constrained Application Protocol (CoAP) {{RFC7252}} is a web transfer protocol specifically designed for constrained devices and networks. 
 
-{{RFC7390}} enables group communication for CoAP, addressing use cases where deployed devices benefit from a group communication model for example to limit latencies and improve performance. Use cases include lighting control, integrated building control, software and firmware updates, parameter and configuration updates, commissioning of constrained networks, and emergency multicast. {{RFC7390}} recognizes the importance to introduce a secure mode for CoAP group communication. This specification defines such a mode.
+Group communication for CoAP {{RFC7390}} addresses use cases where deployed devices benefit from a group communication model, for example to limit latencies and improve performance. Use cases include lighting control, integrated building control, software and firmware updates, parameter and configuration updates, commissioning of constrained networks, and emergency multicast. Furthermore, {{RFC7390}} recognizes the importance to introduce a secure mode for CoAP group communication. This specification defines such a mode.
 
 Object Security of CoAP (OSCOAP){{I-D.ietf-core-object-security}} describes a security protocol based on the exchange of protected CoAP messages. OSCOAP builds on CBOR Object Signing and Encryption (COSE) {{I-D.ietf-cose-msg}} and provides end-to-end encryption, integrity, and replay protection across intermediate modes. To this end, a CoAP message is protected by including payload (if any), certain options, and header fields in a COSE object, which finally replaces the authenticated and encrypted fields in the protected message.
 
-This document describes multicast OSCOAP, providing end-to-end security of CoAP messages exchanged between members of a multicast group. In particular, the described approach defines how OSCOAP should be used in a group communication context, while fulfilling the same security requirements. That is, end-to-end security is assured for multicast CoAP requests sent by multicaster nodes to the group and for related unicast CoAP responses sent as reply by multiple listener nodes. Multicast OSCOAP provides source authentication of all CoAP messages exchanged within the group, by means of digital signatures produced through asymmetric private keys of sender devices and embedded in the protected CoAP messages. As in OSCOAP, it is still possible to simultaneously rely on DTLS to protect hop-by-hop communication between a multicaster node and a proxy (and vice versa), and between a proxy and a listener node (and vice versa).
+This document describes multicast OSCOAP, providing end-to-end security of CoAP messages exchanged between members of a multicast group. In particular, the described approach defines how OSCOAP should be used in a group communication context, while fulfilling the same security requirements. That is, end-to-end security is assured for multicast CoAP requests sent by multicaster nodes to the group and for related unicast CoAP responses sent as reply by multiple listener nodes. Multicast OSCOAP provides source authentication of all CoAP messages exchanged within the group, by means of digital signatures produced through private keys of sender devices and embedded in the protected CoAP messages. As in OSCOAP, it is still possible to simultaneously rely on DTLS to protect hop-by-hop communication between a multicaster node and a proxy (and vice versa), and between a proxy and a listener node (and vice versa).
 
 ## Terminology ## {#terminology}
 
@@ -131,19 +131,19 @@ The following security requirements are out of the scope of this document and ar
 
 The following security requirements need to be fulfilled by the approach described in this document:
 
-* Multicast communication topology: this document considers both 1-to-N (one multicaster and multiple listeners) and M-to-N (multiple multicasters and multiple listeners) communication topologies. The 1-to-N communication topology is the simplest group communication scenario that would serve the needs of a typical LLN. For instance, in a typical lighting control use case, a single switch is the only entity responsible for sending commands to a group of lighting devices. In more advanced lighting control use cases, a M-to-N communication topology would be required, for instance in case multiple sensors (presence or day-light) are responsible to trigger events to a group of lighting devices.
+* Multicast communication topology: this document considers both 1-to-N (one multicaster and multiple listeners) and M-to-N (multiple multicasters and multiple listeners) communication topologies. The 1-to-N communication topology is the simplest group communication scenario that would serve the needs of a typical low-power and lossy network (LLN). For instance, in a typical lighting control use case, a single switch is the only entity responsible for sending commands to a group of lighting devices. In more advanced lighting control use cases, a M-to-N communication topology would be required, for instance in case multiple sensors (presence or day-light) are responsible to trigger events to a group of lighting devices.
 
-* Multicast group size: security solutions for group communication SHOULD be able to adequately support different, possibly large, group sizes. Group size is the combination of the number of multicasters and listeners in a multicast group, with possible overlap (i.e. a multicaster MAY also be a listener at the same time). In the use cases mentioned in this document, the number of multicasters (normally the controlling devices) is expected to be much smaller than the number of listeners (i.e. the controlled devices). A security solution for group communication that supports 1 to 50 multicasters would be able to properly cover the group sizes required for most use cases that are relevant for this document. The total number of group members is expected to be in the range of 2 to 100 devices. Groups larger than that SHOULD be divided into smaller independent multicast groups, e.g. by grouping lights in a building on a per floor basis.
+* Multicast group size: security solutions for group communication should be able to adequately support different, possibly large, group sizes. Group size is the combination of the number of multicasters and listeners in a multicast group, with possible overlap (i.e. a multicaster MAY also be a listener at the same time). In the use cases mentioned in this document, the number of multicasters (normally the controlling devices) is expected to be much smaller than the number of listeners (i.e. the controlled devices). A security solution for group communication that supports 1 to 50 multicasters would be able to properly cover the group sizes required for most use cases that are relevant for this document. The total number of group members is expected to be in the range of 2 to 100 devices. Groups larger than that should be divided into smaller independent multicast groups, e.g. by grouping lights in a building on a per floor basis.
 
-* Data replay protection: it MUST NOT be possible to replay a group request message or a response message, which would disrupt the correct communication in the group and the activity of group members.
+* Data replay protection: it MUST be possible to detect a replayed group request message or response message.
 
 * Group-level data confidentiality: messages sent within the multicast group SHOULD be encrypted. In particular, messages SHALL be encrypted if privacy sensitive data is exchanged within the group. In fact, some control commands and/or associated responses could pose unforeseen security and privacy risks to the system users, when sent as plaintext. This document considers group-level data confidentiality since messages are encrypted at a group level, i.e. in such a way that they can be decrypted by any member of the multicast group, but not by an external adversary or other external entities.
 
-* Source authentication: messages sent within the multicast group SHALL be authenticated. That is, it is essential to ensure that a message is originated by a member of the group in the first place (group authentication), and in particular by a specific member of the group (source authentication). The approach proposed in this document provides both group authentication and source authentication, both for group requests originated by multicasters and responses originated by listeners. In order to provide source authentication, outgoing messages are signed by the respective originator group member by means of its own asymmetric private key. The resulting signature is included in the COSE object.
+* Source authentication: messages sent within the multicast group SHALL be authenticated. That is, it is essential to ensure that a message is originated by a member of the group in the first place (group authentication), and in particular by a specific member of the group (source authentication).
 
-* Message integrity: messages sent within the multicast group SHALL be integrity protected. That is, it is essential to ensure that a message has not been tampered with by an external adversary or other external entities which are not group members. Message integrity is provided through the same means used to provide source authentication.
+* Message integrity: messages sent within the multicast group SHALL be integrity protected. That is, it is essential to ensure that a message has not been tampered with by an external adversary or other external entities which are not group members.
 
-* Message ordering: it MUST be possible to determine ordering of messages coming from a single sender endpoint. Instead, it is not required to determine ordering of messages from different sender endpoints.
+* Message ordering: it MUST be possible to determine ordering of messages coming from a single sender endpoint. It is not required to determine ordering of messages from different sender endpoints.
 
 # Scope Description # {#scope}
 
@@ -161,13 +161,13 @@ According to {{RFC7390}}, any possible proxy entity is supposed to know about th
 
 To support multicast communication secured with OSCOAP, each endpoint registered as member of a multicast group maintains a Security Context as defined in Section 3 of {{I-D.ietf-core-object-security}}. In particular, each endpoint in a group stores:
 
-1. one Common Context, received from the Group Manager upon joining the multicast group and shared by all the endpoints in the group. The Common Context contains the COSE AEAD algorithm, the Master Secret and, optionally, the Master Salt used to derive endpoint-based keying material (see Section 3.2 of {{I-D.ietf-core-object-security}}). All the endpoints in the group agree on the same COSE AEAD algorithm. Besides, in addition to what is defined in {{I-D.ietf-core-object-security}}, the Common Context stores the following parameters:
+1. one Common Context, received from the Group Manager upon joining the multicast group and shared by all the endpoints in the group. All the endpoints in the group agree on the same COSE AEAD algorithm. Besides, in addition to what is defined in {{I-D.ietf-core-object-security}}, the Common Context stores the following parameters:
 
    * Context Identifier (Cid). Variable length byte string that identifies the Security Context. The Cid used in a multicast group is determined by the responsible Group Manager and does not change over time. A Cid MUST be unique in the sets of all the multicast groups associated to the same Group Manager. The choice of the Cid for a given group's Security Context is application specific, but it is RECOMMENDED to use 64-bit long pseudo-random Cids, in order to have globally unique Context Identifiers. It is the role of the application to specify how to handle possible collisions.
 
    * Counter signature algorithm. Value that identifies the algorithm used for source authenticating messages sent within the group. Its value is immutable once the security context is established. All the endpoints in the group agree on the same counter signature algorithm. In the absence of an application profile standard specifying otherwise, a compliant application MUST implement the EdDSA signature algorithm ed25519 {{RFC8032}}.
 
-2. one Sender Context, unless the endpoint is configured exclusively as pure listener. The Sender Context is used to secure outgoing messages and is initialized according to Section 3 of {{I-D.ietf-core-object-security}}, once the endpoint has joined the multicast group. In particular, the Sender ID in the Sender Context coincides with the endpoint ID received upon joining the group. As stated in {{scope}}, it is responsibility of the Group Manager to assign endpoint IDs to new joining endpoints in such a way that uniquess is ensured within the multicast group. Besides, in addition to what is defined in {{I-D.ietf-core-object-security}}, the Sender Context stores also the endpoint's asymmetric public-private key pair.
+2. one Sender Context, unless the endpoint is configured exclusively as pure listener. The Sender Context is used to secure outgoing messages and is initialized according to Section 3 of {{I-D.ietf-core-object-security}}, once the endpoint has joined the multicast group. In particular, the Sender ID in the Sender Context coincides with the endpoint ID received upon joining the group. As stated in {{scope}}, it is responsibility of the Group Manager to assign endpoint IDs to new joining endpoints in such a way that uniquess is ensured within the multicast group. Besides, in addition to what is defined in {{I-D.ietf-core-object-security}}, the Sender Context stores also the endpoint's public-private key pair.
 
 3. one Recipient Context for each distinct endpoint from which messages are received, used to process such incoming secure messages. The endpoint creates a new Recipient Context upon receiving an incoming message from another endpoint in the group for the first time. Besides, in addition to what is defined in {{I-D.ietf-core-object-security}}, each Recipient Context stores also the public key of the associated other endpoint from which secure messages are received. Possible approaches to provision and retrieve public keys of group members are discussed in {{ssec-provisioning-of-public-keys}}.
 
@@ -177,17 +177,17 @@ The 3-tuple (Cid, Sender ID, Partial IV) is called Transaction Identifier (Tid),
 
 # The COSE Object # {#sec-cose-object}
 
-When creating a protected CoAP message, an endpoint in the group computes the COSE object as defined in Section 5 of {{I-D.ietf-core-object-security}}, with the following modifications.
+When creating a protected CoAP message, an endpoint in the group computes the COSE object using the untagged COSE_Encrypt0 structure {{I-D.ietf-cose-msg}} as defined in Section 5 of {{I-D.ietf-core-object-security}}, with the following modifications.
 
 1. The value of the "Partial IV" parameter in the "unprotected" field is set to the Sequence Number used to protect the message, and SHALL always be present in both multicast requests and unicast responses. Specifically, a multicaster endpoint sets the value of "Partial IV" to the Sequence Number from its own Sender Context, upon sending a multicast request message. Furthermore, unlike described in Section 5 of {{I-D.ietf-core-object-security}}, a listener endpoint explicitly sets the value of "Partial IV" to the Sequence Number from its own Sender Context, upon sending a unicast response message.
 
 2. The value of the "kid" parameter in the "unprotected" field is set to the Sender ID of the endpoint and SHALL always be present in both multicast requests and unicast responses.
 
-3. The "unprotected" field of the "Headers" field SHALL include also the following parameter:
+3. The "unprotected" field of the "Headers" field SHALL include also the following parameters:
 
    * gid : its value is set to the Context Identifier (Cid) of the group's Security Context. This parameter is optional if the message is a CoAP response.
 
-   * cs : its value is set to the counter signature of the COSE_Encrypt0 object (Appendix C.4 of {{I-D.ietf-cose-msg}}), computed by the endpoint by means of its own private key.
+   * countersign : its value is set to the counter signature of the COSE object (Appendix C.3.3 of {{I-D.ietf-cose-msg}}), computed by the endpoint by means of its own private key as described in Section 4.5 of {{I-D.ietf-cose-msg}}.
 
 4. The Additional Authenticated Data (AAD) considered to compute the COSE object is extended. In particular, the "external_aad" considered for secure response messages SHALL include also the following parameter:
 
@@ -201,7 +201,7 @@ When creating a protected CoAP message, an endpoint in the group computes the CO
 
    * The fifth least significant bit of the first byte is set to 1 if the "gid" parameter is present, or to 0 otherwise. In order to enable secure group communication as described in this specification, this bit SHALL be set to 1.
 
-   * The sixth least significant bit of the first byte is set to 1 if the "cs" parameter is present, or to 0 otherwise. In order to ensure source authentication of group messages as described in this specification, this bit SHALL be set to 1.
+   * The sixth least significant bit of the first byte is set to 1 if the "countersign" parameter is present, or to 0 otherwise. In order to ensure source authentication of group messages as described in this specification, this bit SHALL be set to 1.
 
    * The following n bytes (n being the value of the Partial IV size in the first byte) encode the value of the "Partial IV", which is always present in the compressed message.
 
@@ -213,11 +213,26 @@ When creating a protected CoAP message, an endpoint in the group computes the CO
 
    * The following p bytes (p given by the previous byte) encode the value of the "gid" parameter.
 
-   * The following q bytes (q given by the counter signature algorithm specified in the Security Context) encode the value of the "cs" parameter including the counter signature of the COSE object.
+   * The following q bytes (q given by the counter signature algorithm specified in the Security Context) encode the value of the "countersign" parameter including the counter signature of the COSE object.
 
    * The remainining bytes encode the ciphertext.
 
-{{sec-no-source-auth}} discusses a possible alternative configuration of the Object-Security option, to avoid the usage of digital signatures and provide only group authentication of secure CoAP messages. However, its usage is NOT RECOMMENDED by this specification.
+In particular, "gid" is included as header parameter as defined in Table 1.
+ 
+~~~~~~~~~~
+ 
+   +---------+-------+----------------+------------------+-------------------+
+   | name    | label | value type     | value registry   | description       |
+   +---------+-------+----------------+------------------+-------------------+
+   | gid     | TBD   | bstr           |                  | Identifies the    |
+   |         |       |                |                  | OSCOAP group      |
+   |         |       |                |                  | security context  |
+   +---------+-------+----------------+------------------+-------------------+
+ 
+~~~~~~~~~~
+Table 1: Additional common header parameter for the COSE object
+
+{{sec-no-source-auth}} discusses a possible alternative configuration of the Object-Security option, to avoid the usage of digital signatures and provide only group authentication of secure CoAP messages. This can be required by application scenarios that have particularly strict requirements, such as limited message latency, and cannot afford source authentication of group messages based on digital signatures {{I-D.somaraju-ace-multicast}}. However, such a purely symmetric approach does not provide source authentication of group messages, and thus is NOT RECOMMENDED by this specification.
 
 {{sec-unicast-with-signature}} discusses a possible alternative configuration of the Object-Security option, to include digital signatures in OSCOAP messages exchanged between two endpoints engaging pure unicast communication.
 
@@ -229,11 +244,9 @@ Each multicast request message and unicast response message is protected and pro
 
 A multicaster endpoint transmits a secure multicast request message as described in Section 7.1 of {{I-D.ietf-core-object-security}}, with the following modifications:
 
-1. The multicaster endpoint stores the association Token - Cid. That is, it SHALL be able to find the correct Security Context used to protect the multicast request and verify the unicast response(s) by using the CoAP Token considered in the message exchange.
+1. The multicaster endpoint stores the association Token - Cid. That is, it SHALL be able to find the correct Security Context used to protect the multicast request and verify the unicast response(s) by using the CoAP Token used in the message exchange.
 
 2. The multicaster endpoint computes the COSE object as defined in {{sec-cose-object}} of this specification.
-
-3. Before transmitting the multicast request message, the multicaster endpoint uses its own private key to create a counter signature of the COSE_Encrypt0 object (Appendix C.4 of {{I-D.ietf-cose-msg}}). Then, the counter signature is included in the Header of the COSE object, in the "cs" paramenter of the "unprotected" field.
 
 ## Verifying the Request ## {#ssec-verify-request}
 
@@ -243,33 +256,31 @@ Upon receiving a secure multicast request message, a listener endpoint proceeds 
 
 2. The listener endpoint retrieves the Sender ID from the header of the COSE object. Then, the Sender ID is used to retrieve the correct Recipient Context associated to the multicaster endpoint and used to process the request message. When receiving a secure multicast CoAP request message from that multicaster endpoint for the first time, the listener endpoint creates a new Recipient Context, initializes it according to Section 3 of {{I-D.ietf-core-object-security}}, and includes the multicaster endpoint's public key.
 
-3. The listener endpoint retrieves the corresponding public key of the multicaster endpoint from the associated Recipient Context. Then, it verifies the counter signature and unsecures the request message.
+3. The listener endpoint retrieves the corresponding public key of the multicaster endpoint from the associated Recipient Context. Then, it verifies the counter signature and decrypts the request message.
 
 ## Protecting the Response ## {#ssec-protect-response}
 
 A listener endpoint that has received a multicast request message MAY reply with a secure unicast response message, which is protected as described in Section 7.3 of {{I-D.ietf-core-object-security}}, with the following modifications:
 
-1. The listener endpoint considers the Transaction Identifier (Tid) as defined in {{sec-context}} of this specification.
+1. The listener endpoint retrieves the Transaction Identifier (Tid) as defined in {{sec-context}} of this specification.
 
 2. The listener endpoint computes the COSE object as defined in {{sec-cose-object}} of this specification.
-
-3. Before transmitting the unicast response message, the listener endpoint uses its own private key to create a counter signature of the COSE_Encrypt0 object (Appendix C.4 of {{I-D.ietf-cose-msg}}). Then, the counter signature is included in the Header of the COSE object, in the "cs" paramenter of the "unprotected" field.
 
 ## Verifying the Response ## {#ssec-verify-response}
 
 Upon receiving a secure unicast response message, a multicaster endpoint proceeds as described in Section 7.4 of {{I-D.ietf-core-object-security}}, with the following modifications: 
 
-1. The multicaster endpoint considers the Security Context identified by the Token of the received response message.
+1. The multicaster endpoint retrieves the Security Context identified by the Token of the received response message.
 
 2. The multicaster endpoint retrieves the Sender ID from the header of the COSE object. Then, the Sender ID is used to retrieve the correct Recipient Context associated to the listener endpoint and used to process the response message. When receiving a secure CoAP response message from that listener endpoint for the first time, the multicaster endpoint creates a new Recipient Context, initializes it according to Section 3 of {{I-D.ietf-core-object-security}}, and includes the listener endpoint's public key.
 
-3. The multicaster endpoint retrieves the corresponding public key of the listener endpoint from the associated Recipient Context. Then, it verifies the counter signature and unsecures the response message.
+3. The multicaster endpoint retrieves the corresponding public key of the listener endpoint from the associated Recipient Context. Then, it verifies the counter signature and decrypts the response message.
 
-The mapping between unicast response messages from listener endpoints and the associated multicast request message from a multicaster endpoint relies on the Transaction Identifier (Tid) associated to the secure multicast request message. The Tid is considered by listener endpoints as part of the Additional Authenticated Data when protecting their own response message, as described in Section {{sec-context}}.
+The mapping between unicast response messages from listener endpoints and the associated multicast request message from a multicaster endpoint relies on the Transaction Identifier (Tid) associated to the secure multicast request message. The Tid is used by listener endpoints as part of the Additional Authenticated Data when protecting their own response message, as described in Section {{sec-context}}.
 
 # Security Considerations  # {#sec-security-considerations} 
 
-Specific security aspects to be taken into account are discussed below.
+The same security considerations from OSCOAP (Section 10 of {{I-D.ietf-core-object-security}}) apply to this specification. Furthermore, additional security aspects to be taken into account are discussed below.
 
 ## Group-level Security {#ssec-group-level-security}
 
@@ -281,7 +292,7 @@ In addition, it is required that all group members are trusted, i.e. they do not
 
 The presented approach should take into consideration the risk of compromise of group members. Such a risk is reduced when multicast groups are deployed in physically secured locations, like lighting inside office buildings. The adoption of key management schemes for secure revocation and renewal of security contexts and group keying material should be considered.
 
-As stated in {{sec-requirements}}, it is important to adopt a group key management scheme that SHOULD update the security context and keying material in the group, before a new endpoint joins the group or after a currently present endpoint leaves the group. This is necessary in order to preserve backward security and forward security in the multicast group.
+As stated in {{sec-requirements}}, it is RECOMMENDED to adopt a group key management scheme that updates the security context and keying material in the group, before a new endpoint joins the group or after a currently present endpoint leaves the group. This is necessary in order to preserve backward security and forward security in the multicast group.
 
 Especially in dynamic, large-scale, multicast groups where endpoints can join and leave at any time, it is important that the considered group key management scheme is efficient and highly scalable with the group size, in order to limit the impact on performance due to the security context and keying material update.
 
@@ -315,10 +326,10 @@ Furthermore, in simple, less dynamic, multicast groups, it can be convenient for
 
 # IANA Considerations # {#iana}
 
-This document has no actions for IANA.
+TBD. Header parameter 'gid'.
 
 # Acknowledgments # {#acknowldegment}
-The authors sincerely thank Rolf Blom, Carsten Bormann, John Mattsson, Jim Schaad, Stefan Beck and Richard Kelsey for their feedback and comments.
+The authors sincerely thank Rolf Blom, Carsten Bormann, John Mattsson, Jim Schaad, Stefan Beck, Richard Kelsey and Ludwig Seitz for their feedback and comments.
 
 --- back
 
@@ -332,7 +343,7 @@ The join process to register an endpoint as a new member of a multicast group ca
 
 * An Authorization Server enables and enforces authorized access of the joining endpoint to the Group Manager and its join-resources.
 
-Then, in accordance with {{I-D.seitz-ace-oscoap-profile}}, the joining endpoint and the Group Manager rely on OSCOAP {{I-D.ietf-core-object-security}} for secure communication and consider Ephemeral Diffie-Hellman Over COSE (EDHOC) {{I-D.selander-ace-cose-ecdhe}} as a possible method to establish key material.
+Then, in accordance with {{I-D.seitz-ace-oscoap-profile}}, the joining endpoint and the Group Manager rely on OSCOAP {{I-D.ietf-core-object-security}} for secure communication and can use Ephemeral Diffie-Hellman Over COSE (EDHOC) {{I-D.selander-ace-cose-ecdhe}} as a possible method to establish key material.
 
 The joining endpoint sends to the Group Manager an OSCOAP request to access the join-resource associated to the multicast group to join. The Group Manager replies with an OSCOAP response including the Common Context associated to that group (see {{sec-context}}). In case the Group Manager is configured to store the public keys of group members, the joining endpoint additionally provides the Group Manager with its own public key, and MAY request from the Group Manager the public keys of the endpoints currently present in the group (see {{ssec-provisioning-of-public-keys}}).
 
@@ -362,9 +373,9 @@ Due to such performance contraints and given the more relaxed security requireme
 
 Although this is NOT RECOMMENDED by this specification, it is possible to avoid digital signatures of group messages and provide only their group authentication as follows.
 
-* In every Security Context ({{sec-context}}): the Common Context has the "Counter signature algorithm" field set to NULL; the Sender Context does not include the asymmetric key pair associated to the endpoint; each Recipient Contexts does not include the public key associated to the respective endpoint.
+* In every Security Context ({{sec-context}}): the Common Context has the "Counter signature algorithm" field set to NULL; the Sender Context does not include the key pair associated to the endpoint; each Recipient Contexts does not include the public key associated to the respective endpoint.
 
-* When encoding the Object-Security option of a group message ({{sec-cose-object}}), the sixth least significant bit of the first byte is set to 0, to indicate that the "cs" parameter including the counter signature of the COSE object is not present.
+* When encoding the Object-Security option of a group message ({{sec-cose-object}}), the sixth least significant bit of the first byte is set to 0, to indicate that the "countersign" parameter including the counter signature of the COSE object is not present.
 
 * No counter signature is computed when securing a multicast request ({{ssec-protect-request}}) or a unicast response ({{ssec-protect-response}}), while no counter signature is verified upon receiving a multicast request ({{ssec-verify-request}}) or a unicast response ({{ssec-verify-response}}).
 
@@ -382,10 +393,10 @@ With reference to two endpoints using OSCOAP {{I-D.ietf-core-object-security}} f
 
    - The fifth least significant bit of the first byte is set to 0, to indicate that the "gid" parameter introduced in this specification and including the Context Identifier of an OSCOAP group is not present.
 
-   - The sixth least significant bit of the first byte is set to 1, to indicate the presence of the "cs" parameter introduced in this specification and including the counter signature of the COSE object.
+   - The sixth least significant bit of the first byte is set to 1, to indicate the presence of the "countersign" parameter introduced in this specification and including the counter signature of the COSE object.
 
-   - The q bytes before the "ciphertext" field (q given by the counter signature algorithm specified in the Security Context) encode the value of the "cs" parameter including the counter signature of the COSE object.
+   - The q bytes before the "ciphertext" field (q given by the counter signature algorithm specified in the Security Context) encode the value of the "countersign" parameter including the counter signature of the COSE object.
 
-* Before transmitting an OSCOAP message, a sender endpoint uses its own private key to create a counter signature of the COSE_Encrypt0 object (Appendix C.4 of {{I-D.ietf-cose-msg}}). Then, the counter signature is included in the Header of the COSE object, in the "cs" paramenter of the "unprotected" field.
+* Before transmitting an OSCOAP message, a sender endpoint uses its own private key to create a counter signature of the COSE object (Appendix C.4 of {{I-D.ietf-cose-msg}}). Then, the counter signature is included in the Header of the COSE object, in the "countersign" paramenter of the "unprotected" field.
 
 * Upon receiving an OSCOAP message, the receiver endpoint retrieves the corresponding public key of the sender endpoint from the Security Context. Then, it verifies the counter signature and unsecures the message according to the cryptographic algorithm specified in the Security Context.
