@@ -232,7 +232,7 @@ In particular, "gid" is included as header parameter as defined in Table 1.
 ~~~~~~~~~~
 Table 1: Additional common header parameter for the COSE object
 
-{{sec-no-source-auth}} discusses a possible alternative configuration of the Object-Security option, to avoid the usage of digital signatures and provide only group authentication of secure CoAP messages. This can be required by application scenarios that have particularly strict requirements, such as low message latency, and cannot afford digital signatures (see Section 3 of {{I-D.somaraju-ace-multicast}}). However, such a purely symmetric approach does not provide source authentication of group messages, and thus is NOT RECOMMENDED by this specification.
+{{sec-no-source-auth}} discusses a possible alternative configuration of the Object-Security option, to avoid the usage of digital signatures and provide only group authentication of secure CoAP messages. This can be required by application scenarios that have particularly strict requirements such as low message latency (see Section 3 of {{I-D.somaraju-ace-multicast}}), and cannot afford digital signatures. However, such a purely symmetric approach does not provide source authentication of group messages, and thus is NOT RECOMMENDED by this specification.
 
 {{sec-unicast-with-signature}} discusses a possible alternative configuration of the Object-Security option, to include digital signatures in OSCOAP messages exchanged between two endpoints engaging pure unicast communication.
 
