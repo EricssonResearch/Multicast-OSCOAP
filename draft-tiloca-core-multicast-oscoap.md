@@ -232,7 +232,7 @@ In particular, "gid" is included as header parameter as defined in Table 1.
 ~~~~~~~~~~
 Table 1: Additional common header parameter for the COSE object
 
-{{sec-no-source-auth}} discusses a possible alternative configuration of the Object-Security option, to avoid the usage of digital signatures and provide only group authentication of secure CoAP messages. This can be required by application scenarios that have particularly strict requirements, such as limited message latency, and cannot afford source authentication of group messages based on digital signatures {{I-D.somaraju-ace-multicast}}. However, such a purely symmetric approach does not provide source authentication of group messages, and thus is NOT RECOMMENDED by this specification.
+{{sec-no-source-auth}} discusses a possible alternative configuration of the Object-Security option, to avoid the usage of digital signatures and provide only group authentication of secure CoAP messages. This can be required by application scenarios that have particularly strict requirements, such as low message latency, and cannot afford digital signatures (see Section 3 of {{I-D.somaraju-ace-multicast}}). However, such a purely symmetric approach does not provide source authentication of group messages, and thus is NOT RECOMMENDED by this specification.
 
 {{sec-unicast-with-signature}} discusses a possible alternative configuration of the Object-Security option, to include digital signatures in OSCOAP messages exchanged between two endpoints engaging pure unicast communication.
 
@@ -367,7 +367,7 @@ Group Communication for CoAP {{RFC7390}} provides the necessary background for m
 
 # No Source Authentication # {#sec-no-source-auth}
 
-Some application scenarios based on group communication can display particularly strict requirements, for instance limited message latency in non-emergency lighting applications {{I-D.somaraju-ace-multicast}}. For such and similar applications, it can be inconvenient or even infeasible to ensure source authentication of group messages through approaches based on digital signatures.
+Some application scenarios based on group communication can display particularly strict requirements, for instance low message latency in non-emergency lighting applications {{I-D.somaraju-ace-multicast}}. For such and similar applications, it can be inconvenient or even infeasible to ensure source authentication of group messages through approaches based on digital signatures.
 
 Due to such performance contraints and given the more relaxed security requirements of such non-crytical applications, it can be acceptable to provide only group authentication of messages exchanged within the group. This can be achieved by authenticating group messages through a key which either is commonly shared among group members or can be derived by any of them. As a result, there is evidence that a given message has been originated by a group member, although not specifically identifiable.
 
