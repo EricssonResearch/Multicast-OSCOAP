@@ -600,11 +600,11 @@ Internet-Draft     Secure group communication for CoAP         June 2017
    Object-Security option, to avoid the usage of digital signatures and
    provide only group authentication of secure CoAP messages.  This can
    be required by application scenarios that have particularly strict
-   requirements, such as limited message latency, and cannot afford
-   source authentication of group messages based on digital signatures
-   [I-D.somaraju-ace-multicast].  However, such a purely symmetric
-   approach does not provide source authentication of group messages,
-   and thus is NOT RECOMMENDED by this specification.
+   requirements, such as low message latency, and cannot afford digital
+   signatures (see Section 3 of [I-D.somaraju-ace-multicast]).  However,
+   such a purely symmetric approach does not provide source
+   authentication of group messages, and thus is NOT RECOMMENDED by this
+   specification.
 
    Appendix D discusses a possible alternative configuration of the
    Object-Security option, to include digital signatures in OSCOAP
@@ -1198,12 +1198,11 @@ Internet-Draft     Secure group communication for CoAP         June 2017
 Appendix C.  No Source Authentication
 
    Some application scenarios based on group communication can display
-   particularly strict requirements, for instance limited message
-   latency in non-emergency lighting applications
-   [I-D.somaraju-ace-multicast].  For such and similar applications, it
-   can be inconvenient or even infeasible to ensure source
-   authentication of group messages through approaches based on digital
-   signatures.
+   particularly strict requirements, for instance low message latency in
+   non-emergency lighting applications [I-D.somaraju-ace-multicast].
+   For such and similar applications, it can be inconvenient or even
+   infeasible to ensure source authentication of group messages through
+   approaches based on digital signatures.
 
    Due to such performance contraints and given the more relaxed
    security requirements of such non-crytical applications, it can be
@@ -1226,6 +1225,7 @@ Appendix C.  No Source Authentication
 
    o  When encoding the Object-Security option of a group message
       (Section 5), the sixth least significant bit of the first byte is
+
 
 
 
