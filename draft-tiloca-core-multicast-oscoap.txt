@@ -600,9 +600,9 @@ Internet-Draft     Secure group communication for CoAP         June 2017
    Object-Security option, to avoid the usage of digital signatures and
    provide only group authentication of secure CoAP messages.  This can
    be required by application scenarios that have particularly strict
-   requirements, such as low message latency, and cannot afford digital
-   signatures (see Section 3 of [I-D.somaraju-ace-multicast]).  However,
-   such a purely symmetric approach does not provide source
+   requirements such as low message latency (see Section 3 of
+   [I-D.somaraju-ace-multicast]), and cannot afford digital signatures.
+   However, such a purely symmetric approach does not provide source
    authentication of group messages, and thus is NOT RECOMMENDED by this
    specification.
 
