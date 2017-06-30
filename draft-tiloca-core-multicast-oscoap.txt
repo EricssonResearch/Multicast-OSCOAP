@@ -492,7 +492,7 @@ Internet-Draft     Secure group communication for CoAP         June 2017
    of invalid messages are performed according to the same principles
    adopted in [I-D.ietf-core-object-security].  In particular, a
    receiver endpoint MUST stop processing and reject any message which
-   is malformed and does not follow the specified format.
+   is malformed and does not follow the format specified in Section 6.
 
 
 
