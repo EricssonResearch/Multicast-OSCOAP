@@ -143,7 +143,7 @@ The following security requirements need to be fulfilled by the approach describ
 
 * Message integrity: messages sent within the multicast group SHALL be integrity protected. That is, it is essential to ensure that a message has not been tampered with by an external adversary or other external entities which are not group members.
 
-* Message ordering: it MUST be possible to determine the ordering of messages coming from a single sender endpoint. In accordance with OSCOAP {{I-D.ietf-core-object-security}}, this results in providing relative freshness of group requests and absolute freshness of responses. It is not required to determine ordering of messages from different sender endpoints.
+* Message ordering: it must be possible to determine the ordering of messages coming from a single sender endpoint. In accordance with OSCOAP {{I-D.ietf-core-object-security}}, this results in providing relative freshness of group requests and absolute freshness of responses. It is not required to determine ordering of messages from different sender endpoints.
 
 # Set-up Phase # {#setup}
 
