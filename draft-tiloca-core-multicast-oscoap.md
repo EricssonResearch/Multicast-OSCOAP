@@ -177,7 +177,7 @@ The 3-tuple (Cid, Sender ID, Partial IV) is called Transaction Identifier (Tid),
 
 # Message Processing # {#mess-processing}
 
-Each multicast request message and unicast response message is protected and processed as specified in {{I-D.ietf-core-object-security}}, with the modifications described in the following sections. Furthermore, error handling and processing of invalid messages are performed according to the same principles adopted in {{I-D.ietf-core-object-security}}. In particular, a receiver endpoint MUST stop processing and reject any message which is malformed and does not follow the specified format.
+Each multicast request message and unicast response message is protected and processed as specified in {{I-D.ietf-core-object-security}}, with the modifications described in the following sections. Furthermore, error handling and processing of invalid messages are performed according to the same principles adopted in {{I-D.ietf-core-object-security}}. In particular, a receiver endpoint MUST stop processing and reject any message which is malformed and does not follow the format specified in {{sec-cose-object}}.
 
 ## Protecting the Request ## {#ssec-protect-request}
 
