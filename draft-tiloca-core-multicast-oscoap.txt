@@ -327,7 +327,7 @@ Internet-Draft     Secure group communication for CoAP         June 2017
       message has not been tampered with by an external adversary or
       other external entities which are not group members.
 
-   o  Message ordering: it MUST be possible to determine the ordering of
+   o  Message ordering: it must be possible to determine the ordering of
       messages coming from a single sender endpoint.  In accordance with
       OSCOAP [I-D.ietf-core-object-security], this results in providing
 
