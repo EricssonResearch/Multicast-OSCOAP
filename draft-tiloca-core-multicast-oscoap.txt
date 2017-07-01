@@ -5,13 +5,13 @@
 CoRE Working Group                                             M. Tiloca
 Internet-Draft                                              RISE SICS AB
 Intended status: Standards Track                             G. Selander
-Expires: January 1, 2018                                    F. Palombini
+Expires: January 2, 2018                                    F. Palombini
                                                              Ericsson AB
-                                                           June 30, 2017
+                                                           July 01, 2017
 
 
                   Secure group communication for CoAP
-                 draft-tiloca-core-multicast-oscoap-01
+                 draft-tiloca-core-multicast-oscoap-02
 
 Abstract
 
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on January 1, 2018.
+   This Internet-Draft will expire on January 2, 2018.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Tiloca, et al.           Expires January 1, 2018                [Page 1]
+Tiloca, et al.           Expires January 2, 2018                [Page 1]
 
-Internet-Draft     Secure group communication for CoAP         June 2017
+Internet-Draft     Secure group communication for CoAP         July 2017
 
 
    publication of this document.  Please review these documents
@@ -89,10 +89,10 @@ Table of Contents
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  18
      10.2.  Informative References . . . . . . . . . . . . . . . . .  18
    Appendix A.  Group Joining Based on the ACE Framework . . . . . .  20
-   Appendix B.  List of Use Cases  . . . . . . . . . . . . . . . . .  21
-   Appendix C.  No Source Authentication . . . . . . . . . . . . . .  23
-   Appendix D.  Unicast OSCOAP Messages with Digital Signature . . .  24
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  25
+   Appendix B.  List of Use Cases  . . . . . . . . . . . . . . . . .  20
+   Appendix C.  No Source Authentication . . . . . . . . . . . . . .  22
+   Appendix D.  Unicast OSCOAP Messages with Digital Signature . . .  23
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  24
 
 1.  Introduction
 
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Tiloca, et al.           Expires January 1, 2018                [Page 2]
+Tiloca, et al.           Expires January 2, 2018                [Page 2]
 
-Internet-Draft     Secure group communication for CoAP         June 2017
+Internet-Draft     Secure group communication for CoAP         July 2017
 
 
    Furthermore, [RFC7390] recognizes the importance to introduce a
@@ -165,9 +165,9 @@ Internet-Draft     Secure group communication for CoAP         June 2017
 
 
 
-Tiloca, et al.           Expires January 1, 2018                [Page 3]
+Tiloca, et al.           Expires January 2, 2018                [Page 3]
 
-Internet-Draft     Secure group communication for CoAP         June 2017
+Internet-Draft     Secure group communication for CoAP         July 2017
 
 
    This document refers also to the following terminology.
@@ -221,9 +221,9 @@ Internet-Draft     Secure group communication for CoAP         June 2017
 
 
 
-Tiloca, et al.           Expires January 1, 2018                [Page 4]
+Tiloca, et al.           Expires January 2, 2018                [Page 4]
 
-Internet-Draft     Secure group communication for CoAP         June 2017
+Internet-Draft     Secure group communication for CoAP         July 2017
 
 
    o  Establishment and management of a security context: a security
@@ -277,9 +277,9 @@ Internet-Draft     Secure group communication for CoAP         June 2017
 
 
 
-Tiloca, et al.           Expires January 1, 2018                [Page 5]
+Tiloca, et al.           Expires January 2, 2018                [Page 5]
 
-Internet-Draft     Secure group communication for CoAP         June 2017
+Internet-Draft     Secure group communication for CoAP         July 2017
 
 
       devices.  In more advanced lighting control use cases, a M-to-N
@@ -333,9 +333,9 @@ Internet-Draft     Secure group communication for CoAP         June 2017
 
 
 
-Tiloca, et al.           Expires January 1, 2018                [Page 6]
+Tiloca, et al.           Expires January 2, 2018                [Page 6]
 
-Internet-Draft     Secure group communication for CoAP         June 2017
+Internet-Draft     Secure group communication for CoAP         July 2017
 
 
       relative freshness of group requests and absolute freshness of
@@ -389,9 +389,9 @@ Internet-Draft     Secure group communication for CoAP         June 2017
 
 
 
-Tiloca, et al.           Expires January 1, 2018                [Page 7]
+Tiloca, et al.           Expires January 2, 2018                [Page 7]
 
-Internet-Draft     Secure group communication for CoAP         June 2017
+Internet-Draft     Secure group communication for CoAP         July 2017
 
 
    handle multiple unicast response messages associated to a given
@@ -445,9 +445,9 @@ Internet-Draft     Secure group communication for CoAP         June 2017
 
 
 
-Tiloca, et al.           Expires January 1, 2018                [Page 8]
+Tiloca, et al.           Expires January 2, 2018                [Page 8]
 
-Internet-Draft     Secure group communication for CoAP         June 2017
+Internet-Draft     Secure group communication for CoAP         July 2017
 
 
        Section 3, it is responsibility of the Group Manager to assign
@@ -501,9 +501,9 @@ Internet-Draft     Secure group communication for CoAP         June 2017
 
 
 
-Tiloca, et al.           Expires January 1, 2018                [Page 9]
+Tiloca, et al.           Expires January 2, 2018                [Page 9]
 
-Internet-Draft     Secure group communication for CoAP         June 2017
+Internet-Draft     Secure group communication for CoAP         July 2017
 
 
 5.1.  Protecting the Request
@@ -557,9 +557,9 @@ Internet-Draft     Secure group communication for CoAP         June 2017
 
 
 
-Tiloca, et al.           Expires January 1, 2018               [Page 10]
+Tiloca, et al.           Expires January 2, 2018               [Page 10]
 
-Internet-Draft     Secure group communication for CoAP         June 2017
+Internet-Draft     Secure group communication for CoAP         July 2017
 
 
    2.  The listener endpoint computes the COSE object as defined in
@@ -613,9 +613,9 @@ Internet-Draft     Secure group communication for CoAP         June 2017
 
 
 
-Tiloca, et al.           Expires January 1, 2018               [Page 11]
+Tiloca, et al.           Expires January 2, 2018               [Page 11]
 
-Internet-Draft     Secure group communication for CoAP         June 2017
+Internet-Draft     Secure group communication for CoAP         July 2017
 
 
        a listener endpoint explicitly sets the value of "Partial IV" to
@@ -669,9 +669,9 @@ Internet-Draft     Secure group communication for CoAP         June 2017
 
 
 
-Tiloca, et al.           Expires January 1, 2018               [Page 12]
+Tiloca, et al.           Expires January 2, 2018               [Page 12]
 
-Internet-Draft     Secure group communication for CoAP         June 2017
+Internet-Draft     Secure group communication for CoAP         July 2017
 
 
        *  The sixth least significant bit of the first byte is set to 1
@@ -725,9 +725,9 @@ Internet-Draft     Secure group communication for CoAP         June 2017
 
 
 
-Tiloca, et al.           Expires January 1, 2018               [Page 13]
+Tiloca, et al.           Expires January 2, 2018               [Page 13]
 
-Internet-Draft     Secure group communication for CoAP         June 2017
+Internet-Draft     Secure group communication for CoAP         July 2017
 
 
    [I-D.somaraju-ace-multicast]), and thus cannot afford digital
@@ -781,9 +781,9 @@ Internet-Draft     Secure group communication for CoAP         June 2017
 
 
 
-Tiloca, et al.           Expires January 1, 2018               [Page 14]
+Tiloca, et al.           Expires January 2, 2018               [Page 14]
 
-Internet-Draft     Secure group communication for CoAP         June 2017
+Internet-Draft     Secure group communication for CoAP         July 2017
 
 
    order to preserve backward security and forward security in the
@@ -805,7 +805,7 @@ Internet-Draft     Secure group communication for CoAP         June 2017
    fresh and has not been replayed.  In order to address this issue, a
    listener can perform a challenge-response exchange with a
    multicaster, by using the Repeat Option for CoAP described in
-   Section 3 of [I-D.mattsson-core-coap-actuators].
+   Section 2 of [I-D.amsuess-core-repeat-request-tag].
 
    That is, upon receiving a multicast request from a particular
    multicaster for the first time, the listener processes the message as
@@ -837,9 +837,9 @@ Internet-Draft     Secure group communication for CoAP         June 2017
 
 
 
-Tiloca, et al.           Expires January 1, 2018               [Page 15]
+Tiloca, et al.           Expires January 2, 2018               [Page 15]
 
-Internet-Draft     Secure group communication for CoAP         June 2017
+Internet-Draft     Secure group communication for CoAP         July 2017
 
 
    Upon receiving the unicast group request including the Repeat Option,
@@ -847,13 +847,13 @@ Internet-Draft     Secure group communication for CoAP         June 2017
    previously sent value; otherwise, the request is silently discarded.
    Then, the listener verifies that the unicast group request has been
    received within a pre-configured time interval, as described in
-   [I-D.mattsson-core-coap-actuators].  In such a case, the request is
-   further processed and verified; otherwise, it is silently discarded.
-   Finally, the listener updates the Recipient Context associated to
-   that multicaster, by setting the Sequence Number to the value
-   included in the unicast group request conveying the Repeat Option.
-   The listener either delivers the request to the application if it is
-   an actual retransmission of the original one, or discard it
+   [I-D.amsuess-core-repeat-request-tag].  In such a case, the request
+   is further processed and verified; otherwise, it is silently
+   discarded.  Finally, the listener updates the Recipient Context
+   associated to that multicaster, by setting the Sequence Number to the
+   value included in the unicast group request conveying the Repeat
+   Option.  The listener either delivers the request to the application
+   if it is an actual retransmission of the original one, or discard it
    otherwise.  Mechanisms to signal whether the resent request is a full
    retransmission of the original one are out of the scope of this
    specification.
@@ -866,17 +866,17 @@ Internet-Draft     Secure group communication for CoAP         June 2017
    A listener SHOULD NOT deliver group request messages from a given
    multicaster to the application until one valid group request from
    that same multicaster has been verified as fresh, as conveying an
-   echoed Repeat Option.  Also, a listener MAY perform the challenge-
-   response described above at any time, if synchronization with
-   sequence numbers of multicasters is (believed to be) lost, for
-   instance after a device reboot.  It is the role of the application to
-   define under what circumstances sequence numbers lose
-   synchronization.  This can include a minimum gap between the sequence
-   number of the latest accepted group request from a multicaster and
-   the sequence number of a group request just received from the same
-   multicaster.  A multicaster MUST always be ready to perform the
-   challenge-response based on the Repeat Option in case a listener
-   starts it.
+   echoed Repeat Option [I-D.amsuess-core-repeat-request-tag].  Also, a
+   listener MAY perform the challenge-response described above at any
+   time, if synchronization with sequence numbers of multicasters is
+   (believed to be) lost, for instance after a device reboot.  It is the
+   role of the application to define under what circumstances sequence
+   numbers lose synchronization.  This can include a minimum gap between
+   the sequence number of the latest accepted group request from a
+   multicaster and the sequence number of a group request just received
+   from the same multicaster.  A multicaster MUST always be ready to
+   perform the challenge-response based on the Repeat Option in case a
+   listener starts it.
 
    Note that endpoints configured as pure listeners are not able to
    perform the challenge-response described above, as they do not store
@@ -893,9 +893,9 @@ Internet-Draft     Secure group communication for CoAP         June 2017
 
 
 
-Tiloca, et al.           Expires January 1, 2018               [Page 16]
+Tiloca, et al.           Expires January 2, 2018               [Page 16]
 
-Internet-Draft     Secure group communication for CoAP         June 2017
+Internet-Draft     Secure group communication for CoAP         July 2017
 
 
    If not already stored in the Recipient Context associated to the
@@ -949,27 +949,26 @@ Internet-Draft     Secure group communication for CoAP         June 2017
 
 
 
-Tiloca, et al.           Expires January 1, 2018               [Page 17]
+Tiloca, et al.           Expires January 2, 2018               [Page 17]
 
-Internet-Draft     Secure group communication for CoAP         June 2017
+Internet-Draft     Secure group communication for CoAP         July 2017
 
 
 10.1.  Normative References
 
+   [I-D.amsuess-core-repeat-request-tag]
+              Amsuess, C., Mattsson, J., and G. Selander, "Repeat And
+              Request-Tag", draft-amsuess-core-repeat-request-tag-00
+              (work in progress), July 2017.
+
    [I-D.ietf-core-object-security]
               Selander, G., Mattsson, J., Palombini, F., and L. Seitz,
               "Object Security of CoAP (OSCOAP)", draft-ietf-core-
-              object-security-03 (work in progress), May 2017.
+              object-security-04 (work in progress), July 2017.
 
    [I-D.ietf-cose-msg]
               Schaad, J., "CBOR Object Signing and Encryption (COSE)",
               draft-ietf-cose-msg-24 (work in progress), November 2016.
-
-   [I-D.mattsson-core-coap-actuators]
-              Mattsson, J., Fornehed, J., Selander, G., and F.
-              Palombini, "Controlling Actuators with CoAP", draft-
-              mattsson-core-coap-actuators-02 (work in progress),
-              November 2016.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -996,24 +995,20 @@ Internet-Draft     Secure group communication for CoAP         June 2017
 
    [I-D.seitz-ace-oscoap-profile]
               Seitz, L., Gunnarsson, M., and F. Palombini, "OSCOAP
-              profile of ACE", draft-seitz-ace-oscoap-profile-02 (work
-              in progress), May 2017.
-
-
-
-
-
-
-
-Tiloca, et al.           Expires January 1, 2018               [Page 18]
-
-Internet-Draft     Secure group communication for CoAP         June 2017
-
+              profile of ACE", draft-seitz-ace-oscoap-profile-03 (work
+              in progress), June 2017.
 
    [I-D.selander-ace-cose-ecdhe]
               Selander, G., Mattsson, J., and F. Palombini, "Ephemeral
               Diffie-Hellman Over COSE (EDHOC)", draft-selander-ace-
               cose-ecdhe-06 (work in progress), April 2017.
+
+
+
+Tiloca, et al.           Expires January 2, 2018               [Page 18]
+
+Internet-Draft     Secure group communication for CoAP         July 2017
+
 
    [I-D.somaraju-ace-multicast]
               Somaraju, A., Kumar, S., Tschofenig, H., and W. Werner,
@@ -1057,19 +1052,19 @@ Internet-Draft     Secure group communication for CoAP         June 2017
               RFC 6749, DOI 10.17487/RFC6749, October 2012,
               <http://www.rfc-editor.org/info/rfc6749>.
 
-
-
-
-
-Tiloca, et al.           Expires January 1, 2018               [Page 19]
-
-Internet-Draft     Secure group communication for CoAP         June 2017
-
-
    [RFC7228]  Bormann, C., Ersue, M., and A. Keranen, "Terminology for
               Constrained-Node Networks", RFC 7228,
               DOI 10.17487/RFC7228, May 2014,
               <http://www.rfc-editor.org/info/rfc7228>.
+
+
+
+
+
+Tiloca, et al.           Expires January 2, 2018               [Page 19]
+
+Internet-Draft     Secure group communication for CoAP         July 2017
+
 
    [RFC7390]  Rahman, A., Ed. and E. Dijk, Ed., "Group Communication for
               the Constrained Application Protocol (CoAP)", RFC 7390,
@@ -1114,19 +1109,19 @@ Appendix A.  Group Joining Based on the ACE Framework
    Server.  To this end, different alternatives are possible, including
    OSCOAP and DTLS [RFC6347].
 
-
-
-
-Tiloca, et al.           Expires January 1, 2018               [Page 20]
-
-Internet-Draft     Secure group communication for CoAP         June 2017
-
-
 Appendix B.  List of Use Cases
 
    Group Communication for CoAP [RFC7390] provides the necessary
    background for multicast-based CoAP communication, with particular
    reference to low-power and lossy networks (LLNs) and resource
+
+
+
+Tiloca, et al.           Expires January 2, 2018               [Page 20]
+
+Internet-Draft     Secure group communication for CoAP         July 2017
+
+
    constrained environments.  The interested reader is encouraged to
    first read [RFC7390] to understand the non-security related details.
    This section discusses a number of use cases that benefit from secure
@@ -1170,19 +1165,19 @@ Appendix B.  List of Use Cases
 
    o  Software and firmware updates: software and firmware updates often
       comprise quite a large amount of data.  This can overload a LLN
-
-
-
-Tiloca, et al.           Expires January 1, 2018               [Page 21]
-
-Internet-Draft     Secure group communication for CoAP         June 2017
-
-
       that is otherwise typically used to deal with only small amounts
       of data, on an infrequent base.  Rather than sending software and
       firmware updates as unicast messages to each individual device,
       multicasting such updated data to a larger group of devices at
       once displays a number of benefits.  For instance, it can
+
+
+
+Tiloca, et al.           Expires January 2, 2018               [Page 21]
+
+Internet-Draft     Secure group communication for CoAP         July 2017
+
+
       significantly reduce the network load and decrease the overall
       time latency for propagating this data to all devices.  Even if
       the complete whole update process itself is secured, securing the
@@ -1222,18 +1217,6 @@ Internet-Draft     Secure group communication for CoAP         June 2017
       back to the emergency notifier, in order to provide their feedback
       and local information related to the ongoing emergency.
 
-
-
-
-
-
-
-
-Tiloca, et al.           Expires January 1, 2018               [Page 22]
-
-Internet-Draft     Secure group communication for CoAP         June 2017
-
-
 Appendix C.  No Source Authentication
 
    Some application scenarios based on group communication can display
@@ -1242,6 +1225,14 @@ Appendix C.  No Source Authentication
    For such and similar applications, it can be inconvenient or even
    infeasible to ensure source authentication of group messages through
    approaches based on digital signatures.
+
+
+
+
+Tiloca, et al.           Expires January 2, 2018               [Page 22]
+
+Internet-Draft     Secure group communication for CoAP         July 2017
+
 
    Due to such performance contraints and given the more relaxed
    security requirements of such non-critical applications, it can be
@@ -1278,18 +1269,6 @@ Appendix C.  No Source Authentication
    from the Sender ID and the commonly shared Master Secret and Master
    Salt.
 
-
-
-
-
-
-
-
-Tiloca, et al.           Expires January 1, 2018               [Page 23]
-
-Internet-Draft     Secure group communication for CoAP         June 2017
-
-
 Appendix D.  Unicast OSCOAP Messages with Digital Signature
 
    Two endpoints engaging pure unicast communication secured with OSCOAP
@@ -1302,6 +1281,14 @@ Appendix D.  Unicast OSCOAP Messages with Digital Signature
    With reference to two endpoints using OSCOAP
    [I-D.ietf-core-object-security] for pure unicast communication,
    digital signing of exchanged messages can be enabled as follows.
+
+
+
+
+Tiloca, et al.           Expires January 2, 2018               [Page 23]
+
+Internet-Draft     Secure group communication for CoAP         July 2017
+
 
    o  Each of the two endpoint additionally stores in the Security
       Context: i) the respective public-private key pair; ii) the other
@@ -1339,13 +1326,6 @@ Appendix D.  Unicast OSCOAP Messages with Digital Signature
       unsecures the message according to the cryptographic algorithm
       specified in the Security Context.
 
-
-
-Tiloca, et al.           Expires January 1, 2018               [Page 24]
-
-Internet-Draft     Secure group communication for CoAP         June 2017
-
-
 Authors' Addresses
 
    Marco Tiloca
@@ -1355,6 +1335,15 @@ Authors' Addresses
    Sweden
 
    Email: marco.tiloca@ri.se
+
+
+
+
+
+
+Tiloca, et al.           Expires January 2, 2018               [Page 24]
+
+Internet-Draft     Secure group communication for CoAP         July 2017
 
 
    Goeran Selander
@@ -1397,4 +1386,15 @@ Authors' Addresses
 
 
 
-Tiloca, et al.           Expires January 1, 2018               [Page 25]
+
+
+
+
+
+
+
+
+
+
+
+Tiloca, et al.           Expires January 2, 2018               [Page 25]
