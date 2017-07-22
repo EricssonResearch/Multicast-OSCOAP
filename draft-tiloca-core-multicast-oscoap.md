@@ -368,7 +368,7 @@ Group Communication for CoAP {{RFC7390}} provides the necessary background for m
 
 Some application scenarios based on group communication can display particularly strict requirements, for instance low message latency in non-emergency lighting applications {{I-D.somaraju-ace-multicast}}. In such and similar non-critical applications with performance contraints and more relaxed security requirements, it can be inconvenient for some endpoints to verify digital signatures in order to assert source authenticity of received group messages.
 
-Although it is NOT RECOMMENDED by this specification, such endpoints may optionally not verify the counter signature of receveid group messages. As a consequence, they assert only group-authenticity of received group messages, when decrypting them by means of the AEAD algorithm and the Sender Key/IV used by the sender endpoint. That is, such endpoints can have evidence that a received message has been originated by a group member, although not specifically identifiable in a secure way.
+Although it is NOT RECOMMENDED by this specification, such endpoints may optionally not verify the counter signature of receveid group messages. As a consequence, they assert only group-authenticity of received group messages, when decrypting them by means of the AEAD algorithm and the Sender Key/IV used by the sender endpoint. That is, such endpoints have evidence that a received message has been originated by a group member, although not specifically identifiable in a secure way.
 
 # Unicast OSCOAP Messages with Digital Signature # {#sec-unicast-with-signature}
 
