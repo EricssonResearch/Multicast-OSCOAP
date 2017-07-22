@@ -1222,7 +1222,7 @@ Appendix C.  No Verification of Signatures
    messages.  As a consequence, they assert only group-authenticity of
    received group messages, when decrypting them by means of the AEAD
    algorithm and the Sender Key/IV used by the sender endpoint.  That
-   is, such endpoints can have evidence that a received message has been
+   is, such endpoints have evidence that a received message has been
    originated by a group member, although not specifically identifiable
    in a secure way.
 
