@@ -299,7 +299,6 @@ address {
 <link href="#rfc.appendix.A" rel="Chapter" title="A Group Joining Based on the ACE Framework">
 <link href="#rfc.appendix.B" rel="Chapter" title="B List of Use Cases">
 <link href="#rfc.appendix.C" rel="Chapter" title="C No Verification of Signatures">
-<link href="#rfc.appendix.D" rel="Chapter" title="D Unicast OSCOAP Messages with Digital Signature">
 <link href="#rfc.authors" rel="Chapter">
 
 
@@ -308,7 +307,7 @@ address {
 
   <meta name="dct.creator" content="Tiloca, M., Selander, G., and F. Palombini" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-tiloca-core-multicast-oscoap-03" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-7-22" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-7-23" />
   <meta name="dct.abstract" content="This document describes a method for protecting group communication over the Constrained Application Protocol (CoAP). The proposed approach relies on Object Security of CoAP (OSCOAP) and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast OSCOAP request messages and related unicast OSCOAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through private keys of sender devices and embedded in the protected CoAP messages." />
   <meta name="description" content="This document describes a method for protecting group communication over the Constrained Application Protocol (CoAP). The proposed approach relies on Object Security of CoAP (OSCOAP) and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCOAP are maintained for multicast OSCOAP request messages and related unicast OSCOAP response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through private keys of sender devices and embedded in the protected CoAP messages." />
 
@@ -332,7 +331,7 @@ address {
 <td class="right">G. Selander</td>
 </tr>
 <tr>
-<td class="left">Expires: January 23, 2018</td>
+<td class="left">Expires: January 24, 2018</td>
 <td class="right">F. Palombini</td>
 </tr>
 <tr>
@@ -341,7 +340,7 @@ address {
 </tr>
 <tr>
 <td class="left"></td>
-<td class="right">July 22, 2017</td>
+<td class="right">July 23, 2017</td>
 </tr>
 
     	
@@ -357,7 +356,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on January 23, 2018.</p>
+<p>This Internet-Draft will expire on January 24, 2018.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -414,8 +413,6 @@ address {
 <li>Appendix B.   <a href="#rfc.appendix.B">List of Use Cases</a>
 </li>
 <li>Appendix C.   <a href="#rfc.appendix.C">No Verification of Signatures</a>
-</li>
-<li>Appendix D.   <a href="#rfc.appendix.D">Unicast OSCOAP Messages with Digital Signature</a>
 </li>
 <li><a href="#rfc.authors">Authors' Addresses</a>
 </li>
@@ -589,7 +586,6 @@ address {
  
 </pre>
 <p id="rfc.section.6.p.4">Table 1: Additional common header parameter for the COSE object</p>
-<p><a href="#sec-unicast-with-signature" class="xref">Appendix D</a> discusses a possible alternative configuration of the Object-Security option, to include digital signatures in OSCOAP messages exchanged between two endpoints engaging pure unicast communication.</p>
 <h1 id="rfc.section.7">
 <a href="#rfc.section.7">7.</a> <a href="#sec-security-considerations" id="sec-security-considerations">Security Considerations</a>
 </h1>
@@ -774,24 +770,6 @@ address {
 </h1>
 <p id="rfc.section.C.p.1">Some application scenarios based on group communication can display particularly strict requirements, for instance low message latency in non-emergency lighting applications <a href="#I-D.somaraju-ace-multicast" class="xref">[I-D.somaraju-ace-multicast]</a>. In such and similar non-critical applications with performance constraints and more relaxed security requirements, it can be inconvenient for some endpoints to verify digital signatures in order to assert source authenticity of received group messages.</p>
 <p id="rfc.section.C.p.2">Although it is NOT RECOMMENDED by this specification, such endpoints may optionally not verify the counter signature of received group messages. As a consequence, they assert only group-authenticity of received group messages, when decrypting them by means of the AEAD algorithm and the Sender Key/IV used by the sender endpoint. That is, such endpoints have evidence that a received message has been originated by a group member, although not specifically identifiable in a secure way.</p>
-<h1 id="rfc.appendix.D">
-<a href="#rfc.appendix.D">Appendix D.</a> <a href="#sec-unicast-with-signature" id="sec-unicast-with-signature">Unicast OSCOAP Messages with Digital Signature</a>
-</h1>
-<p id="rfc.section.D.p.1">Two endpoints engaging pure unicast communication secured with OSCOAP can benefit from exchanging digitally signed messages. This especially applies to scenarios where end-to-end confidentiality is not a security requirement to fulfill, and thus proxies are able to fully inspect, process and aggregate messages, while still not able to alter them.</p>
-<p id="rfc.section.D.p.2">With reference to two endpoints using OSCOAP <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a> for pure unicast communication, digital signing of exchanged messages can be enabled as follows.</p>
-<p></p>
-
-<ul>
-<li>Each of the two endpoint additionally stores in the Security Context: i) the respective public-private key pair; ii) the other endpoint's public key; iii) a "Counter signature algorithm" field as defined in <a href="#sec-context" class="xref">Section 4</a> of this specification.</li>
-<li>The Object-Security option of OSCOAP messages is encoded as described in Section 8.1 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>, with the following differences.  <ul>
-<li>The fifth least significant bit of the first byte is set to 0, to indicate that the "gid" parameter introduced in this specification and including the Context Identifier of an OSCOAP multicast group is not present.</li>
-<li>The sixth least significant bit of the first byte is set to 1, to indicate the presence of the "countersign" parameter introduced in this specification and including the counter signature of the COSE object.</li>
-<li>The q bytes before the "ciphertext" field (q given by the counter signature algorithm specified in the Security Context) encode the value of the "countersign" parameter including the counter signature of the COSE object.</li>
-</ul>
-</li>
-<li>Before transmitting an OSCOAP message, a sender endpoint uses its own private key to create a counter signature of the COSE object (Appendix C.4 of <a href="#I-D.ietf-cose-msg" class="xref">[I-D.ietf-cose-msg]</a>). Then, the counter signature is included in the Header of the COSE object, in the "countersign" paramenter of the "unprotected" field.</li>
-<li>Upon receiving an OSCOAP message, the receiver endpoint retrieves the corresponding public key of the sender endpoint from the Security Context. Then, it verifies the counter signature and unsecures the message according to the cryptographic algorithm specified in the Security Context.</li>
-</ul>
 <h1 id="rfc.authors"><a href="#rfc.authors">Authors' Addresses</a></h1>
 <div class="avoidbreak">
   <address class="vcard">
