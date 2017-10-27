@@ -13,7 +13,7 @@ Expires: April 30, 2018                                     F. Palombini
 
 
                   Secure group communication for CoAP
-                 draft-tiloca-core-multicast-oscore-04
+                 draft-tiloca-core-multicast-oscoap-04
 
 Abstract
 
