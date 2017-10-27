@@ -1,7 +1,7 @@
 ---
 title: Secure group communication for CoAP
 # abbrev: 
-docname: draft-tiloca-core-multicast-oscore-04
+docname: draft-tiloca-core-multicast-oscoap-04
 
 
 # stand_alone: true
