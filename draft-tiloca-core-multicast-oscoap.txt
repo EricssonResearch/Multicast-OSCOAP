@@ -809,9 +809,9 @@ Internet-Draft     Secure group communication for CoAP      October 2017
 
 9.  Acknowledgments
 
-   The authors sincerely thank Rolf Blom, Carsten Bormann, John
-   Mattsson, Jim Schaad, Stefan Beck, Richard Kelsey, Ludwig Seitz and
-   Klaus Hartke for their feedback and comments.
+   The authors sincerely thank Stefan Beck, Rolf Blom, Carsten Bormann,
+   Klaus Hartke, Richard Kelsey, John Mattsson, Jim Schaad and Ludwig
+   Seitz for their feedback and comments.
 
 10.  References
 
