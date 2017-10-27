@@ -63,16 +63,17 @@ author:
 normative:
 
   I-D.ietf-core-object-security:
-  I-D.amsuess-core-repeat-request-tag:
   RFC2119:
   RFC7252:
   RFC8032:
   RFC8152:
+  RFC8174:
 
 informative:
 
   I-D.ietf-ace-oauth-authz:
   I-D.ietf-ace-dtls-authorize:
+  I-D.amsuess-core-repeat-request-tag:
   I-D.aragon-ace-ipsec-profile:
   I-D.seitz-ace-oscoap-profile:
   I-D.somaraju-ace-multicast:
@@ -112,7 +113,7 @@ This document describes multicast OSCORE, providing end-to-end security of CoAP 
 
 ## Terminology ## {#terminology}
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in {{RFC2119}}. These words may also appear in this document in lowercase, absent their normative meanings.
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{RFC2119}}{{RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
 Readers are expected to be familiar with the terms and concepts described in CoAP {{RFC7252}}; group communication for CoAP {{RFC7390}}; COSE and counter signatures {{RFC8152}}.
 
@@ -126,13 +127,13 @@ This document refers also to the following terminology.
 
 * Group Manager (GM): entity responsible for creating a multicast group, establishing and provisioning Security Contexts among authorized group members, as well as managing the joining of new group members and the leaving of current group members. A GM can be responsible for multiple multicast groups. Besides, a GM is not required to be an actual group member and to take part in the group communication. The GM is also responsible for renewing/updating Security Contexts and related keying material in the multicast groups of its competence. Each endpoint in a multicast group securely communicates with the respective GM.
 
-* Endpoint ID: identifier assigned by the Group Manager to an endpoint upon joining the group as a new member, unless configured exclusively as pure listener. The Group Manager generates and manages Endpoint IDs in order to ensure their uniqueness within a same multicast group. That is, within a single multicast group, the same Endpoint ID cannot be associated to more endpoints at the same time. Endpoint IDs are not necessarily related to any protocol-relevant identifiers, such as IP addresses.
-
 * Multicaster: member of a multicast group that sends multicast CoAP messages intended for all members of the group. In a 1-to-N multicast group, only a single multicaster transmits data to the group; in an M-to-N multicast group (where M and N do not necessarily have the same value), M group members are multicasters. According to {{RFC7390}}, any possible proxy entity is supposed to know about the multicasters in the group and to not perform aggregation of response messages. Also, every multicaster expects and is able to handle multiple response messages associated to a given multicast request message that it has previously sent to the group.
 
 * Listener: member of a multicast group that receives multicast CoAP messages when listening to the multicast IP address associated to the multicast group. A listener may reply back, by sending a response message to the multicaster which has sent the multicast message.
 
 * Pure listener: member of a multicast group that is configured as listener and never replies back to multicasters after receiving multicast messages.
+
+* Endpoint ID: identifier assigned by the Group Manager to an endpoint upon joining the group as a new member, unless configured exclusively as pure listener. The Group Manager generates and manages Endpoint IDs in order to ensure their uniqueness within a same multicast group. That is, within a single multicast group, the same Endpoint ID cannot be associated to more endpoints at the same time. Endpoint IDs are not necessarily related to any protocol-relevant identifiers, such as IP addresses.
 
 * Group request: multicast CoAP request message sent by a multicaster in the group to all listeners in the group through multicast IP, unless otherwise specified.
 
@@ -178,9 +179,9 @@ To support multicast communication secured with OSCORE, each endpoint registered
 
 1. one Common Context, received from the Group Manager upon joining the multicast group and shared by all the endpoints in the group. All the endpoints in the group agree on the same COSE AEAD algorithm. In addition to what is defined in Section 3 of {{I-D.ietf-core-object-security}}, the Common Context includes the following information.
 
-   * Group Identifier (Gid). Variable length byte string identifying the Security Context and used as Master Salt parameter in the derivation of keying material. The Gid is used together with the multicast IP address of the group to retrieve the Security Context, upon receiving a secure multicast request message (see {{ssec-verify-request}}). The Gid associated to a multicast group is determined by the responsible Group Manager. The choice of the Gid for a given group's Security Context is application specific. However, a Gid MUST be random as well as long enough, in order to achieve a negligible probability of collisions between Group Identifiers from different Group Managers. It is the role of the application to specify how to handle possible collisions. An example of a specific formatting of the Gid that would follow this specification is given in {{gid-ex}}.
+   * Group Identifier (Gid). Variable length byte string identifying the Security Context and used as Master Salt parameter in the derivation of keying material. The Gid is used together with the multicast IP address of the group to retrieve the Security Context, upon receiving a secure multicast request message (see {{ssec-verify-request}}). The Gid associated to a multicast group is determined by the responsible Group Manager. The choice of the Gid for a given group's Security Context is application specific. However, a Gid MUST be random as well as long enough, in order to achieve a negligible probability of collisions between Group Identifiers from different Group Managers. It is the role of the application to specify how to handle possible collisions. An example of specific formatting of the Group Identifier that would follow this specification is given in {{gid-ex}}.
 
-   * Counter signature algorithm. Value stored as new additional field that identifies the algorithm used for source authenticating messages sent within the group, by means of a counter signature (see Section 4.5 of {{RFC8152}}). Its value is immutable once the Security Context is established. All the endpoints in the group agree on the same counter signature algorithm. The Group Manager MUST define a list of supported signature algorithms as part of the group communication policy. Such a list MUST include the EdDSA signature algorithm ed25519 {{RFC8032}}.
+   * Counter signature algorithm. Value identifying the algorithm used for source authenticating messages sent within the group, by means of a counter signature (see Section 4.5 of {{RFC8152}}). Its value is immutable once the Security Context is established. All the endpoints in the group agree on the same counter signature algorithm. The Group Manager MUST define a list of supported signature algorithms as part of the group communication policy. Such a list MUST include the EdDSA signature algorithm ed25519 {{RFC8032}}.
 
 2. one Sender Context, unless the endpoint is configured exclusively as pure listener. The Sender Context is used to secure outgoing messages and is initialized according to Section 3 of {{I-D.ietf-core-object-security}}, once the endpoint has joined the multicast group. In practice, the sender endpoint shares the same symmetric keying material stored in the Sender Context with all the recipient endpoints receiving its outgoing OSCORE messages. The Sender ID in the Sender Context coincides with the Endpoint ID received upon joining the group. It is responsibility of the Group Manager to assign Endpoint IDs to new joining endpoints in such a way that uniquess is ensured within the multicast group. Besides, in addition to what is defined in {{I-D.ietf-core-object-security}}, the Sender Context stores also the endpoint's public-private key pair.
 
@@ -198,10 +199,9 @@ The Sender Key/IV stored in the Sender Context and the Recipient Keys/IVs stored
 
 The approach described in this specification should take into account the risk of compromise of group members. Such a risk is reduced when multicast groups are deployed in physically secured locations, like lighting inside office buildings. Nevertheless, the adoption of key management schemes for secure revocation and renewal of Security Contexts and group keying material should be considered.
 
-Consistently with the security assumptions in {{sec-requirements}}, it is RECOMMENDED to adopt a group key management scheme, and securely distribute a new value for the Master Secret parameter of the group's Security Context, before a new joining endpoint is added to the group or after a currently present endpoint leaves the group. This is necessary in order to preserve backward security and forward security in the multicast group. The Group Manager responsible for the group is entrusted with such a task and acts also as Group Key Manager.
+Consistently with the security assumptions in {{sec-requirements}}, it is RECOMMENDED to adopt a group key management scheme, and securely distribute a new value for the Master Secret parameter of the group's Security Context, before a new joining endpoint is added to the group or after a currently present endpoint leaves the group. This is necessary in order to preserve backward security and forward security in the multicast group. The Group Manager responsible for the group is entrusted with such a task.
 
-The Group Key Manager MUST distribute also a new Group Identifier (Gid) for that group, together with a new value for the Master Secret parameter. An example of how this can be done is provided in {{gid-ex}}. Then, each group member re-derives the keying material stored in its own Sender Context and Recipient Contexts as described in {{sec-context}}, using the updated Group Identifier.
-<!--Once the Master Secret has been renewed in the group, all the group members increment by 1 the Group Epoch in the Group Identifier of that group (see {{sec-context}}).-->
+In particular, the Group Manager MUST distribute also a new Group Identifier (Gid) for that group, together with a new value for the Master Secret parameter. An example of how this can be done is provided in {{gid-ex}}. Then, each group member re-derives the keying material stored in its own Sender Context and Recipient Contexts as described in {{sec-context}}, using the updated Group Identifier.
 
 Especially in dynamic, large-scale, multicast groups where endpoints can join and leave at any time, it is important that the considered group key management scheme is efficient and highly scalable with the group size, in order to limit the impact on performance due to the Security Context and keying material update.
 
@@ -220,7 +220,6 @@ When creating a protected CoAP message, an endpoint in the group computes the CO
 In particular, "gid" is included as COSE header parameter as defined in {{tab-1}}.
  
 ~~~~~~~~~~
- 
 +------+-------+------------+----------------+-------------------+
 | name | label | value type | value registry | description       |
 +------+-------+------------+----------------+-------------------+
@@ -228,7 +227,6 @@ In particular, "gid" is included as COSE header parameter as defined in {{tab-1}
 |      |       |            |                | OSCORE group      |
 |      |       |            |                | Security Context  |
 +------+-------+------------+----------------+-------------------+
- 
 ~~~~~~~~~~
 {: #tab-1 title="Additional common header parameter for the COSE object" artwork-align="center"}
 
@@ -269,7 +267,6 @@ external_aad = [
 -----------------------+-----------------------------+-----------+
       Gid (if any)     |         countersign         |    kid    | 
 -----------------------+-----------------------------+-----------+
-
 ~~~~~~~~~~~
 {: #fig-option-value title="Object-Security Value" artwork-align="center"}
    
@@ -281,7 +278,7 @@ Furthermore, endpoints in the multicast group locally perform error handling and
 
 ## Protecting the Request ## {#ssec-protect-request}
 
-A multicaster endpoint transmits a secure multicast request message as described in Section 7.1 of {{I-D.ietf-core-object-security}}, with the following modifications:
+A multicaster endpoint transmits a secure multicast request message as described in Section 7.1 of {{I-D.ietf-core-object-security}}, with the following modifications.
 
 1. The multicaster endpoint stores the association Token - Group Identifier. That is, it SHALL be able to find the correct Security Context used to protect the multicast request and verify the response(s) by using the CoAP Token used in the message exchange.
 
@@ -289,9 +286,9 @@ A multicaster endpoint transmits a secure multicast request message as described
 
 ## Verifying the Request ## {#ssec-verify-request}
 
-Upon receiving a secure multicast request message, a listener endpoint proceeds as described in Section 7.2 of {{I-D.ietf-core-object-security}}, with the following modifications: 
+Upon receiving a secure multicast request message, a listener endpoint proceeds as described in Section 7.2 of {{I-D.ietf-core-object-security}}, with the following modifications.
 
-1. The listener endpoint retrieves the Group Identifier from the "gid" parameter of the received COSE object. Then, it uses the Group Prefix from the Group Identifier together with the destination IP address of the multicast request message to identify the correct group's Security Context.
+1. The listener endpoint retrieves the Group Identifier from the "gid" parameter of the received COSE object. Then, it uses the Group Identifier together with the destination IP address of the multicast request message to identify the correct group's Security Context.
 
 2. The listener endpoint retrieves the Sender ID from the "kid" parameter of the received COSE object. Then, the Sender ID is used to retrieve the correct Recipient Context associated to the multicaster endpoint and used to process the request message. When receiving a secure multicast CoAP request message from that multicaster endpoint for the first time, the listener endpoint creates a new Recipient Context, initializes it according to Section 3 of {{I-D.ietf-core-object-security}}, and includes the multicaster endpoint's public key.
 
@@ -299,13 +296,13 @@ Upon receiving a secure multicast request message, a listener endpoint proceeds 
 
 ## Protecting the Response ## {#ssec-protect-response}
 
-A listener endpoint that has received a multicast request message may reply with a secure response message, which is protected as described in Section 7.3 of {{I-D.ietf-core-object-security}}, with the following modifications:
+A listener endpoint that has received a multicast request message may reply with a secure response message, which is protected as described in Section 7.3 of {{I-D.ietf-core-object-security}}, with the following modifications.
 
 1. The listener endpoint computes the COSE object as defined in {{sec-cose-object}} of this specification.
 
 ## Verifying the Response ## {#ssec-verify-response}
 
-Upon receiving a secure response message, a multicaster endpoint proceeds as described in Section 7.4 of {{I-D.ietf-core-object-security}}, with the following modifications: 
+Upon receiving a secure response message, a multicaster endpoint proceeds as described in Section 7.4 of {{I-D.ietf-core-object-security}}, with the following modifications.
 
 1. The multicaster endpoint retrieves the Security Context by using the Token of the received response message.
 
@@ -319,7 +316,7 @@ The mapping between response messages from listener endpoints and the associated
 
 Upon joining the multicast group, new listeners are not aware of the sequence number values currently used by different multicasters to transmit multicast request messages. This means that, when such listeners receive a secure multicast request from a given multicaster for the first time, they are not able to verify if that request is fresh and has not been replayed. The same applies when a listener endpoint loses synchronization with sequence numbers of multicasters, for instance after a device reboot.
 
-The exact way to address this issue depends on the specific use case and its synchronization requirements. The Group Manager should define as part of the policies enforced in the multicast group also how to handle synchronization of sequence numbers. In particular, the Group Manager can suggest to single specific listener endpoints how they can exceptionally behave in order to synchronize with sequence numbers of multicasters. {{synch-ex}} describes three possible approaches that can be considered.
+The exact way to address this issue depends on the specific use case and its synchronization requirements. The Group Manager should define also how to handle synchronization of sequence numbers, as part of the policies enforced in the multicast group. In particular, the Group Manager can suggest to single specific listener endpoints how they can exceptionally behave in order to synchronize with sequence numbers of multicasters. {{synch-ex}} describes three possible approaches that can be considered.
 
 # Security Considerations  # {#sec-security-considerations} 
 
@@ -370,7 +367,7 @@ An endpoint joins a multicast group by explicitly interacting with the responsib
 
 In order to receive multicast messages sent to the group, a joining endpoint has to register with a network router device {{RFC3376}}{{RFC3810}}, signaling its intent to receive packets sent to the multicast IP address of that group. As a particular case, the Group Manager can also act as such a network router device. Upon joining the group, endpoints are not required to know how many and what endpoints are active in the same group.
 
-Furthermore, in order to participate in the secure group communication, an endpoint needs to maintain a number of information elements stored in its own Security Context ({{sec-context}}). The following {{join-process}} describes which of this information is provided to an endpoint upon joining a multicast group through the responsible Group Manager.
+Furthermore, in order to participate in the secure group communication, an endpoint needs to maintain a number of information elements stored in its own Security Context (see {{sec-context}}). The following {{join-process}} describes which of this information is provided to an endpoint upon joining a multicast group through the responsible Group Manager.
 
 ## Join Process ## {#join-process}
 
@@ -392,13 +389,13 @@ Once renewed the Security Context in the multicast group, the Group Manager repl
 
 * Security Common Context: the OSCORE Security Common Context associated to the joined multicast group (see {{sec-context}}).
 
-* Endpoint ID: the OSCORE Endpoint ID associated to the joining node. This information is not included in case "Role" in the join request is equal to "pure listener".
+* Endpoint ID: the Endpoint ID associated to the joining node. This information is not included in case "Role" in the join request is equal to "pure listener".
 
-* Management keying material: the set of administrative keying material used to participate in the group rekeying process run by the Group Key Manager (see {{sec-group-key-management}}). The specific elements of this management keying material depend on the group rekeying protocol used in the group. For instance, this can simply consist in a group key encryption key and a pairwise symmetric key shared between the joining node and the Group Key Manager, in case GKMP {{RFC2093}}{{RFC2094}} is used. Instead, if key-tree based rekeying protocols like LKH {{RFC2627}} are used, it can consist in the set of symmetric keys associated to the key-tree leaf representing the group member up to the key-tree root representing the group key encryption key. Unless the Group Manager is entrusted to directly perform the group rekeying process as Group Key Manager, it is its responsibility to ensure that the management keying material provided to the joining endpoint is correct and updated, possibly in concertation with the entity responsible for the rekeying process.
+* Management keying material: the set of administrative keying material used to participate in the group rekeying process run by the Group Manager (see {{sec-group-key-management}}). The specific elements of this management keying material depend on the group rekeying protocol used in the group. For instance, this can simply consist in a group key encryption key and a pairwise symmetric key shared between the joining node and the Group Manager, in case GKMP {{RFC2093}}{{RFC2094}} is used. Instead, if key-tree based rekeying protocols like LKH {{RFC2627}} are used, it can consist in the set of symmetric keys associated to the key-tree leaf representing the group member up to the key-tree root representing the group key encryption key.
 
-* Member public keys: the public keys of the endpoints currently present in the multicast group. This information is omitted in case the Group Manager is not configured to store the public keys of group members or if the retrieval flag was set to false in the join request. {{ssec-provisioning-of-public-keys}} discusses additional details on retrieving public keys of group members.
+* Member public keys: the public keys of the endpoints currently present in the multicast group. This includes: the public keys of the non-pure listeners currently in the group, if the joining endpoint is configured (also) as multicaster; and the public keys of the multicasters currently in the group, if the joining endpoint is configured (also) as listener or pure listener. This information is omitted in case the Group Manager is not configured to store the public keys of group members or if the "Retrieval flag" was set to false in the join request. {{ssec-provisioning-of-public-keys}} discusses additional details on provisioning public keys upon joining the group and on retrieving public keys of group members.
 
-## Provisioning of Public Keys ## {#ssec-provisioning-of-public-keys}
+## Provisioning and Retrieval of Public Keys ## {#ssec-provisioning-of-public-keys}
 
 As mentioned in {{sec-context}}, it is RECOMMENDED that the Group Manager acts as trusted key repository, stores public keys of group members and provide them to other members of the same group upon request. In such a case, a joining endpoint provides its own public key to the Group Manager, as "Identity credentials" of the join request, when joining the multicast group (see {{join-process}}).
 
@@ -414,11 +411,11 @@ Instead, in case the Group Manager does not act as trusted key repository, the f
 
 3. When processing the join request, the Group Manager first validates the certificate by verifying the signature of the issuer CA, and then verifies the signature of the joining node.
 
-4. The Group Manager stores the association between the Certificate Subject of the joining node's certificate and the pair {Group Prefix, Endpoint ID of the joining node}. If received from the joining endpoint, the Group Manager also stores the list of public key repositories storing the certificate of the joining endpoint.
+4. The Group Manager stores the association between the Certificate Subject of the joining node's certificate and the pair {Group ID, Endpoint ID of the joining node}. If received from the joining endpoint, the Group Manager also stores the list of public key repositories storing the certificate of the joining endpoint.
 
 When a group member X wants to retrieve the public key of another group member Y in the same multicast group, the endpoint X proceeds as follows.
 
-1. The endpoint X contacts the Group Manager, specifying the pair {Group Prefix, Endpoint ID of the endpoint Y}.
+1. The endpoint X contacts the Group Manager, specifying the pair {Group ID, Endpoint ID of the endpoint Y}.
 
 2. The Group Manager provides the endpoint X with the Certificate Subject CS from the certificate of endpoint Y. If available, the Group Manager provides the endpoint X also with the list of public key repositories storing the certificate of the endpoint Y.
 
