@@ -333,7 +333,7 @@ In addition, it is required that all group members are trusted, i.e. they do not
 TBD. Header parameter 'gid'.
 
 # Acknowledgments # {#acknowldegment}
-The authors sincerely thank Rolf Blom, Carsten Bormann, John Mattsson, Jim Schaad, Stefan Beck, Richard Kelsey, Ludwig Seitz and Klaus Hartke for their feedback and comments.
+The authors sincerely thank Stefan Beck, Rolf Blom, Carsten Bormann, Klaus Hartke, Richard Kelsey, John Mattsson, Jim Schaad and Ludwig Seitz for their feedback and comments.
 
 --- back
 
