@@ -482,7 +482,7 @@ address {
 <ul>
 <li>Group: a set of endpoints that share group keying material and parameters (Common Context of the group's Security Context, see <a href="#sec-context" class="xref">Section 2</a>). That is, the term group used in this specification refers to a "security group", not to be confused with network/multicast groups or application groups.</li>
 <li>Keying material: data that is necessary to establish and maintain secure communication among member of a group. This includes, for instance, keys and IVs <a href="#RFC4949" class="xref">[RFC4949]</a>.</li>
-<li>Group Manager (GM): entity responsible for creating a group, establishing and provisioning Security Contexts among authorized group members, as well as managing the joining of new group members and the leaving of current group members. A GM can be responsible for multiple groups. Besides, a GM is not required to be an actual group member and to take part in the group communication. The GM is also responsible for renewing/updating Security Contexts and related keying material in the groups of its competence. Each endpoint in a group securely communicates with the respective GM.</li>
+<li>Group Manager (GM): entity responsible for creating a group, establishing and provisioning Security Common Contexts among authorized group members, as well as managing the joining of new group members and the leaving of current group members. A GM can be responsible for multiple groups. Besides, a GM is not required to be an actual group member and to take part in the group communication. The GM is also responsible for renewing/updating Security Contexts and related keying material in the groups of its competence. Each endpoint in a group securely communicates with the respective GM.</li>
 <li>Multicaster: member of a group that sends multicast CoAP messages intended for all members of the group. In a 1-to-N communication model, only a single multicaster transmits data to the group; in an M-to-N communication model (where M and N do not necessarily have the same value), M group members are multicasters. According to <a href="#RFC7390" class="xref">[RFC7390]</a>, any possible proxy entity is supposed to know about the multicasters in the group and to not perform aggregation of response messages. Also, every multicaster expects and is able to handle multiple response messages associated to a given multicast request message that it has previously sent to the group.</li>
 <li>Listener: member of a group that receives multicast CoAP messages when listening to the multicast IP address associated to the group. A listener may reply back, by sending a response message to the multicaster which has sent the multicast message.</li>
 <li>Pure listener: member of a group that is configured as listener and never replies back to multicasters after receiving multicast messages.</li>
@@ -616,6 +616,7 @@ external_aad = [
 <h1 id="rfc.section.6">
 <a href="#rfc.section.6">6.</a> <a href="#group-manager" id="group-manager">Group Manager</a>
 </h1>
+<p id="rfc.section.6.p.1">TBD: List of responsibilities and requirements of the Group Manager.</p>
 <h1 id="rfc.section.7">
 <a href="#rfc.section.7">7.</a> <a href="#sec-security-considerations" id="sec-security-considerations">Security Considerations</a>
 </h1>
@@ -628,6 +629,7 @@ external_aad = [
 <h1 id="rfc.section.8">
 <a href="#rfc.section.8">8.</a> <a href="#iana" id="iana">IANA Considerations</a>
 </h1>
+<p id="rfc.section.8.p.1">This document has no actions for IANA.</p>
 <h1 id="rfc.section.9">
 <a href="#rfc.section.9">9.</a> <a href="#acknowldegment" id="acknowldegment">Acknowledgments</a>
 </h1>
@@ -838,8 +840,9 @@ external_aad = [
 <a href="#rfc.appendix.C">Appendix C.</a> <a href="#gid-ex" id="gid-ex">Example of Group Identifier Format</a>
 </h1>
 <p id="rfc.section.C.p.1">This section provides an example of how the Group Identifier (Gid) can be specifically formatted. That is, the Gid can be composed of two parts, namely a Group Prefix and a Group Epoch.</p>
-<p id="rfc.section.C.p.2">The Group Prefix is uniquely defined in the set of all the groups associated to the same Group Manager. The choice of the Group Prefix for a given group's Security Context is application specific. Group Prefixes are random as well as long enough, in order to achieve a negligible probability of collisions between Group Identifiers from different Group Managers.</p>
+<p id="rfc.section.C.p.2">The Group Prefix is uniquely defined in the set of all the groups associated to the same Group Manager. The choice of the Group Prefix for a given group's Security Context is application specific. A Group Prefixes is random, constant over time,  and long enough to achieve a negligible probability of collisions between Group Identifiers from different Group Managers. The size of the Group Prefix directly impact on the maximum number of disting groups under the same Group Manager.</p>
 <p id="rfc.section.C.p.3">The Group Epoch is set to 0 upon the group's initialization, and is incremented by 1 upon completing each renewal of the Security Context and keying material in the group (see <a href="#sec-group-key-management" class="xref">Section 2.1</a>). In particular, once a new Master Secret has been distributed to the group, all the group members increment by 1 the Group Epoch in the Group Identifier of that group (see <a href="#sec-context" class="xref">Section 2</a>).</p>
+<p id="rfc.section.C.p.4">As an example, a 3-byte Group Identifier can be composed of: i) a 1-byte Group Prefix '0xb1' interpreted as a raw byte string; and ii) a 2-byte Group Epoch interpreted as an unsigned integer ranging from 0 to 65535. Then, after having established the Security Common Context 61532 times in the group, its Group Identifier will assume value '0xb1f05c'.</p>
 <h1 id="rfc.appendix.D">
 <a href="#rfc.appendix.D">Appendix D.</a> <a href="#setup" id="setup">Set-up of New Endpoints</a>
 </h1>
