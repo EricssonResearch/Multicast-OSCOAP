@@ -98,7 +98,7 @@ informative:
 
 --- abstract
 
-This document describes a method for protecting group communication over the Constrained Application Protocol (CoAP). The proposed approach relies on Object Security for Constrained RESTful Environments (OSCORE) and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCORE are maintained for OSCORE group request messages and related OSCORE response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through private keys of sender devices and embedded in the protected CoAP messages.
+This document describes a method for protecting group communication over the Constrained Application Protocol (CoAP). The proposed method relies on Object Security for Constrained RESTful Environments (OSCORE) and the CBOR Object Signing and Encryption (COSE) format. In particular, it is defined how OSCORE should be used in a group communication setting, while fulfilling the same security requirements for request messages and related response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through private keys of sender devices and embedded in the protected CoAP messages.
 
 --- middle
 
@@ -110,7 +110,7 @@ Group communication for CoAP {{RFC7390}} addresses use cases where deployed devi
 
 Object Security for Constrained RESTful Environments (OSCORE){{I-D.ietf-core-object-security}} describes a security protocol based on the exchange of protected CoAP messages. OSCORE builds on CBOR Object Signing and Encryption (COSE) {{RFC8152}} and provides end-to-end encryption, integrity, and replay protection between a sending endpoint and a receiving endpoint possibly involving intermediary endpoints. To this end, a CoAP message is protected by including its payload (if any), certain options, and header fields in a COSE object, which finally replaces the authenticated and encrypted fields in the protected message.
 
-This document describes group OSCORE, providing end-to-end security of CoAP messages exchanged between members of a group. In particular, the described approach defines how OSCORE should be used in a group communication context, so that end-to-end security is assured by using the same security method. That is, end-to-end security is assured for multicast CoAP requests sent by multicaster endpoints to the group and for related CoAP responses sent as reply by multiple listener endpoints. Group OSCORE provides source authentication of all CoAP messages exchanged within the group, by means of digital signatures produced through private keys of sender devices and embedded in the protected CoAP messages. As in OSCORE, it is still possible to simultaneously rely on DTLS to protect hop-by-hop communication between a multicaster endpoint and a proxy (and vice versa), and between a proxy and a listener endpoint (and vice versa).
+This document describes group OSCORE, providing end-to-end security of CoAP messages exchanged between members of a group. In particular, the described approach defines how OSCORE should be used in a group communication setting, so that end-to-end security is assured by using the same security method. That is, end-to-end security is assured for multicast CoAP requests sent by multicaster endpoints to the group and for related CoAP responses sent as reply by multiple listener endpoints. Group OSCORE provides source authentication of all CoAP messages exchanged within the group, by means of digital signatures produced through private keys of sender devices and embedded in the protected CoAP messages. As in OSCORE, it is still possible to simultaneously rely on DTLS to protect hop-by-hop communication between a multicaster endpoint and a proxy (and vice versa), and between a proxy and a listener endpoint (and vice versa).
 
 ## Terminology ## {#terminology}
 
@@ -138,7 +138,7 @@ This document refers also to the following terminology.
 
 * Group ID: group identifier assigned to the group. Group IDs are unique within the pool of groups of a same Group Manager.
 
-* Endpoint ID: Sender ID of the endpoint (see {{I-D.ietf-core-object-security}}). Endpoint IDs are unique within a same group. Endpoints which are configured only as pure listeners do not have an Endpoint ID.
+* Endpoint ID: Sender ID of the endpoint (see {{I-D.ietf-core-object-security}}). Endpoint IDs are provided to endpoints upon joining a group, and are unique within a same group. Endpoints which are configured only as pure listeners do not have an Endpoint ID.
 
 * Group request: multicast CoAP request message sent by a multicaster in the group to all listeners in the group through multicast IP, unless otherwise specified.
 
@@ -155,13 +155,35 @@ To support multicast communication secured with OSCORE, each endpoint registered
 
    * Counter Signature Algorithm. Value identifying the algorithm used for source authenticating messages sent within the group, by means of a counter signature (see Section 4.5 of {{RFC8152}}). Its value is immutable once the Common Context is established. All the endpoints in the group agree on the same counter signature algorithm. The list of supported signature algorithms is part of the group communication policy and MUST include the EdDSA signature algorithm ed25519 {{RFC8032}}.
 
-2. one Sender Context, unless the endpoint is configured exclusively as pure listener. The Sender Context is used to secure outgoing messages and is initialized according to Section 3 of {{I-D.ietf-core-object-security}}, once the endpoint has joined the group. In practice, the sender endpoint shares the same symmetric keying material stored in the Sender Context with all the recipient endpoints receiving its outgoing OSCORE messages. Besides, in addition to what is defined in {{I-D.ietf-core-object-security}}, the Sender Context stores also the endpoint's public-private key pair.
+2. one Sender Context, unless the endpoint is configured exclusively as pure listener. The Sender Context is used to secure outgoing group messages and is initialized according to Section 3 of {{I-D.ietf-core-object-security}}, once the endpoint has joined the group. In practice, the symmetric keying material in the Sender Context of the sender endpoint is shared with all the recipient endpoints that have received group messages from that same sender endpoint. Besides, in addition to what is defined in {{I-D.ietf-core-object-security}}, the Sender Context stores also the endpoint's public-private key pair.
 
-3. one Recipient Context for each distinct endpoint from which messages are received, used to process such incoming secure messages. The endpoint creates a new Recipient Context upon receiving an incoming message from another endpoint in the group for the first time. In practice, the recipient endpoint shares the symmetric keying material stored in the Recipient Context with the associated other endpoint from which secure messages are received. Besides, in addition to what is defined in {{I-D.ietf-core-object-security}}, each Recipient Context stores also the public key of the associated other endpoint from which secure messages are received.
+3. one Recipient Context for each distinct endpoint from which group messages are received, used to process such incoming messages. The recipient endpoint creates a new Recipient Context upon receiving an incoming message from another endpoint in the group for the first time (see {{ssec-verify-request}} and {{ssec-verify-response}}). In practice, the symmetric keying material in a given Recipient Context of the recipient endpoint is shared with the associated sender endpoint from which group messages are received. Besides, in addition to what is defined in {{I-D.ietf-core-object-security}}, each Recipient Context stores also the public key of the associated other endpoint from which group messages are received.
+
+The table in {{fig-additional-context-information}} overviews the new information included in the OSCORE Security Context, with respect to what defined in Section 3 of {{I-D.ietf-core-object-security}}.
+
+~~~~~~~~~~~
+   +---------------------------+-----------------------------+
+   |      Context portion      |       New information       |
+   +---------------------------+-----------------------------+
+   |                           |                             |
+   |      Common Context       | Group Identifier (Gid)      |
+   |                           |                             |
+   |      Common Context       | Counter signature algorithm |
+   |                           |                             |
+   |      Sender Context       | Endpoint's private key      |
+   |                           |                             |
+   |      Sender Context       | Endpoint's public key       |
+   |                           |                             |
+   |  Each Recipient Context   | Public key of the           |
+   |                           | associated other endpoint   |
+   |                           |                             |
+   +---------------------------+-----------------------------+
+~~~~~~~~~~~
+{: #fig-additional-context-information title="Additions to the OSCORE Security Context" artwork-align="center"}
 
 Upon receiving a secure CoAP message, a recipient endpoint relies on the sender endpoint's public key, in order to verify the counter signature conveyed in the COSE Object.
 
-If not already stored in the Recipient Context associated to the sender endpoint, the recipient endpoint retrieves the public key from a trusted key repository. In such a case, the correct binding between the sender endpoint and the retrieved public key must be assured, for instance by means of public key certificates.
+If not already stored in the Recipient Context associated to the sender endpoint, the recipient endpoint retrieves the public key from a trusted key repository. In such a case, the correct binding between the sender endpoint and the retrieved public key must be assured, for instance by means of public key certificates. Further discussion about how public keys can be handled and retrieved in the group is provided in {{ssec-provisioning-of-public-keys}}.
 
 The Sender Key/IV stored in the Sender Context and the Recipient Keys/IVs stored in the Recipient Contexts are derived according to the same scheme defined in Section 3.2 of {{I-D.ietf-core-object-security}}.
 
@@ -226,7 +248,7 @@ external_aad = [
    
 # Message Processing # {#mess-processing}
 
-Each multicast request message and response message is protected and processed as specified in {{I-D.ietf-core-object-security}}, with the modifications described in the following sections.
+Each multicast request message and response message is protected and processed as specified in {{I-D.ietf-core-object-security}}, with the modifications described in the following sections. The following security objectives are fulfilled in the group, as further discussed in {{ssec-sec-objectives}}: data replay protection, group-level data confidentiality, source authentication, message integrity, and message ordering.
 
 Furthermore, endpoints in the group locally perform error handling and processing of invalid messages according to the same principles adopted in {{I-D.ietf-core-object-security}}. However, a receiver endpoint MUST stop processing and silently reject any message which is malformed and does not follow the format specified in {{sec-cose-object}}, without sending back any error message. This prevents listener endpoints from sending multiple error messages to a multicaster endpoint, so avoiding the risk of flooding the group.
 
@@ -344,7 +366,7 @@ The following assumptions are assumed to be already addressed and are out of the
 
 * Forward security: entities that leave the group should not have access to any future Security Contexts or message exchanged within the group after their leaving. This ensures that a former group member is not able to decrypt confidential data sent within the group anymore. Also, it ensures that a former member is not able to send encrypted and/or integrity protected messages to the group anymore. The actual mechanism to update the Security Context and renew the group keying material upon a group member's leaving has to be defined as part of the group key management scheme.
 
-## Security Objectives
+## Security Objectives {#ssec-sec-objectives}
 
 The approach described in this document aims at fulfilling the following security objectives:
 
