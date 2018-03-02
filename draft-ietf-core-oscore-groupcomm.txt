@@ -5,11 +5,11 @@
 CoRE Working Group                                             M. Tiloca
 Internet-Draft                                              RISE SICS AB
 Intended status: Standards Track                             G. Selander
-Expires: September 2, 2018                                  F. Palombini
+Expires: September 3, 2018                                  F. Palombini
                                                              Ericsson AB
                                                                  J. Park
                                              Universitaet Duisburg-Essen
-                                                          March 01, 2018
+                                                          March 02, 2018
 
 
                   Secure group communication for CoAP
@@ -19,14 +19,14 @@ Abstract
 
    This document describes a method for protecting group communication
    over the Constrained Application Protocol (CoAP).  The proposed
-   approach relies on Object Security for Constrained RESTful
-   Environments (OSCORE) and the CBOR Object Signing and Encryption
-   (COSE) format.  All security requirements fulfilled by OSCORE are
-   maintained for OSCORE group request messages and related OSCORE
-   response messages.  Source authentication of all messages exchanged
-   within the group is ensured, by means of digital signatures produced
-   through private keys of sender devices and embedded in the protected
-   CoAP messages.
+   method relies on Object Security for Constrained RESTful Environments
+   (OSCORE) and the CBOR Object Signing and Encryption (COSE) format.
+   In particular, it is defined how OSCORE should be used in a group
+   communication setting, while fulfilling the same security
+   requirements for request messages and related response messages.
+   Source authentication of all messages exchanged within the group is
+   ensured, by means of digital signatures produced through private keys
+   of sender devices and embedded in the protected CoAP messages.
 
 Status of This Memo
 
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 2, 2018.
+   This Internet-Draft will expire on September 3, 2018.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Tiloca, et al.          Expires September 2, 2018               [Page 1]
+Tiloca, et al.          Expires September 3, 2018               [Page 1]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -74,42 +74,42 @@ Table of Contents
      1.1.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   3
    2.  OSCORE Security Context . . . . . . . . . . . . . . . . . . .   5
      2.1.  Management of Group Keying Material . . . . . . . . . . .   7
-   3.  The COSE Object . . . . . . . . . . . . . . . . . . . . . . .   7
-   4.  Message Processing  . . . . . . . . . . . . . . . . . . . . .   9
-     4.1.  Protecting the Request  . . . . . . . . . . . . . . . . .   9
-     4.2.  Verifying the Request . . . . . . . . . . . . . . . . . .  10
-     4.3.  Protecting the Response . . . . . . . . . . . . . . . . .  10
-     4.4.  Verifying the Response  . . . . . . . . . . . . . . . . .  10
-   5.  Synchronization of Sequence Numbers . . . . . . . . . . . . .  11
-   6.  Responsibilities of the Group Manager . . . . . . . . . . . .  11
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  13
-     7.1.  Group-level Security  . . . . . . . . . . . . . . . . . .  13
-   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  13
-   9.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  13
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  13
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  13
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  14
-   Appendix A.  Assumptions and Security Objectives  . . . . . . . .  17
-     A.1.  Assumptions . . . . . . . . . . . . . . . . . . . . . . .  17
-     A.2.  Security Objectives . . . . . . . . . . . . . . . . . . .  18
-   Appendix B.  List of Use Cases  . . . . . . . . . . . . . . . . .  19
-   Appendix C.  Example of Group Identifier Format . . . . . . . . .  21
-   Appendix D.  Set-up of New Endpoints  . . . . . . . . . . . . . .  22
-     D.1.  Join Process  . . . . . . . . . . . . . . . . . . . . . .  22
-     D.2.  Provisioning and Retrieval of Public Keys . . . . . . . .  25
-     D.3.  Group Joining Based on the ACE Framework  . . . . . . . .  27
-   Appendix E.  Examples of Synchronization Approaches . . . . . . .  27
-     E.1.  Best-Effort Synchronization . . . . . . . . . . . . . . .  27
-     E.2.  Baseline Synchronization  . . . . . . . . . . . . . . . .  28
-     E.3.  Challenge-Response Synchronization  . . . . . . . . . . .  28
-   Appendix F.  No Verification of Signatures  . . . . . . . . . . .  30
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  30
+   3.  The COSE Object . . . . . . . . . . . . . . . . . . . . . . .   8
+   4.  Message Processing  . . . . . . . . . . . . . . . . . . . . .  10
+     4.1.  Protecting the Request  . . . . . . . . . . . . . . . . .  10
+     4.2.  Verifying the Request . . . . . . . . . . . . . . . . . .  11
+     4.3.  Protecting the Response . . . . . . . . . . . . . . . . .  11
+     4.4.  Verifying the Response  . . . . . . . . . . . . . . . . .  11
+   5.  Synchronization of Sequence Numbers . . . . . . . . . . . . .  12
+   6.  Responsibilities of the Group Manager . . . . . . . . . . . .  12
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  14
+     7.1.  Group-level Security  . . . . . . . . . . . . . . . . . .  14
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  14
+   9.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  14
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  14
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  14
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  15
+   Appendix A.  Assumptions and Security Objectives  . . . . . . . .  18
+     A.1.  Assumptions . . . . . . . . . . . . . . . . . . . . . . .  18
+     A.2.  Security Objectives . . . . . . . . . . . . . . . . . . .  19
+   Appendix B.  List of Use Cases  . . . . . . . . . . . . . . . . .  20
+   Appendix C.  Example of Group Identifier Format . . . . . . . . .  22
+   Appendix D.  Set-up of New Endpoints  . . . . . . . . . . . . . .  23
+     D.1.  Join Process  . . . . . . . . . . . . . . . . . . . . . .  23
+     D.2.  Provisioning and Retrieval of Public Keys . . . . . . . .  26
+     D.3.  Group Joining Based on the ACE Framework  . . . . . . . .  28
+   Appendix E.  Examples of Synchronization Approaches . . . . . . .  28
+     E.1.  Best-Effort Synchronization . . . . . . . . . . . . . . .  28
+     E.2.  Baseline Synchronization  . . . . . . . . . . . . . . . .  29
+     E.3.  Challenge-Response Synchronization  . . . . . . . . . . .  29
+   Appendix F.  No Verification of Signatures  . . . . . . . . . . .  31
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  31
 
 
 
 
 
-Tiloca, et al.          Expires September 2, 2018               [Page 2]
+Tiloca, et al.          Expires September 3, 2018               [Page 2]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -144,7 +144,7 @@ Internet-Draft     Secure group communication for CoAP        March 2018
    This document describes group OSCORE, providing end-to-end security
    of CoAP messages exchanged between members of a group.  In
    particular, the described approach defines how OSCORE should be used
-   in a group communication context, so that end-to-end security is
+   in a group communication setting, so that end-to-end security is
    assured by using the same security method.  That is, end-to-end
    security is assured for multicast CoAP requests sent by multicaster
    endpoints to the group and for related CoAP responses sent as reply
@@ -165,7 +165,7 @@ Internet-Draft     Secure group communication for CoAP        March 2018
 
 
 
-Tiloca, et al.          Expires September 2, 2018               [Page 3]
+Tiloca, et al.          Expires September 3, 2018               [Page 3]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -221,7 +221,7 @@ Internet-Draft     Secure group communication for CoAP        March 2018
 
 
 
-Tiloca, et al.          Expires September 2, 2018               [Page 4]
+Tiloca, et al.          Expires September 3, 2018               [Page 4]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -237,9 +237,10 @@ Internet-Draft     Secure group communication for CoAP        March 2018
       unique within the pool of groups of a same Group Manager.
 
    o  Endpoint ID: Sender ID of the endpoint (see
-      [I-D.ietf-core-object-security]).  Endpoint IDs are unique within
-      a same group.  Endpoints which are configured only as pure
-      listeners do not have an Endpoint ID.
+      [I-D.ietf-core-object-security]).  Endpoint IDs are provided to
+      endpoints upon joining a group, and are unique within a same
+      group.  Endpoints which are configured only as pure listeners do
+      not have an Endpoint ID.
 
    o  Group request: multicast CoAP request message sent by a
       multicaster in the group to all listeners in the group through
@@ -273,15 +274,15 @@ Internet-Draft     Secure group communication for CoAP        March 2018
           associated group (see Section 2); and ii) as OSCORE Master
           Salt (see Section 3.1 of [I-D.ietf-core-object-security]).
           The choice of the Gid for a given group's Security Context is
-          application specific.  It is the role of the application to
 
 
 
-Tiloca, et al.          Expires September 2, 2018               [Page 5]
+Tiloca, et al.          Expires September 3, 2018               [Page 5]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
 
+          application specific.  It is the role of the application to
           specify how to handle possible collisions.  An example of
           specific formatting of the Group Identifier that would follow
           this specification is given in Appendix C.
@@ -297,26 +298,64 @@ Internet-Draft     Secure group communication for CoAP        March 2018
 
    2.  one Sender Context, unless the endpoint is configured exclusively
        as pure listener.  The Sender Context is used to secure outgoing
-       messages and is initialized according to Section 3 of
+       group messages and is initialized according to Section 3 of
        [I-D.ietf-core-object-security], once the endpoint has joined the
-       group.  In practice, the sender endpoint shares the same
-       symmetric keying material stored in the Sender Context with all
-       the recipient endpoints receiving its outgoing OSCORE messages.
-       Besides, in addition to what is defined in
+       group.  In practice, the symmetric keying material in the Sender
+       Context of the sender endpoint is shared with all the recipient
+       endpoints that have received group messages from that same sender
+       endpoint.  Besides, in addition to what is defined in
        [I-D.ietf-core-object-security], the Sender Context stores also
        the endpoint's public-private key pair.
 
-   3.  one Recipient Context for each distinct endpoint from which
-       messages are received, used to process such incoming secure
-       messages.  The endpoint creates a new Recipient Context upon
+   3.  one Recipient Context for each distinct endpoint from which group
+       messages are received, used to process such incoming messages.
+       The recipient endpoint creates a new Recipient Context upon
        receiving an incoming message from another endpoint in the group
-       for the first time.  In practice, the recipient endpoint shares
-       the symmetric keying material stored in the Recipient Context
-       with the associated other endpoint from which secure messages are
-       received.  Besides, in addition to what is defined in
+       for the first time (see Section 4.2 and Section 4.4).  In
+       practice, the symmetric keying material in a given Recipient
+       Context of the recipient endpoint is shared with the associated
+       sender endpoint from which group messages are received.  Besides,
+       in addition to what is defined in
        [I-D.ietf-core-object-security], each Recipient Context stores
        also the public key of the associated other endpoint from which
-       secure messages are received.
+       group messages are received.
+
+   The table in Figure 1 overviews the new information included in the
+   OSCORE Security Context, with respect to what defined in Section 3 of
+   [I-D.ietf-core-object-security].
+
+
+
+
+
+
+
+
+
+
+Tiloca, et al.          Expires September 3, 2018               [Page 6]
+
+Internet-Draft     Secure group communication for CoAP        March 2018
+
+
+         +---------------------------+-----------------------------+
+         |      Context portion      |       New information       |
+         +---------------------------+-----------------------------+
+         |                           |                             |
+         |      Common Context       | Group Identifier (Gid)      |
+         |                           |                             |
+         |      Common Context       | Counter signature algorithm |
+         |                           |                             |
+         |      Sender Context       | Endpoint's private key      |
+         |                           |                             |
+         |      Sender Context       | Endpoint's public key       |
+         |                           |                             |
+         |  Each Recipient Context   | Public key of the           |
+         |                           | associated other endpoint   |
+         |                           |                             |
+         +---------------------------+-----------------------------+
+
+            Figure 1: Additions to the OSCORE Security Context
 
    Upon receiving a secure CoAP message, a recipient endpoint relies on
    the sender endpoint's public key, in order to verify the counter
@@ -326,18 +365,12 @@ Internet-Draft     Secure group communication for CoAP        March 2018
    sender endpoint, the recipient endpoint retrieves the public key from
    a trusted key repository.  In such a case, the correct binding
    between the sender endpoint and the retrieved public key must be
-   assured, for instance by means of public key certificates.
+   assured, for instance by means of public key certificates.  Further
+   discussion about how public keys can be handled and retrieved in the
+   group is provided in Appendix D.2.
 
    The Sender Key/IV stored in the Sender Context and the Recipient
    Keys/IVs stored in the Recipient Contexts are derived according to
-
-
-
-Tiloca, et al.          Expires September 2, 2018               [Page 6]
-
-Internet-Draft     Secure group communication for CoAP        March 2018
-
-
    the same scheme defined in Section 3.2 of
    [I-D.ietf-core-object-security].
 
@@ -353,6 +386,14 @@ Internet-Draft     Secure group communication for CoAP        March 2018
    distribute a new value for the Master Secret parameter of the group's
    Security Context, before a new joining endpoint is added to the group
    or after a currently present endpoint leaves the group.  This is
+
+
+
+Tiloca, et al.          Expires September 3, 2018               [Page 7]
+
+Internet-Draft     Secure group communication for CoAP        March 2018
+
+
    necessary in order to preserve backward security and forward security
    in the group.
 
@@ -386,14 +427,6 @@ Internet-Draft     Secure group communication for CoAP        March 2018
 
       *  CounterSignature0 : its value is set to the counter signature
          of the COSE object, computed by the endpoint by means of its
-
-
-
-Tiloca, et al.          Expires September 2, 2018               [Page 7]
-
-Internet-Draft     Secure group communication for CoAP        March 2018
-
-
          own private key as described in Section 4.5 of [RFC8152].  The
          presence of this parameter is explicitly signaled, by using the
          reserved sixth least significant bit of the first byte of flag
@@ -406,6 +439,16 @@ Internet-Draft     Secure group communication for CoAP        March 2018
       defined in Section 5.4 of [I-D.ietf-core-object-security] SHALL
       also include "alg_countersign", which contains the Counter
       Signature Algorithm from the Common Context (see Section 2).
+
+
+
+
+
+
+Tiloca, et al.          Expires September 3, 2018               [Page 8]
+
+Internet-Draft     Secure group communication for CoAP        March 2018
+
 
    external_aad = [
       oscore_version : uint,
@@ -441,21 +484,27 @@ Internet-Draft     Secure group communication for CoAP        March 2018
 
       *  The following q bytes (q given by the Counter Signature
          Algorithm specified in the Security Context) encode the value
-
-
-
-
-Tiloca, et al.          Expires September 2, 2018               [Page 8]
-
-Internet-Draft     Secure group communication for CoAP        March 2018
-
-
          of the CounterSignature0" parameter including the counter
          signature of the COSE object.
 
       *  The remaining bytes in the Object-Security value encode the
          value of the "kid" parameter, which is always present both in
          multicast requests and in responses.
+
+
+
+
+
+
+
+
+
+
+
+Tiloca, et al.          Expires September 3, 2018               [Page 9]
+
+Internet-Draft     Secure group communication for CoAP        March 2018
+
 
      0 1 2 3 4 5 6 7 <----------- n bytes -----------> <-- 1 byte -->
     +-+-+-+-+-+-+-+-+---------------------------------+--------------+
@@ -467,13 +516,17 @@ Internet-Draft     Secure group communication for CoAP        March 2018
      kid context =  Gid    |    CounterSignature0        |    kid    |
     -----------------------+-----------------------------+-----------+
 
-                      Figure 1: Object-Security Value
+                      Figure 2: Object-Security Value
 
 4.  Message Processing
 
    Each multicast request message and response message is protected and
    processed as specified in [I-D.ietf-core-object-security], with the
-   modifications described in the following sections.
+   modifications described in the following sections.  The following
+   security objectives are fulfilled in the group, as further discussed
+   in Appendix A.2: data replay protection, group-level data
+   confidentiality, source authentication, message integrity, and
+   message ordering.
 
    Furthermore, endpoints in the group locally perform error handling
    and processing of invalid messages according to the same principles
@@ -501,7 +554,10 @@ Internet-Draft     Secure group communication for CoAP        March 2018
 
 
 
-Tiloca, et al.          Expires September 2, 2018               [Page 9]
+
+
+
+Tiloca, et al.          Expires September 3, 2018              [Page 10]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -557,7 +613,7 @@ Internet-Draft     Secure group communication for CoAP        March 2018
 
 
 
-Tiloca, et al.          Expires September 2, 2018              [Page 10]
+Tiloca, et al.          Expires September 3, 2018              [Page 11]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -613,7 +669,7 @@ Internet-Draft     Secure group communication for CoAP        March 2018
 
 
 
-Tiloca, et al.          Expires September 2, 2018              [Page 11]
+Tiloca, et al.          Expires September 3, 2018              [Page 12]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -669,7 +725,7 @@ Internet-Draft     Secure group communication for CoAP        March 2018
 
 
 
-Tiloca, et al.          Expires September 2, 2018              [Page 12]
+Tiloca, et al.          Expires September 3, 2018              [Page 13]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -725,7 +781,7 @@ Internet-Draft     Secure group communication for CoAP        March 2018
 
 
 
-Tiloca, et al.          Expires September 2, 2018              [Page 13]
+Tiloca, et al.          Expires September 3, 2018              [Page 14]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -781,7 +837,7 @@ Internet-Draft     Secure group communication for CoAP        March 2018
 
 
 
-Tiloca, et al.          Expires September 2, 2018              [Page 14]
+Tiloca, et al.          Expires September 3, 2018              [Page 15]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -837,7 +893,7 @@ Internet-Draft     Secure group communication for CoAP        March 2018
 
 
 
-Tiloca, et al.          Expires September 2, 2018              [Page 15]
+Tiloca, et al.          Expires September 3, 2018              [Page 16]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -893,7 +949,7 @@ Internet-Draft     Secure group communication for CoAP        March 2018
 
 
 
-Tiloca, et al.          Expires September 2, 2018              [Page 16]
+Tiloca, et al.          Expires September 3, 2018              [Page 17]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -949,7 +1005,7 @@ A.1.  Assumptions
 
 
 
-Tiloca, et al.          Expires September 2, 2018              [Page 17]
+Tiloca, et al.          Expires September 3, 2018              [Page 18]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -1005,7 +1061,7 @@ A.2.  Security Objectives
 
 
 
-Tiloca, et al.          Expires September 2, 2018              [Page 18]
+Tiloca, et al.          Expires September 3, 2018              [Page 19]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -1061,7 +1117,7 @@ Appendix B.  List of Use Cases
 
 
 
-Tiloca, et al.          Expires September 2, 2018              [Page 19]
+Tiloca, et al.          Expires September 3, 2018              [Page 20]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -1117,7 +1173,7 @@ Internet-Draft     Secure group communication for CoAP        March 2018
 
 
 
-Tiloca, et al.          Expires September 2, 2018              [Page 20]
+Tiloca, et al.          Expires September 3, 2018              [Page 21]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -1173,7 +1229,7 @@ Appendix C.  Example of Group Identifier Format
 
 
 
-Tiloca, et al.          Expires September 2, 2018              [Page 21]
+Tiloca, et al.          Expires September 3, 2018              [Page 22]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -1229,7 +1285,7 @@ D.1.  Join Process
 
 
 
-Tiloca, et al.          Expires September 2, 2018              [Page 22]
+Tiloca, et al.          Expires September 3, 2018              [Page 23]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -1285,7 +1341,7 @@ Internet-Draft     Secure group communication for CoAP        March 2018
 
 
 
-Tiloca, et al.          Expires September 2, 2018              [Page 23]
+Tiloca, et al.          Expires September 3, 2018              [Page 24]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -1341,7 +1397,7 @@ Internet-Draft     Secure group communication for CoAP        March 2018
 
 
 
-Tiloca, et al.          Expires September 2, 2018              [Page 24]
+Tiloca, et al.          Expires September 3, 2018              [Page 25]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -1397,7 +1453,7 @@ D.2.  Provisioning and Retrieval of Public Keys
 
 
 
-Tiloca, et al.          Expires September 2, 2018              [Page 25]
+Tiloca, et al.          Expires September 3, 2018              [Page 26]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -1453,7 +1509,7 @@ Internet-Draft     Secure group communication for CoAP        March 2018
 
 
 
-Tiloca, et al.          Expires September 2, 2018              [Page 26]
+Tiloca, et al.          Expires September 3, 2018              [Page 27]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -1509,7 +1565,7 @@ E.1.  Best-Effort Synchronization
 
 
 
-Tiloca, et al.          Expires September 2, 2018              [Page 27]
+Tiloca, et al.          Expires September 3, 2018              [Page 28]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -1565,7 +1621,7 @@ E.3.  Challenge-Response Synchronization
 
 
 
-Tiloca, et al.          Expires September 2, 2018              [Page 28]
+Tiloca, et al.          Expires September 3, 2018              [Page 29]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -1621,7 +1677,7 @@ Internet-Draft     Secure group communication for CoAP        March 2018
 
 
 
-Tiloca, et al.          Expires September 2, 2018              [Page 29]
+Tiloca, et al.          Expires September 3, 2018              [Page 30]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -1677,7 +1733,7 @@ Authors' Addresses
 
 
 
-Tiloca, et al.          Expires September 2, 2018              [Page 30]
+Tiloca, et al.          Expires September 3, 2018              [Page 31]
 
 Internet-Draft     Secure group communication for CoAP        March 2018
 
@@ -1733,4 +1789,4 @@ Internet-Draft     Secure group communication for CoAP        March 2018
 
 
 
-Tiloca, et al.          Expires September 2, 2018              [Page 31]
+Tiloca, et al.          Expires September 3, 2018              [Page 32]

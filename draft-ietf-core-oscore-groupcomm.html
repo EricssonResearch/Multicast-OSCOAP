@@ -323,9 +323,9 @@ address {
 
   <meta name="dct.creator" content="Tiloca, M., Selander, G., Palombini, F., and J. Park" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-oscore-groupcomm-01" />
-  <meta name="dct.issued" scheme="ISO8601" content="2018-03-01" />
-  <meta name="dct.abstract" content="This document describes a method for protecting group communication over the Constrained Application Protocol (CoAP). The proposed approach relies on Object Security for Constrained RESTful Environments (OSCORE) and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCORE are maintained for OSCORE group request messages and related OSCORE response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through private keys of sender devices and embedded in the protected CoAP messages." />
-  <meta name="description" content="This document describes a method for protecting group communication over the Constrained Application Protocol (CoAP). The proposed approach relies on Object Security for Constrained RESTful Environments (OSCORE) and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCORE are maintained for OSCORE group request messages and related OSCORE response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through private keys of sender devices and embedded in the protected CoAP messages." />
+  <meta name="dct.issued" scheme="ISO8601" content="2018-03-02" />
+  <meta name="dct.abstract" content="This document describes a method for protecting group communication over the Constrained Application Protocol (CoAP). The proposed method relies on Object Security for Constrained RESTful Environments (OSCORE) and the CBOR Object Signing and Encryption (COSE) format. In particular, it is defined how OSCORE should be used in a group communication setting, while fulfilling the same security requirements for request messages and related response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through private keys of sender devices and embedded in the protected CoAP messages." />
+  <meta name="description" content="This document describes a method for protecting group communication over the Constrained Application Protocol (CoAP). The proposed method relies on Object Security for Constrained RESTful Environments (OSCORE) and the CBOR Object Signing and Encryption (COSE) format. In particular, it is defined how OSCORE should be used in a group communication setting, while fulfilling the same security requirements for request messages and related response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through private keys of sender devices and embedded in the protected CoAP messages." />
 
 </head>
 
@@ -347,7 +347,7 @@ address {
 <td class="right">G. Selander</td>
 </tr>
 <tr>
-<td class="left">Expires: September 2, 2018</td>
+<td class="left">Expires: September 3, 2018</td>
 <td class="right">F. Palombini</td>
 </tr>
 <tr>
@@ -364,7 +364,7 @@ address {
 </tr>
 <tr>
 <td class="left"></td>
-<td class="right">March 01, 2018</td>
+<td class="right">March 02, 2018</td>
 </tr>
 
     	
@@ -375,12 +375,12 @@ address {
   <span class="filename">draft-ietf-core-oscore-groupcomm-01</span></p>
   
   <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
-<p>This document describes a method for protecting group communication over the Constrained Application Protocol (CoAP). The proposed approach relies on Object Security for Constrained RESTful Environments (OSCORE) and the CBOR Object Signing and Encryption (COSE) format. All security requirements fulfilled by OSCORE are maintained for OSCORE group request messages and related OSCORE response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through private keys of sender devices and embedded in the protected CoAP messages.</p>
+<p>This document describes a method for protecting group communication over the Constrained Application Protocol (CoAP). The proposed method relies on Object Security for Constrained RESTful Environments (OSCORE) and the CBOR Object Signing and Encryption (COSE) format. In particular, it is defined how OSCORE should be used in a group communication setting, while fulfilling the same security requirements for request messages and related response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through private keys of sender devices and embedded in the protected CoAP messages.</p>
 <h1 id="rfc.status"><a href="#rfc.status">Status of This Memo</a></h1>
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on September 2, 2018.</p>
+<p>This Internet-Draft will expire on September 3, 2018.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2018 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -468,7 +468,7 @@ address {
 <p id="rfc.section.1.p.1">The Constrained Application Protocol (CoAP) <a href="#RFC7252" class="xref">[RFC7252]</a> is a web transfer protocol specifically designed for constrained devices and networks <a href="#RFC7228" class="xref">[RFC7228]</a>.</p>
 <p id="rfc.section.1.p.2">Group communication for CoAP <a href="#RFC7390" class="xref">[RFC7390]</a> addresses use cases where deployed devices benefit from a group communication model, for example to reduce latencies and improve performance. Use cases include lighting control, integrated building control, software and firmware updates, parameter and configuration updates, commissioning of constrained networks, and emergency multicast (see <a href="#sec-use-cases" class="xref">Appendix B</a>). Furthermore, <a href="#RFC7390" class="xref">[RFC7390]</a> recognizes the importance to introduce a secure mode for CoAP group communication. This specification defines such a mode.</p>
 <p id="rfc.section.1.p.3">Object Security for Constrained RESTful Environments (OSCORE)<a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a> describes a security protocol based on the exchange of protected CoAP messages. OSCORE builds on CBOR Object Signing and Encryption (COSE) <a href="#RFC8152" class="xref">[RFC8152]</a> and provides end-to-end encryption, integrity, and replay protection between a sending endpoint and a receiving endpoint possibly involving intermediary endpoints. To this end, a CoAP message is protected by including its payload (if any), certain options, and header fields in a COSE object, which finally replaces the authenticated and encrypted fields in the protected message.</p>
-<p id="rfc.section.1.p.4">This document describes group OSCORE, providing end-to-end security of CoAP messages exchanged between members of a group. In particular, the described approach defines how OSCORE should be used in a group communication context, so that end-to-end security is assured by using the same security method. That is, end-to-end security is assured for multicast CoAP requests sent by multicaster endpoints to the group and for related CoAP responses sent as reply by multiple listener endpoints. Group OSCORE provides source authentication of all CoAP messages exchanged within the group, by means of digital signatures produced through private keys of sender devices and embedded in the protected CoAP messages. As in OSCORE, it is still possible to simultaneously rely on DTLS to protect hop-by-hop communication between a multicaster endpoint and a proxy (and vice versa), and between a proxy and a listener endpoint (and vice versa).</p>
+<p id="rfc.section.1.p.4">This document describes group OSCORE, providing end-to-end security of CoAP messages exchanged between members of a group. In particular, the described approach defines how OSCORE should be used in a group communication setting, so that end-to-end security is assured by using the same security method. That is, end-to-end security is assured for multicast CoAP requests sent by multicaster endpoints to the group and for related CoAP responses sent as reply by multiple listener endpoints. Group OSCORE provides source authentication of all CoAP messages exchanged within the group, by means of digital signatures produced through private keys of sender devices and embedded in the protected CoAP messages. As in OSCORE, it is still possible to simultaneously rely on DTLS to protect hop-by-hop communication between a multicaster endpoint and a proxy (and vice versa), and between a proxy and a listener endpoint (and vice versa).</p>
 <h1 id="rfc.section.1.1">
 <a href="#rfc.section.1.1">1.1.</a> <a href="#terminology" id="terminology">Terminology</a>
 </h1>
@@ -487,7 +487,7 @@ address {
 <li>Listener: member of a group that receives multicast CoAP messages when listening to the multicast IP address associated to the group. A listener may reply back, by sending a response message to the multicaster which has sent the multicast message.</li>
 <li>Pure listener: member of a group that is configured as listener and never replies back to multicasters after receiving multicast messages.</li>
 <li>Group ID: group identifier assigned to the group. Group IDs are unique within the pool of groups of a same Group Manager.</li>
-<li>Endpoint ID: Sender ID of the endpoint (see <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>). Endpoint IDs are unique within a same group. Endpoints which are configured only as pure listeners do not have an Endpoint ID.</li>
+<li>Endpoint ID: Sender ID of the endpoint (see <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>). Endpoint IDs are provided to endpoints upon joining a group, and are unique within a same group. Endpoints which are configured only as pure listeners do not have an Endpoint ID.</li>
 <li>Group request: multicast CoAP request message sent by a multicaster in the group to all listeners in the group through multicast IP, unless otherwise specified.</li>
 <li>Source authentication: evidence that a received message in the group originated from a specifically identified group member. This also provides assurances that the message was not tampered with either by a different group member or by a non-group member.</li>
 </ul>
@@ -503,12 +503,34 @@ address {
 <li>Counter Signature Algorithm. Value identifying the algorithm used for source authenticating messages sent within the group, by means of a counter signature (see Section 4.5 of <a href="#RFC8152" class="xref">[RFC8152]</a>). Its value is immutable once the Common Context is established. All the endpoints in the group agree on the same counter signature algorithm. The list of supported signature algorithms is part of the group communication policy and MUST include the EdDSA signature algorithm ed25519 <a href="#RFC8032" class="xref">[RFC8032]</a>.</li>
 </ul>
 </li>
-<li>one Sender Context, unless the endpoint is configured exclusively as pure listener. The Sender Context is used to secure outgoing messages and is initialized according to Section 3 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>, once the endpoint has joined the group. In practice, the sender endpoint shares the same symmetric keying material stored in the Sender Context with all the recipient endpoints receiving its outgoing OSCORE messages. Besides, in addition to what is defined in <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>, the Sender Context stores also the endpoint's public-private key pair.</li>
-<li>one Recipient Context for each distinct endpoint from which messages are received, used to process such incoming secure messages. The endpoint creates a new Recipient Context upon receiving an incoming message from another endpoint in the group for the first time. In practice, the recipient endpoint shares the symmetric keying material stored in the Recipient Context with the associated other endpoint from which secure messages are received. Besides, in addition to what is defined in <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>, each Recipient Context stores also the public key of the associated other endpoint from which secure messages are received.</li>
+<li>one Sender Context, unless the endpoint is configured exclusively as pure listener. The Sender Context is used to secure outgoing group messages and is initialized according to Section 3 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>, once the endpoint has joined the group. In practice, the symmetric keying material in the Sender Context of the sender endpoint is shared with all the recipient endpoints that have received group messages from that same sender endpoint. Besides, in addition to what is defined in <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>, the Sender Context stores also the endpoint's public-private key pair.</li>
+<li>one Recipient Context for each distinct endpoint from which group messages are received, used to process such incoming messages. The recipient endpoint creates a new Recipient Context upon receiving an incoming message from another endpoint in the group for the first time (see <a href="#ssec-verify-request" class="xref">Section 4.2</a> and <a href="#ssec-verify-response" class="xref">Section 4.4</a>). In practice, the symmetric keying material in a given Recipient Context of the recipient endpoint is shared with the associated sender endpoint from which group messages are received. Besides, in addition to what is defined in <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>, each Recipient Context stores also the public key of the associated other endpoint from which group messages are received.</li>
 </ol>
-<p id="rfc.section.2.p.3">Upon receiving a secure CoAP message, a recipient endpoint relies on the sender endpoint's public key, in order to verify the counter signature conveyed in the COSE Object.</p>
-<p id="rfc.section.2.p.4">If not already stored in the Recipient Context associated to the sender endpoint, the recipient endpoint retrieves the public key from a trusted key repository. In such a case, the correct binding between the sender endpoint and the retrieved public key must be assured, for instance by means of public key certificates.</p>
-<p id="rfc.section.2.p.5">The Sender Key/IV stored in the Sender Context and the Recipient Keys/IVs stored in the Recipient Contexts are derived according to the same scheme defined in Section 3.2 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>.</p>
+<p id="rfc.section.2.p.3">The table in <a href="#fig-additional-context-information" class="xref">Figure 1</a> overviews the new information included in the OSCORE Security Context, with respect to what defined in Section 3 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>.</p>
+<div id="rfc.figure.1"></div>
+<div id="fig-additional-context-information"></div>
+<pre>
+   +---------------------------+-----------------------------+
+   |      Context portion      |       New information       |
+   +---------------------------+-----------------------------+
+   |                           |                             |
+   |      Common Context       | Group Identifier (Gid)      |
+   |                           |                             |
+   |      Common Context       | Counter signature algorithm |
+   |                           |                             |
+   |      Sender Context       | Endpoint's private key      |
+   |                           |                             |
+   |      Sender Context       | Endpoint's public key       |
+   |                           |                             |
+   |  Each Recipient Context   | Public key of the           |
+   |                           | associated other endpoint   |
+   |                           |                             |
+   +---------------------------+-----------------------------+
+</pre>
+<p class="figure">Figure 1: Additions to the OSCORE Security Context</p>
+<p id="rfc.section.2.p.4">Upon receiving a secure CoAP message, a recipient endpoint relies on the sender endpoint's public key, in order to verify the counter signature conveyed in the COSE Object.</p>
+<p id="rfc.section.2.p.5">If not already stored in the Recipient Context associated to the sender endpoint, the recipient endpoint retrieves the public key from a trusted key repository. In such a case, the correct binding between the sender endpoint and the retrieved public key must be assured, for instance by means of public key certificates. Further discussion about how public keys can be handled and retrieved in the group is provided in <a href="#ssec-provisioning-of-public-keys" class="xref">Appendix D.2</a>.</p>
+<p id="rfc.section.2.p.6">The Sender Key/IV stored in the Sender Context and the Recipient Keys/IVs stored in the Recipient Contexts are derived according to the same scheme defined in Section 3.2 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>.</p>
 <h1 id="rfc.section.2.1">
 <a href="#rfc.section.2.1">2.1.</a> <a href="#sec-group-key-management" id="sec-group-key-management">Management of Group Keying Material</a>
 </h1>
@@ -548,7 +570,7 @@ external_aad = [
 <li>The remaining bytes in the Object-Security value encode the value of the "kid" parameter, which is always present both in multicast requests and in responses.</li>
 </ul>
 </li></ul>
-<div id="rfc.figure.1"></div>
+<div id="rfc.figure.2"></div>
 <div id="fig-option-value"></div>
 <pre>
  0 1 2 3 4 5 6 7 &lt;----------- n bytes -----------&gt; &lt;-- 1 byte --&gt;
@@ -561,11 +583,11 @@ external_aad = [
  kid context =  Gid    |    CounterSignature0        |    kid    | 
 -----------------------+-----------------------------+-----------+
 </pre>
-<p class="figure">Figure 1: Object-Security Value</p>
+<p class="figure">Figure 2: Object-Security Value</p>
 <h1 id="rfc.section.4">
 <a href="#rfc.section.4">4.</a> <a href="#mess-processing" id="mess-processing">Message Processing</a>
 </h1>
-<p id="rfc.section.4.p.1">Each multicast request message and response message is protected and processed as specified in <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>, with the modifications described in the following sections.</p>
+<p id="rfc.section.4.p.1">Each multicast request message and response message is protected and processed as specified in <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>, with the modifications described in the following sections. The following security objectives are fulfilled in the group, as further discussed in <a href="#ssec-sec-objectives" class="xref">Appendix A.2</a>: data replay protection, group-level data confidentiality, source authentication, message integrity, and message ordering.</p>
 <p id="rfc.section.4.p.2">Furthermore, endpoints in the group locally perform error handling and processing of invalid messages according to the same principles adopted in <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>. However, a receiver endpoint MUST stop processing and silently reject any message which is malformed and does not follow the format specified in <a href="#sec-cose-object" class="xref">Section 3</a>, without sending back any error message. This prevents listener endpoints from sending multiple error messages to a multicaster endpoint, so avoiding the risk of flooding the group.</p>
 <h1 id="rfc.section.4.1">
 <a href="#rfc.section.4.1">4.1.</a> <a href="#ssec-protect-request" id="ssec-protect-request">Protecting the Request</a>
@@ -834,7 +856,7 @@ external_aad = [
 <li>Forward security: entities that leave the group should not have access to any future Security Contexts or message exchanged within the group after their leaving. This ensures that a former group member is not able to decrypt confidential data sent within the group anymore. Also, it ensures that a former member is not able to send encrypted and/or integrity protected messages to the group anymore. The actual mechanism to update the Security Context and renew the group keying material upon a group member's leaving has to be defined as part of the group key management scheme.</li>
 </ul>
 <h1 id="rfc.appendix.A.2">
-<a href="#rfc.appendix.A.2">A.2.</a> <a href="#security-objectives" id="security-objectives">Security Objectives</a>
+<a href="#rfc.appendix.A.2">A.2.</a> <a href="#ssec-sec-objectives" id="ssec-sec-objectives">Security Objectives</a>
 </h1>
 <p id="rfc.section.A.2.p.1">The approach described in this document aims at fulfilling the following security objectives:</p>
 <p></p>
