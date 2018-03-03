@@ -63,7 +63,6 @@ author:
 normative:
 
   I-D.ietf-core-object-security:
-  I-D.palombini-ace-key-groupcomm:
   RFC2119:
   RFC7252:
   RFC8032:
@@ -75,7 +74,7 @@ informative:
   I-D.ietf-ace-oauth-authz:
   I-D.ietf-ace-dtls-authorize:
   I-D.ietf-core-echo-request-tag:
-  I-D.aragon-ace-ipsec-profile:
+  I-D.palombini-ace-key-groupcomm:
   I-D.ietf-ace-oscore-profile:
   I-D.somaraju-ace-multicast:
   I-D.tiloca-ace-oscoap-joining:
@@ -98,7 +97,7 @@ informative:
 
 --- abstract
 
-This document describes a method for protecting group communication over the Constrained Application Protocol (CoAP). The proposed method relies on Object Security for Constrained RESTful Environments (OSCORE) and the CBOR Object Signing and Encryption (COSE) format. In particular, it is defined how OSCORE should be used in a group communication setting, while fulfilling the same security requirements for request messages and related response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through private keys of sender devices and embedded in the protected CoAP messages.
+This document describes a mode for protecting group communication over the Constrained Application Protocol (CoAP). The proposed mode relies on Object Security for Constrained RESTful Environments (OSCORE) and the CBOR Object Signing and Encryption (COSE) format. In particular, it is defined how OSCORE should be used in a group communication setting, while fulfilling the same security requirements for request messages and related response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through private keys of sender endpoints and embedded in the protected CoAP messages.
 
 --- middle
 
@@ -124,34 +123,34 @@ Terminology for constrained environments, such as "constrained device", "constra
 
 This document refers also to the following terminology.
 
+* Keying material: data that is necessary to establish and maintain secure communication among endpoints. This includes, for instance, keys and IVs {{RFC4949}}.
+
 * Group: a set of endpoints that share group keying material and parameters (Common Context of the group's Security Context, see {{sec-context}}). That is, the term group used in this specification refers to a "security group", not to be confused with network/multicast groups or application groups.
 
-* Keying material: data that is necessary to establish and maintain secure communication among member of a group. This includes, for instance, keys and IVs {{RFC4949}}.
+* Group Manager (GM): entity responsible for a set of OSCORE groups. Each endpoint in a group securely communicates with the respective GM, which is not required to be an actual group member and to take part in the group communication. The full list of responsibilities of the Group Manager is provided in {{sec-group-manager}}.
 
-* Group Manager (GM): entity responsible for a pool of OSCORE groups. Each endpoint in a group securely communicates with the respective GM, which is not required to be an actual group member and to take part in the group communication. The full list of responsibilities of the Group Manager is provided in {{sec-group-manager}}.
+* Multicaster: member of a group that sends multicast CoAP request messages intended for all members of the group. In a 1-to-N communication model, only a single multicaster transmits data to the group; in an M-to-N communication model (where M and N do not necessarily have the same value), M group members are multicasters. According to {{RFC7390}}, any possible proxy entity is supposed to know about the multicasters in the group and to not perform aggregation of response messages. Also, every multicaster expects and is able to handle multiple response messages associated to a given multicast request message that it has previously sent to the group.
 
-* Multicaster: member of a group that sends multicast CoAP messages intended for all members of the group. In a 1-to-N communication model, only a single multicaster transmits data to the group; in an M-to-N communication model (where M and N do not necessarily have the same value), M group members are multicasters. According to {{RFC7390}}, any possible proxy entity is supposed to know about the multicasters in the group and to not perform aggregation of response messages. Also, every multicaster expects and is able to handle multiple response messages associated to a given multicast request message that it has previously sent to the group.
+* Listener: member of a group that receives multicast CoAP request messages when listening to the multicast IP address associated to the group. A listener may reply back, by sending a response message to the multicaster which has sent the request message.
 
-* Listener: member of a group that receives multicast CoAP messages when listening to the multicast IP address associated to the group. A listener may reply back, by sending a response message to the multicaster which has sent the multicast message.
+* Pure listener: member of a group that is configured as listener and never replies back to multicasters after receiving request messages.
 
-* Pure listener: member of a group that is configured as listener and never replies back to multicasters after receiving multicast messages.
+* Group ID: group identifier assigned to the group. Group IDs are unique within the set of groups of a same Group Manager.
 
-* Group ID: group identifier assigned to the group. Group IDs are unique within the pool of groups of a same Group Manager.
-
-* Endpoint ID: Sender ID of the endpoint (see {{I-D.ietf-core-object-security}}). Endpoint IDs are provided to endpoints upon joining a group, and are unique within a same group. Endpoints which are configured only as pure listeners do not have an Endpoint ID.
+* Endpoint ID: Sender ID of the endpoint, as defined in {{I-D.ietf-core-object-security}}. An Endpoint ID is provided to an endpoint upon joining a group, is valid only within that group, and is unique within the same group. Endpoints which are configured only as pure listeners do not have an Endpoint ID.
 
 * Group request: multicast CoAP request message sent by a multicaster in the group to all listeners in the group through multicast IP, unless otherwise specified.
 
-* Source authentication: evidence that a received message in the group originated from a specifically identified group member. This also provides assurances that the message was not tampered with either by a different group member or by a non-group member.
+* Source authentication: evidence that a received message in the group originated from a specifically identified group member. This also provides assurances that the message was not tampered with by a different group member or by a non-group member.
 
 
 # OSCORE Security Context # {#sec-context}
 
-To support multicast communication secured with OSCORE, each endpoint registered as member of a group maintains a Security Context as defined in Section 3 of {{I-D.ietf-core-object-security}}. In particular, each endpoint in a group stores:
+To support group communication secured with OSCORE, each endpoint registered as member of a group maintains a Security Context as defined in Section 3 of {{I-D.ietf-core-object-security}}. In particular, each endpoint in a group stores:
 
 1. one Common Context, shared by all the endpoints in the group. All the endpoints in the group agree on the same COSE AEAD algorithm. In addition to what is defined in Section 3 of {{I-D.ietf-core-object-security}}, the Common Context includes the following information.
 
-   * Group Identifier (Gid). Variable length byte string identifying the Security Context. A Gid MUST have a random component and be long enough, in order to achieve a negligible probability of collisions between Group Identifiers from different Group Managers. A Group ID is used i) alone or together with other parameters such as the multicast IP address to retrieve the OSCORE Security Context of the associated group (see {{sec-context}}); and ii) as OSCORE Master Salt (see Section 3.1 of {{I-D.ietf-core-object-security}}). The choice of the Gid for a given group's Security Context is application specific. It is the role of the application to specify how to handle possible collisions. An example of specific formatting of the Group Identifier that would follow this specification is given in {{gid-ex}}.
+   * Group Identifier (Gid). Variable length byte string identifying the Security Context. A Gid MUST have a random component and be long enough, in order to achieve a negligible probability of collisions between Group Identifiers from different Group Managers. A Group ID is used i) alone or together with other parameters, such as the multicast IP address of the group, to retrieve the OSCORE Security Context of the associated group (see {{mess-processing}}); and ii) as OSCORE Master Salt (see Section 3.1 of {{I-D.ietf-core-object-security}}). The choice of the Gid for a given group's Security Context is application specific. It is the role of the application to specify how to handle possible collisions. An example of specific formatting of the Group Identifier that would follow this specification is given in {{gid-ex}}.
 
    * Counter Signature Algorithm. Value identifying the algorithm used for source authenticating messages sent within the group, by means of a counter signature (see Section 4.5 of {{RFC8152}}). Its value is immutable once the Common Context is established. All the endpoints in the group agree on the same counter signature algorithm. The list of supported signature algorithms is part of the group communication policy and MUST include the EdDSA signature algorithm ed25519 {{RFC8032}}.
 
@@ -191,7 +190,7 @@ The Sender Key/IV stored in the Sender Context and the Recipient Keys/IVs stored
 
 The approach described in this specification should take into account the risk of compromise of group members. In particular, the adoption of key management schemes for secure revocation and renewal of Security Contexts and group keying material should be considered.
 
-Consistently with the security assumptions in {{sec-requirements}}, it is RECOMMENDED to adopt a group key management scheme, and securely distribute a new value for the Master Secret parameter of the group's Security Context, before a new joining endpoint is added to the group or after a currently present endpoint leaves the group. This is necessary in order to preserve backward security and forward security in the group.
+Consistently with the security assumptions in {{ssec-sec-assumptions}}, it is RECOMMENDED to adopt a group key management scheme, and securely distribute a new value for the Master Secret parameter of the group's Security Context, before a new joining endpoint is added to the group or after a currently present endpoint leaves the group. This is necessary in order to preserve backward security and forward security in the group.
 
 In particular, a new Group Identifier (Gid) for that group and a new value for the Master Secret parameter must also be distributed. An example of Group Identifier format supporting this operation is provided in {{gid-ex}}. Then, each group member re-derives the keying material stored in its own Sender Context and Recipient Contexts as described in {{sec-context}}, using the updated Group Identifier.
 
@@ -201,11 +200,11 @@ Especially in dynamic, large-scale, groups where endpoints can join and leave at
 
 When creating a protected CoAP message, an endpoint in the group computes the COSE object using the untagged COSE_Encrypt0 structure {{RFC8152}} as defined in Section 5 of {{I-D.ietf-core-object-security}}, with the following modifications.
 
-* The value of the "kid" parameter in the "unprotected" field of responses SHALL be set to the Endpoint ID of the endpoint transmitting the group message, i.e. the Sender ID.
+* The value of the "kid" parameter in the "unprotected" field of response messagess SHALL be set to the Endpoint ID of the endpoint transmitting the message, i.e. the Sender ID.
 
-* The "unprotected" field of the "Headers" field SHALL additionally include the following parameters:
+* The "unprotected" field of the "Headers" field SHALL additionally include the following parameter:
 
-    - CounterSignature0 : its value is set to the counter signature of the COSE object, computed by the endpoint by means of its own private key as described in Section 4.5 of {{RFC8152}}. The presence of this parameter is explicitly signaled, by using the reserved sixth least significant bit of the first byte of flag bits in the value of the Object-Security option (see Section 6 of {{I-D.ietf-core-object-security}}).
+    - CounterSignature0 : its value is set to the counter signature of the COSE object, computed by the endpoint by means of its own private key as described in Section 4.5 of {{RFC8152}}. The presence of this parameter is explicitly signaled, by using the reserved sixth least significant bit of the first byte of flag bits in the value of the Object-Security option (see Section 6.1 of {{I-D.ietf-core-object-security}}).
   
 * The Additional Authenticated Data (AAD) considered to compute the COSE object is extended, by adding the countersignature algorithm used to protect group messages. In particular, the "external_aad" defined in Section 5.4 of {{I-D.ietf-core-object-security}} SHALL also include "alg_countersign", which contains the Counter Signature Algorithm from the Common Context (see {{sec-context}}).
 
@@ -221,9 +220,9 @@ external_aad = [
 
 * The OSCORE compression defined in Section 6 of {{I-D.ietf-core-object-security}} is used, with the following additions for the encoding of the Object-Security option.
 
-   - The fourth least significant bit of the first byte of flag bits SHALL be set to 1, to indicate the presence of the "kid" parameter for both multicast requests and responses.
+   - The fourth least significant bit of the first byte of flag bits SHALL be set to 1, to indicate the presence of the "kid" parameter for both group requests and responses.
 
-   - The fifth least significant bit of the first byte of flag bits MUST be set to 1 for multicast requests, to indicate the presence of the kid context in the OSCORE payload. The kid context flag MAY be set to 1 for responses.
+   - The fifth least significant bit of the first byte of flag bits MUST be set to 1 for group requests, to indicate the presence of the kid context in the OSCORE payload. The kid context flag MAY be set to 1 for responses.
    
    - The sixth least significant bit of the first byte of flag bits is originally marked as reserved in {{I-D.ietf-core-object-security}} and its usage is defined in this specification. This bit is set to 1 if the "CounterSignature0" parameter is present, or to 0 otherwise. In order to ensure source authentication of group messages as described in this specification, this bit SHALL be set to 1.
 
@@ -231,48 +230,48 @@ external_aad = [
   
    - The following q bytes (q given by the Counter Signature Algorithm specified in the Security Context) encode the value of the CounterSignature0" parameter including the counter signature of the COSE object. 
    
-   - The remaining bytes in the Object-Security value encode the value of the "kid" parameter, which is always present both in multicast requests and in responses.
+   - The remaining bytes in the Object-Security value encode the value of the "kid" parameter, which is always present both in group requests and in responses.
 
 ~~~~~~~~~~~                
  0 1 2 3 4 5 6 7 <----------- n bytes -----------> <-- 1 byte -->
 +-+-+-+-+-+-+-+-+---------------------------------+--------------+
-|0 0|1|h|1|  n  |        Partial IV (if any)      |  s (if any)  |
+|0 0|1|h|1|  n  |       Partial IV (if any)       |  s (if any)  |
 +-+-+-+-+-+-+-+-+---------------------------------+--------------+
 
 <------ s bytes ------> <--------- q bytes --------->
 -----------------------+-----------------------------+-----------+
- kid context =  Gid    |    CounterSignature0        |    kid    | 
+   kid context = Gid   |      CounterSignature0      |    kid    | 
 -----------------------+-----------------------------+-----------+
 ~~~~~~~~~~~
 {: #fig-option-value title="Object-Security Value" artwork-align="center"}
    
 # Message Processing # {#mess-processing}
 
-Each multicast request message and response message is protected and processed as specified in {{I-D.ietf-core-object-security}}, with the modifications described in the following sections. The following security objectives are fulfilled in the group, as further discussed in {{ssec-sec-objectives}}: data replay protection, group-level data confidentiality, source authentication, message integrity, and message ordering.
+Each request message and response message is protected and processed as specified in {{I-D.ietf-core-object-security}}, with the modifications described in the following sections. The following security objectives are fulfilled, as further discussed in {{ssec-sec-objectives}}: data replay protection, group-level data confidentiality, source authentication, message integrity, and message ordering.
 
-Furthermore, endpoints in the group locally perform error handling and processing of invalid messages according to the same principles adopted in {{I-D.ietf-core-object-security}}. However, a receiver endpoint MUST stop processing and silently reject any message which is malformed and does not follow the format specified in {{sec-cose-object}}, without sending back any error message. This prevents listener endpoints from sending multiple error messages to a multicaster endpoint, so avoiding the risk of flooding the group.
+Furthermore, endpoints in the group locally perform error handling and processing of invalid messages according to the same principles adopted in {{I-D.ietf-core-object-security}}. However, a receiver endpoint MUST stop processing and silently reject any message which is malformed and does not follow the format specified in {{sec-cose-object}}, without sending back any error message. This prevents listener endpoints from sending multiple error messages to a multicaster endpoint, so avoiding the risk of flooding and possibly congesting the group.
 
 ## Protecting the Request ## {#ssec-protect-request}
 
-A multicaster endpoint transmits a secure multicast request message as described in Section 8.1 of {{I-D.ietf-core-object-security}}, with the following modifications.
+A multicaster endpoint transmits a secure group request as described in Section 8.1 of {{I-D.ietf-core-object-security}}, with the following modifications.
 
-1. The multicaster endpoint stores the association Token - Group Identifier. That is, it SHALL be able to find the correct Security Context used to protect the multicast request and verify the response(s) by using the CoAP Token used in the message exchange.
+1. The multicaster endpoint stores the association Token - Group Identifier. That is, it SHALL be able to find the correct Security Context used to protect the group request and verify the response(s) by using the CoAP Token used in the message exchange.
 
 2. The multicaster computes the COSE object as defined in {{sec-cose-object}} of this specification.
 
 ## Verifying the Request ## {#ssec-verify-request}
 
-Upon receiving a secure multicast request message, a listener endpoint proceeds as described in Section 8.2 of {{I-D.ietf-core-object-security}}, with the following modifications.
+Upon receiving a secure group request, a listener endpoint proceeds as described in Section 8.2 of {{I-D.ietf-core-object-security}}, with the following modifications.
 
-1. The listener endpoint retrieves the Group Identifier from the 'kid context' parameter of the received COSE object. Then, it uses the Group Identifier together with the destination IP address of the multicast request message to identify the correct group's Security Context.
+1. The listener endpoint retrieves the Group Identifier from the 'kid context' parameter of the received COSE object. Then, it uses the Group Identifier together with the destination IP address of the group request to identify the correct group's Security Context.
 
-2. The listener endpoint retrieves the Sender ID from the "kid" parameter of the received COSE object. Then, the Sender ID is used to retrieve the correct Recipient Context associated to the multicaster endpoint and used to process the request message. When receiving a secure multicast CoAP request message from that multicaster endpoint for the first time, the listener endpoint creates a new Recipient Context, initializes it according to Section 3 of {{I-D.ietf-core-object-security}}, and includes the multicaster endpoint's public key.
+2. The listener endpoint retrieves the Sender ID from the "kid" parameter of the received COSE object. Then, the Sender ID is used to retrieve the correct Recipient Context associated to the multicaster endpoint and used to process the group request. When receiving a secure group request message from that multicaster endpoint for the first time, the listener endpoint creates a new Recipient Context, initializes it according to Section 3 of {{I-D.ietf-core-object-security}}, and includes the multicaster endpoint's public key.
 
-3. The listener endpoint retrieves the corresponding public key of the multicaster endpoint from the associated Recipient Context. Then, it verifies the counter signature and decrypts the request message.
+3. The listener endpoint retrieves the corresponding public key of the multicaster endpoint from the associated Recipient Context. Then, it verifies the counter signature and decrypts the group request.
 
 ## Protecting the Response ## {#ssec-protect-response}
 
-A listener endpoint that has received a multicast request message may reply with a secure response message, which is protected as described in Section 8.3 of {{I-D.ietf-core-object-security}}, with the following modifications.
+A listener endpoint that has received a secure group request may reply with a secure response, which is protected as described in Section 8.3 of {{I-D.ietf-core-object-security}}, with the following modifications.
 
 1. The listener endpoint computes the COSE object as defined in {{sec-cose-object}} of this specification.
 
@@ -282,15 +281,15 @@ Upon receiving a secure response message, a multicaster endpoint proceeds as des
 
 1. The multicaster endpoint retrieves the Security Context by using the Token of the received response message.
 
-2. The multicaster endpoint retrieves the Sender ID from the "kid" parameter of the received COSE object. Then, the Sender ID is used to retrieve the correct Recipient Context associated to the listener endpoint and used to process the response message. When receiving a secure CoAP response message from that listener endpoint for the first time, the multicaster endpoint creates a new Recipient Context, initializes it according to Section 3 of {{I-D.ietf-core-object-security}}, and includes the listener endpoint's public key.
+2. The multicaster endpoint retrieves the Sender ID from the "kid" parameter of the received COSE object. Then, the Sender ID is used to retrieve the correct Recipient Context associated to the listener endpoint and used to process the response message. When receiving a secure response message from that listener endpoint for the first time, the multicaster endpoint creates a new Recipient Context, initializes it according to Section 3 of {{I-D.ietf-core-object-security}}, and includes the listener endpoint's public key.
 
 3. The multicaster endpoint retrieves the corresponding public key of the listener endpoint from the associated Recipient Context. Then, it verifies the counter signature and decrypts the response message.
 
-The mapping between response messages from listener endpoints and the associated multicast request message from a multicaster endpoint relies on the 3-tuple (Group ID, Sender ID, Partial IV) associated to the secure multicast request message. This is used by listener endpoints as part of the Additional Authenticated Data when protecting their own response message, as described in {{sec-cose-object}}.
+The mapping between response messages from listener endpoints and the associated group request from a multicaster endpoint relies on the pair (Sender ID, Partial IV) associated to the secure group request. This is used by listener endpoints as part of the Additional Authenticated Data when protecting their own response message, as described in {{sec-cose-object}}.
 
 # Synchronization of Sequence Numbers # {#sec-synch-seq-num}
 
-Upon joining the group, new listeners are not aware of the sequence number values currently used by different multicasters to transmit multicast request messages. This means that, when such listeners receive a secure multicast request from a given multicaster for the first time, they are not able to verify if that request is fresh and has not been replayed. The same applies when a listener endpoint loses synchronization with sequence numbers of multicasters, for instance after a device reboot.
+Upon joining the group, new listeners are not aware of the sequence number values currently used by different multicasters to transmit group requests. This means that, when such listeners receive a secure group request from a given multicaster for the first time, they are not able to verify if that request is fresh and has not been replayed. The same holds when a listener endpoint loses synchronization with sequence numbers of multicasters, for instance after a device reboot.
 
 The exact way to address this issue depends on the specific use case and its synchronization requirements. The list of methods to handle synchronization of sequence numbers is part of the group communication policy, and different listener endpoints can use different methods. {{synch-ex}} describes three possible approaches that can be considered.
 
@@ -298,15 +297,15 @@ The exact way to address this issue depends on the specific use case and its syn
 
 The Group Manager is responsible for performing the following tasks:
 
-* Creating and managing OSCORE groups. This includes the assignment of a Group ID to every newly created group, as well as ensuring uniqueness of Group IDs within the pool of OSCORE groups of the Group Manager.
+* Creating and managing OSCORE groups. This includes the assignment of a Group ID to every newly created group, as well as ensuring uniqueness of Group IDs within the set of its OSCORE groups.
 
-* Defining policies for authorizing the joining of its OSCORE groups. Such policies can be enforced by a Third Party, which is in a trust relation with the Group Manager and enforces join policies on behalf of the Group Manager.
+* Defining policies for authorizing the joining of its OSCORE groups. Such policies can be enforced by a third party, which is in a trust relation with the Group Manager and enforces join policies on behalf of the Group Manager.
 
 * Driving the join process to add new endpoints as group members.
 
 * Establishing Security Common Contexts and providing them to authorized group members during the join process, together with a corresponding Security Sender Context.
 
-* Generating and managing Endpoint IDs within its OSCORE groups, as well as assigning and providing them to new endpoints during the join process. This includes ensuring uniqueness of Endpoints IDs within each OSCORE group of the Group Manager.
+* Generating and managing Endpoint IDs within its OSCORE groups, as well as assigning and providing them to new endpoints during the join process. This includes ensuring uniqueness of Endpoints IDs within each of its OSCORE groups.
 
 * Defining a set of supported signature algorithms as part of the communication policy of each of its OSCORE groups, and signalling it to new endpoints during the join process.
 
@@ -314,11 +313,15 @@ The Group Manager is responsible for performing the following tasks:
 
 * Renewing the Security Context of an OSCORE group upon membership change, by revoking and renewing common security parameters and keying material (rekeying).
 
+* Providing the management keying material that a new endpoint requires to participate in the rekeying process, consistently with the key management scheme used in the group joined by the new endpoint.
+
 * Updating the Group ID of its OSCORE groups, upon renewing the respective Security Context.
 
 The Group Manager may additionally be responsible for the following tasks:
 
 * Acting as trusted key repository, in order to store the public keys of the members of its OSCORE groups, and provide such public keys to other members of the same group upon request. This specification recommends that the Group Manager is entrusted to perform this task.
+
+* Acting as network router device where endpoints register to correctly receive group messages sent to the multicast IP address of that group.
 
 * Autonomously and locally enforcing access policies to authorize new endpoints to join its OSCORE groups.
 
@@ -348,7 +351,7 @@ The work on this document has been partly supported by the EIT-Digital High Impa
 
 This section presents a set of assumptions and security objectives for the approach described in this document.
 
-## Assumptions
+## Assumptions # {#ssec-sec-assumptions}
 
 The following assumptions are assumed to be already addressed and are out of the scope of this document.
 
@@ -401,9 +404,9 @@ Group Communication for CoAP {{RFC7390}} provides the necessary background for m
 
 This section provides an example of how the Group Identifier (Gid) can be specifically formatted. That is, the Gid can be composed of two parts, namely a Group Prefix and a Group Epoch.
 
-The Group Prefix is uniquely defined in the set of all the groups associated to the same Group Manager. The choice of the Group Prefix for a given group's Security Context is application specific. A Group Prefixes is random, constant over time,  and long enough to achieve a negligible probability of collisions between Group Identifiers from different Group Managers. The size of the Group Prefix directly impact on the maximum number of disting groups under the same Group Manager.
+The Group Prefix is uniquely defined in the set of all the groups associated to the same Group Manager. The choice of the Group Prefix for a given group's Security Context is application specific. A Group Prefix is random, constant over time,  and long enough to achieve a negligible probability of collisions between Group Identifiers from different Group Managers. The size of the Group Prefix directly impact on the maximum number of distinct groups under the same Group Manager.
 
-The Group Epoch is set to 0 upon the group's initialization, and is incremented by 1 upon completing each renewal of the Security Context and keying material in the group (see {{sec-group-key-management}}). In particular, once a new Master Secret has been distributed to the group, all the group members increment by 1 the Group Epoch in the Group Identifier of that group (see {{sec-context}}).
+The Group Epoch is set to 0 upon the group's initialization, and is incremented by 1 upon completing each renewal of the Security Context and keying material in the group (see {{sec-group-key-management}}). In particular, once a new Master Secret has been distributed to the group, all the group members increment by 1 the Group Epoch in the Group Identifier of that group.
 
 As an example, a 3-byte Group Identifier can be composed of: i) a 1-byte Group Prefix '0xb1' interpreted as a raw byte string; and ii) a 2-byte Group Epoch interpreted as an unsigned integer ranging from 0 to 65535. Then, after having established the Security Common Context 61532 times in the group, its Group Identifier will assume value '0xb1f05c'.
 
@@ -415,17 +418,17 @@ In order to receive multicast messages sent to the group, a joining endpoint has
 
 Furthermore, in order to participate in the secure group communication, an endpoint needs to be properly initialized upon joining the group. In particular, the Group Manager provides keying material and parameters to a joining endpoint, which can then initialize its own Security Context (see {{sec-context}}).
 
-The following {{join-process}} provides an example describing how such information can be provided to an endpoint upon joining a group through the responsible Group Manager. Then, {{ssec-provisioning-of-public-keys}} discusses how public keys of group members can be handled and made available to group members. Finally, {{join-ACE-framework}} overviews how the ACE framework for Authentication and Authorization {{I-D.ietf-ace-oauth-authz}} can be possibly used to support such a join process.
+The following {{join-process}} provides an example describing how such information can be provided to an endpoint upon joining a group through the responsible Group Manager. Then, {{ssec-provisioning-of-public-keys}} discusses how public keys of group members can be handled and made available to group members. Finally, {{join-ACE-framework}} overviews how the ACE framework for Authentication and Authorization in constrained environments {{I-D.ietf-ace-oauth-authz}} can be possibly used to support such a join process.
 
 ## Join Process ## {#join-process}
 
-An endpoint requests to join a group by sending a confirmable CoAP POST request to the Group Manager responsible for that group. The join request can reflect the format of the Key Distribution Request message defined in Section 4.1 of {{I-D.palombini-ace-key-groupcomm}}. Besides, it can be addressed to a CoAP resource associated to that group and carries the following information.
+An endpoint requests to join a group by sending a confirmable CoAP POST request to the Group Manager responsible for that group. This join request can reflect the format of the Key Distribution Request message defined in Section 4.1 of {{I-D.palombini-ace-key-groupcomm}}. Besides, it can be addressed to a CoAP resource associated to that group and carries the following information.
 
 * Group identifier: the Group Identifier (Gid) of the group, as known to the joining endpoint at this point in time. This may not fully coincide with the Gid currently associated to the group, e.g. if it includes a dynamic component. This information can be mapped to the first element of the "scope" parameter of the Key Distribution Request message defined in Section 4.1 of {{I-D.palombini-ace-key-groupcomm}}.
 
 * Role: the exact role of the joining endpoint in the group. Possible values are: "multicaster", "listener", "pure listener", "multicaster and listener", or "multicaster and pure listener". This information can be mapped to the second element of the "scope" parameter of the Key Distribution Request message defined in Section 4.1 of {{I-D.palombini-ace-key-groupcomm}}.
 
-* Retrieval flag: indication of interest to receive the public keys of the endpoints currently in the group, as included in the following join response. This flag must be set to false if the Group Manager is not configured to store the public keys of group members, or if the joining endpoint is configured exclusively as pure listener for the joined group. This information can be mapped to the "get_pub_keys" parameter of the Key Distribution Request message defined in Section 4.1 of {{I-D.palombini-ace-key-groupcomm}}.
+* Retrieval flag: indication of interest to receive the public keys of the endpoints currently in the group, as included in the following join response. This flag must not be present if the Group Manager is not configured to store the public keys of group members, or if the joining endpoint is configured exclusively as pure listener for the group to join. This information can be mapped to the "get_pub_keys" parameter of the Key Distribution Request message defined in Section 4.1 of {{I-D.palombini-ace-key-groupcomm}}.
 
 * Identity credentials: information elements to enforce source authentication of group messages from the joining endpoint, such as its public key. The exact content depends on whether the Group Manager is configured to store the public keys of group members. If this is the case, this information is omitted if it has been provided to the same Group Manager upon previously joining the same or a different group under its control. This information is also omitted if the joining endpoint is configured exclusively as pure listener for the joined group. {{ssec-provisioning-of-public-keys}} discusses additional details on provisioning of public keys and other information to enforce source authentication of joining endpoints's messages. This information can be mapped to the "client_cred" parameter of the Key Distribution Request message defined in Section 4.1 of {{I-D.palombini-ace-key-groupcomm}}.
 
@@ -435,27 +438,27 @@ In case of successful authorization check, the Group Manager generates an Endpoi
 
 As discussed in {{sec-group-key-management}}, it is recommended that the Security Context is renewed before the joining endpoint receives the group keying material and becomes a new active member of the group. This is achieved by securely distributing a new Master Secret and a new Group Identifier to the endpoints currently present in the same group.
 
-Once renewed the Security Context in the group, the Group Manager replies to the joining endpoint with a CoAP response carrying the following information. The join response can reflect the format of the Key Distribution Response message defined in Section 4.2 of {{I-D.palombini-ace-key-groupcomm}}.
+Once renewed the Security Context in the group, the Group Manager replies to the joining endpoint with a CoAP response carrying the following information. This join response can reflect the format of the Key Distribution Response message defined in Section 4.2 of {{I-D.palombini-ace-key-groupcomm}}.
 
 * Security Common Context: the OSCORE Security Common Context associated to the joined group (see {{sec-context}}). This information can be mapped to the "key" parameter of the Key Distribution Response message defined in Section 4.2 of {{I-D.palombini-ace-key-groupcomm}}.
 
 * Endpoint ID: the Endpoint ID associated to the joining endpoint. This information is not included in case "Role" in the join request is equal to "pure listener". This information can be mapped to the "clientID" parameter within the "key" parameter of the Key Distribution Response message defined in Section 4.2 of {{I-D.palombini-ace-key-groupcomm}}.
 
-* Member public keys: the public keys of the endpoints currently present in the group. This includes: the public keys of the non-pure listeners currently in the group, if the joining endpoint is configured (also) as multicaster; and the public keys of the multicasters currently in the group, if the joining endpoint is configured (also) as listener or pure listener. This information is omitted in case the Group Manager is not configured to store the public keys of group members or if the "Retrieval flag" was set to false in the join request. {{ssec-provisioning-of-public-keys}} discusses additional details on provisioning public keys upon joining the group and on retrieving public keys of group members. This information can be mapped to the "pub_keys" parameter of the Key Distribution Response message defined in Section 4.2 of {{I-D.palombini-ace-key-groupcomm}}.
+* Member public keys: the public keys of the endpoints currently present in the group. This includes: the public keys of the non-pure listeners currently in the group, if the joining endpoint is configured (also) as multicaster; and the public keys of the multicasters currently in the group, if the joining endpoint is configured (also) as listener or pure listener. This information is omitted in case the Group Manager is not configured to store the public keys of group members or if the "Retrieval flag" was not present in the join request. {{ssec-provisioning-of-public-keys}} discusses additional details on provisioning public keys upon joining the group and on retrieving public keys of group members. This information can be mapped to the "pub_keys" parameter of the Key Distribution Response message defined in Section 4.2 of {{I-D.palombini-ace-key-groupcomm}}.
 
-* Group policies: a list of key words indicating the particular policies enforced in the group. This includes, for instance, the list of supported signature algorithms and the method to achieve synchronization of sequence numbers among group members (see {{synch-ex}}). This information can be mapped to the "clientID" parameter within the "group_policies" parameter of the Key Distribution Response message defined in Section 4.2 of {{I-D.palombini-ace-key-groupcomm}}.
+* Group policies: a list of key words indicating the particular policies enforced in the group. This includes, for instance, the list of supported signature algorithms and the method to achieve synchronization of sequence numbers among group members (see {{synch-ex}}). This information can be mapped to the "group_policies" parameter of the Key Distribution Response message defined in Section 4.2 of {{I-D.palombini-ace-key-groupcomm}}.
 
 * Management keying material: the set of administrative keying material used to participate in the group rekeying process run by the Group Manager (see {{sec-group-key-management}}). The specific elements of this management keying material depend on the group rekeying protocol used in the group. For instance, this can simply consist in a group key encryption key and a pairwise symmetric key shared between the joining endpoint and the Group Manager, in case GKMP {{RFC2093}}{{RFC2094}} is used. Instead, if key-tree based rekeying protocols like LKH {{RFC2627}} are used, it can consist in the set of symmetric keys associated to the key-tree leaf representing the group member up to the key-tree root representing the group key encryption key. This information can be mapped to the "mgt_key_material" parameter of the Key Distribution Response message defined in Section 4.2 of {{I-D.palombini-ace-key-groupcomm}}.
 
 ## Provisioning and Retrieval of Public Keys ## {#ssec-provisioning-of-public-keys}
 
-As mentioned in {{sec-group-manager}}, it is recommended that the Group Manager acts as trusted key repository, so storeing public keys of group members and providing them to other members of the same group upon request. In such a case, a joining endpoint provides its own public key to the Group Manager, as "Identity credentials" of the join request, when joining the group (see {{join-process}}).
+As mentioned in {{sec-group-manager}}, it is recommended that the Group Manager acts as trusted key repository, so storing public keys of group members and providing them to other members of the same group upon request. In such a case, a joining endpoint provides its own public key to the Group Manager, as "Identity credentials" of the join request, when joining the group (see {{join-process}}).
 
-After that, the Group Manager should verify that the joining endpoint actually owns the associated private key, for instance by performing a proof-of-possession challenge-response, whose details are out of the scope of this specification. In case of failure, the Group Manager performs up to a pre-defined maximum number of retries, after which it aborts the join process.
+After that, the Group Manager should verify that the joining endpoint actually owns the associated private key, for instance by performing a proof-of-possession challenge-response, whose details are out of scope. In case of failure, the Group Manager performs up to a pre-defined maximum number of retries, after which it aborts the join process.
 
 In case of successful challenge-response, the Group Manager stores the received public key as associated to the joining endpoint and its Endpoint ID. From then on, that public key will be available for secure and trusted delivery to other endpoints in the group. Finally, the Group Manager sends the join response to the joining endpoint, as described in {{join-process}}.
 
-The joining endpoint does not have to provide its own public key if that already occurred upon previously joining the same or a different group under the same Group Manager. However, separately for each group under its control, the Group Manager maintains an updated list of active Endpoint IDs associated to a same endpoint's public key.
+The joining endpoint does not have to provide its own public key if that already occurred upon previously joining the same or a different group under the same Group Manager. However, separately for each group under its control, the Group Manager maintains an updated list of active Endpoint IDs associated to the respective endpoint's public key.
 
 Instead, in case the Group Manager does not act as trusted key repository, the following exchange with the Group Manager can occur during the join process.
 
@@ -479,7 +482,7 @@ When a group member X wants to retrieve the public key of another group member Y
 
 The join process to register an endpoint as a new member of a group can be based on the ACE framework for Authentication and Authorization in constrained environments {{I-D.ietf-ace-oauth-authz}}, built on re-use of OAuth 2.0 {{RFC6749}}.
 
-In particular, the approach described in {{I-D.tiloca-ace-oscoap-joining}} uses the ACE framework to delegate the authentication and authorization of joining endpoints to an Authorization Server in a trust relation with the Group Manager. At the same time, it allows a joining endpoint to establish a secure channel with the Group Manager, by leveraging protocol-specific profiles of ACE {{I-D.ietf-ace-oscore-profile}}{{I-D.ietf-ace-dtls-authorize}}{{I-D.aragon-ace-ipsec-profile}} to achieve communication security, proof-of-possession and server authentication.
+In particular, the approach described in {{I-D.tiloca-ace-oscoap-joining}} uses the ACE framework to delegate the authentication and authorization of joining endpoints to an Authorization Server in a trust relation with the Group Manager. At the same time, it allows a joining endpoint to establish a secure channel with the Group Manager, by leveraging protocol-specific profiles of ACE, such as {{I-D.ietf-ace-oscore-profile}} and {{I-D.ietf-ace-dtls-authorize}}, to achieve communication security, proof-of-possession and server authentication.
 
 More specifically and with reference to the terminology defined in OAuth 2.0:
 
@@ -501,7 +504,7 @@ Upon receiving a multicast request from a multicaster, a listener endpoint does 
 
 ## Baseline Synchronization ## {#ssec-synch-baseline}
 
-Upon receiving a multicast request from a given multicaster for the first time, a listener endpoint initializes its last-seen sequence number in its Recipient Context associated to that multicaster. However, the listener drops the multicast request without delivering it to the application layer. This provides a reference point to identify if future multicast requests from the same multicaster are fresher than the last one received.
+Upon receiving a multicast request from a given multicaster for the first time, a listener endpoint initializes its last-seen sequence number in its Recipient Context associated to that multicaster. However, the listener drops the multicast request without delivering it to the application layer. This provides a reference point to identify if future group requests from the same multicaster are fresher than the last one received.
 
 A replay time interval exists, between when a possibly replayed message is originally transmitted by a given multicaster and the first authentic fresh message from that same multicaster is received. This can be acceptable for use cases where listener endpoints admit such a trade-off between performance and assurance of message freshness.
 
@@ -509,15 +512,15 @@ A replay time interval exists, between when a possibly replayed message is origi
 
 A listener endpoint performs a challenge-response exchange with a multicaster, by using the Repeat Option for CoAP described in Section 2 of {{I-D.ietf-core-echo-request-tag}}.
 
-That is, upon receiving a multicast request from a particular multicaster for the first time, the listener processes the message as described in {{ssec-verify-request}} of this specification, but, even if valid, does not deliver it to the application. Instead, the listener replies to the multicaster with a 4.03 Forbidden response message including a Repeat Option, and stores the option value included therein.
+That is, upon receiving a group request from a particular multicaster for the first time, the listener processes the message as described in {{ssec-verify-request}} of this specification, but, even if valid, does not deliver it to the application. Instead, the listener replies to the multicaster with a 4.03 Forbidden response message including a Repeat Option, and stores the option value included therein.
 
-Upon receiving a 4.03 Forbidden response that includes a Repeat Option and originates from a verified group member, a multicaster sends a group request as a unicast message addressed to the same listener, echoing the Repeat Option value. In particular, the multicaster does not necessarily resend the same group request, but can instead send a more recent one, if the application permits it. This makes it possible for the multicaster to not retain previously sent group requests for full retransmission, unless the application explicitly requires otherwise. In either case, the multicaster uses the sequence number value currently stored in its own Sender Context. If the multicaster stores group requests for possible retransmission with the Repeat Option, it should not store a given request for longer than a pre-configured time interval. Note that the unicast request echoing the Repeat Option is correctly treated and processed as a group message, since the 'kid context' field including the Group Identifier of the OSCORE group is still present in the Object-Security Option as part of the COSE object (see {{sec-cose-object}}).
+Upon receiving a 4.03 Forbidden response that includes a Repeat Option and originates from a verified group member, a multicaster sends a request as a unicast message addressed to the same listener, echoing the Repeat Option value. In particular, the multicaster does not necessarily resend the same group request, but can instead send a more recent one, if the application permits it. This makes it possible for the multicaster to not retain previously sent group requests for full retransmission, unless the application explicitly requires otherwise. In either case, the multicaster uses the sequence number value currently stored in its own Sender Context. If the multicaster stores group requests for possible retransmission with the Repeat Option, it should not store a given request for longer than a pre-configured time interval. Note that the unicast request echoing the Repeat Option is correctly treated and processed as a group message, since the 'kid context' field including the Group Identifier of the OSCORE group is still present in the Object-Security Option as part of the COSE object (see {{sec-cose-object}}).
 
-Upon receiving the unicast group request including the Repeat Option, the listener verifies that the option value equals the stored and previously sent value; otherwise, the request is silently discarded. Then, the listener verifies that the unicast group request has been received within a pre-configured time interval, as described in {{I-D.ietf-core-echo-request-tag}}. In such a case, the request is further processed and verified; otherwise, it is silently discarded. Finally, the listener updates the Recipient Context associated to that multicaster, by setting the Replay Window according to the Sequence Number from the unicast group request conveying the Repeat Option. The listener either delivers the request to the application if it is an actual retransmission of the original one, or discard it otherwise. Mechanisms to signal whether the resent request is a full retransmission of the original one are out of the scope of this specification.
+Upon receiving the unicast request including the Repeat Option, the listener verifies that the option value equals the stored and previously sent value; otherwise, the request is silently discarded. Then, the listener verifies that the unicast request has been received within a pre-configured time interval, as described in {{I-D.ietf-core-echo-request-tag}}. In such a case, the request is further processed and verified; otherwise, it is silently discarded. Finally, the listener updates the Recipient Context associated to that multicaster, by setting the Replay Window according to the Sequence Number from the unicast request conveying the Repeat Option. The listener either delivers the request to the application if it is an actual retransmission of the original one, or discards it otherwise. Mechanisms to signal whether the resent request is a full retransmission of the original one are out of the scope of this specification.
 
-In case it does not receive a valid group request including the Repeat Option within the configured time interval, the listener endpoint SHOULD perform the same challenge-response upon receiving the next multicast request from that same multicaster.
+In case it does not receive a valid unicast request including the Repeat Option within the configured time interval, the listener endpoint should perform the same challenge-response upon receiving the next multicast request from that same multicaster.
 
-A listener should not deliver group request messages from a given multicaster to the application until one valid group request from that same multicaster has been verified as fresh, as conveying an echoed Repeat Option {{I-D.ietf-core-echo-request-tag}}. Also, a listener may perform the challenge-response described above at any time, if synchronization with sequence numbers of multicasters is (believed to be) lost, for instance after a device reboot. It is the role of the application to define under what circumstances sequence numbers lose synchronization. This can include a minimum gap between the sequence number of the latest accepted group request from a multicaster and the sequence number of a group request just received from the same multicaster. A multicaster has to be always be ready to perform the challenge-response based on the Repeat Option in case a listener starts it.
+A listener should not deliver group requests from a given multicaster to the application until one valid request from that same multicaster has been verified as fresh, as conveying an echoed Repeat Option {{I-D.ietf-core-echo-request-tag}}. Also, a listener may perform the challenge-response described above at any time, if synchronization with sequence numbers of multicasters is (believed to be) lost, for instance after a device reboot. It is the role of the application to define under what circumstances sequence numbers lose synchronization. This can include a minimum gap between the sequence number of the latest accepted group request from a multicaster and the sequence number of a group request just received from the same multicaster. A multicaster has to be always ready to perform the challenge-response based on the Repeat Option in case a listener starts it.
 
 Note that endpoints configured as pure listeners are not able to perform the challenge-response described above, as they do not store a Sender Context to secure the 4.03 Forbidden response to the multicaster. Therefore, pure listeners should adopt alternative approaches to achieve and maintain synchronization with sequence numbers of multicasters.
 
@@ -525,6 +528,6 @@ This approach provides an assurance of absolute message freshness. However, it c
 
 # No Verification of Signatures # {#sec-no-source-auth}
 
-There are some application scenarios using group communications that have particularly strict requirements. One example of this is the requirement of low message latency in non-emergency lighting applications {{I-D.somaraju-ace-multicast}}. For those applications which have tight performance constraints and relaxed security requirements, it can be inconvenient for some endpoints to verify digital signatures in order to assert source authenticity of received group messages. In other cases, the signature verification can be deferred or only checked for specific actions. For instance, a command to turn a bulb on where the bulb is already on does not need the signature to be checked. In such situations, the counter signature needs to be included anyway as part of the group message, so that an endpoint that needs to validate the signature for any reason has the ability to do so.
+There are some application scenarios using group communication that have particularly strict requirements. One example of this is the requirement of low message latency in non-emergency lighting applications {{I-D.somaraju-ace-multicast}}. For those applications which have tight performance constraints and relaxed security requirements, it can be inconvenient for some endpoints to verify digital signatures in order to assert source authenticity of received group messages. In other cases, the signature verification can be deferred or only checked for specific actions. For instance, a command to turn a bulb on where the bulb is already on does not need the signature to be checked. In such situations, the counter signature needs to be included anyway as part of the group message, so that an endpoint that needs to validate the signature for any reason has the ability to do so.
 
 In this specification, it is NOT RECOMMENDED that endpoints do not verify the counter signature of received group messages. However, it is recognized that there may be situations where it is not always required. The consequence of not doing the signature validation is that security in the group is based only on the group-authenticity of the shared keying material used for encryption. That is, endpoints in the group have evidence that a received message has been originated by a group member, although not specifically identifiable in a secure way. This can violate a number of security requirements, as the compromise of any element in the group means that the attacker has the ability to control the entire group. Even worse, the group may not be limited in scope, and hence the same keying material might be used not only for light bulbs but for locks as well. Therefore, extreme care must be taken in situations where the security requirements are relaxed, so that deployment of the system will always be done safely.
