@@ -228,7 +228,7 @@ external_aad = [
 
    - The 'kid context' value encodes the Group Identifier value (Gid) of the group's Security Context.
   
-   - The following q bytes (q given by the Counter Signature Algorithm specified in the Security Context) encode the value of the CounterSignature0" parameter including the counter signature of the COSE object. 
+   - The following q bytes (q given by the Counter Signature Algorithm specified in the Security Context) encode the value of the "CounterSignature0" parameter including the counter signature of the COSE object. 
    
    - The remaining bytes in the Object-Security value encode the value of the "kid" parameter, which is always present both in group requests and in responses.
 
@@ -245,6 +245,54 @@ external_aad = [
 ~~~~~~~~~~~
 {: #fig-option-value title="Object-Security Value" artwork-align="center"}
    
+## Examples: Request
+
+Request with kid = 0x25, Partial IV = 5 and kid context = 0x44616c, assuming the label for the new kid context defined in {{I-D.ietf-core-object-security}} has value 10. COUNTERSIGN is the CounterSignature0 byte string as described in {{sec-cose-object}} and is 64 bytes long in this example. The ciphertext in this example is 14 bytes long.
+
+Before compression (96 bytes):
+
+~~~~~~~~~~~
+[
+h'',
+{ 4:h'25', 6:h'05', 10:h'44616c', 9:COUNTERSIGN },
+h'aea0155667924dff8a24e4cb35b9'
+]
+~~~~~~~~~~~
+
+After compression (85 bytes):
+
+~~~~~~~~~~~
+Flag byte: 0b00111001 = 0x39
+
+Option Value: 39 05 03 44 61 6c COUNTERSIGN 25 (7 bytes + size of COUNTERSIGN)
+
+Payload: ae a0 15 56 67 92 4d ff 8a 24 e4 cb 35 b9 (14 bytes)
+~~~~~~~~~~~
+
+## Example: Response 
+
+Response with kid = 0x52. COUNTERSIGN is the CounterSignature0 byte string as described in {{sec-cose-object}} and is 64 bytes long in this example. The ciphertext in this example is 14 bytes long.
+
+Before compression (88 bytes):
+
+~~~~~~~~~~~
+[
+h'',
+{ 4:h'52', 9:COUNTERSIGN },
+h'60b035059d9ef5667c5a0710823b'
+]
+~~~~~~~~~~~
+
+After compression (80 bytes):
+
+~~~~~~~~~~~
+Flag byte: 0b00101000 = 0x28
+
+Option Value: 28 COUNTERSIGN 52 (2 bytes + size of COUNTERSIGN)
+
+Payload: 60 b0 35 05 9d 9e f5 66 7c 5a 07 10 82 3b (14 bytes)
+~~~~~~~~~~~
+
 # Message Processing # {#mess-processing}
 
 Each request message and response message is protected and processed as specified in {{I-D.ietf-core-object-security}}, with the modifications described in the following sections. The following security objectives are fulfilled, as further discussed in {{ssec-sec-objectives}}: data replay protection, group-level data confidentiality, source authentication, message integrity, and message ordering.
