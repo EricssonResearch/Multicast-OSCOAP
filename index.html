@@ -1,51 +1,7 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>EricssonResearch/Multicast-OSCOAP branches</title>
-    <style>
-      body { font-family: sans-serif; }
-      h2 { font-size: 130%; }
-      h3 { font-size: 120%; color: #222; }
-    </style>
-  </head>
-  <body>
-    <h2>Editor's drafts for EricssonResearch/Multicast-OSCOAP</h2>
-    <p><a href="issues.html">Saved issues</a>.</p>
-    <ul id="branch-master">
-      <li>
-        draft-ietf-core-oscore-groupcomm: 
-        <a href="./draft-ietf-core-oscore-groupcomm.html"
-           class="html draft-ietf-core-oscore-groupcomm">html</a>, 
-        <a href="./draft-ietf-core-oscore-groupcomm.txt"
-           class="txt draft-ietf-core-oscore-groupcomm">plain text</a>, 
-        <a href="https://tools.ietf.org/rfcdiff?url1=https://tools.ietf.org/id/draft-ietf-core-oscore-groupcomm.txt&amp;url2=https://EricssonResearch.github.io/Multicast-OSCOAP/draft-ietf-core-oscore-groupcomm.txt"
-           class="diff draft-ietf-core-oscore-groupcomm">
-          diff with last submission</a>
-      </li>
-    </ul>
-    <script>
-// @licstart
-//  Any copyright is dedicated to the Public Domain.
-//  http://creativecommons.org/publicdomain/zero/1.0/
-// @licend */
-window.onload = function() {
-  var referrer_branch = 'master';
-  // e.g., "https://github.com/user/repo/tree/master"
-  var chunks = document.referrer.split("/");
-  if (chunks[2] === 'github.com' && chunks[5] === 'tree') {
-    referrer_branch = chunks[6];
-  }
-  let branch = document.querySelector('#branch-' + referrer_branch);
-  let h = document.location.hash.substring(1);
-  if (h === 'show') {
-    document.location.hash = '#' + branch.id;
-  } else if (branch && h.startsWith('go')) {
-    let e = branch.querySelector(h.substring(2));
-    if (e && e.href) {
-      document.location = e.href;
-    }
-  }
-};
-    </script>
-  </body>
-</html>
+<h1 id="group-oscore---secure-group-communication-for-coap-interop">Group OSCORE - Secure Group Communication for CoAP interop:</h1>
+<p>Latest test specifications and report:</p>
+<ul>
+<li><a href="test-spec1.html">Test specifications v1</a> <!-- * [Interop DD/MM/YYYY]() --></li>
+</ul>
+<p>Others:</p>
+<h2 id="please-refer-to-the-up-to-date-version-of-group-oscore-in-the-core-wg-github-httpsgithub.comcore-wgoscore-groupcomm">Please refer to the up-to-date version of Group OSCORE in the CoRE wg github: <a href="https://github.com/core-wg/oscore-groupcomm">https://github.com/core-wg/oscore-groupcomm</a></h2>
