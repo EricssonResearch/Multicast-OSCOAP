@@ -5,12 +5,15 @@
 ## Table of Contents
 1. [Notes](#notes)
 2. [Security Contexts and Resources](#security-contexts-and-resources)
-    1. [Security Context A: Client](#client-sec-A1)
-    2. [Security Context B: Server](#server-sec-B)
-    3. [Security Context C: Server](#server-sec-C)
-    3. [Security Context C: Server](#server-sec-D)
-    3. [Security Context C: Server](#server-sec-E)
-    3. [Resources](#resources)
+    1. [Security Context A1: Client](#client-sec-A1)
+    2. [Security Context A2: Client](#server-sec-A2)
+    3. [Security Context A3: Client](#client-sec-A3)
+    4. [Security Context A4: Client](#server-sec-A4)
+    5. [Security Context B1: Server](#server-sec-B1)
+    6. [Security Context B2: Server](#server-sec-B2)
+    7. [Security Context B3: Server](#server-sec-B3)
+    8. [Security Context B4: Server](#server-sec-B4)
+    9. [Resources](#resources)
 3. [Set up the environment](#env-setup)
     1. [Test 0a](#test-0a)
     2. [Test 0b](#test-0b)
@@ -143,10 +146,15 @@ The test specified below can in fact be run on unicast between the nodes, to tes
     - Sender Seq Number: 00
     - Sender IV: 0x2da58fb85ff1b81d0b7181b85e (using Partial IV: 00)
     - Private Key TBD
-* Recipient Context:
+* Recipient Context 1:
     - Recipient Id: 0xa1 (0 byte)
     - Recipient Key: 0xaf2a1300a5e95788b356336eeecd2b92 (16 bytes)
     - Recipient IV: 0x2ca58fb85ff1b81c0b7181b85e (using Partial IV: 00)
+    - Public Key TBD
+* Recipient Context 2:
+    - Recipient ID: 0xa2 (1 byte)
+    - Recipient Key: TODO (16 bytes)
+    - Recipient IV: TODO (using Partial IV: TODO)
     - Public Key TBD
 
 ### Security Context B2: Server {#server-sec-b2}
@@ -285,17 +293,17 @@ _server resources_:
 
 ## 4. Several Recipient Contexts on Client {#client}
 
-In these tests, the client has several recipient contexts. The goal is to test the retrieval/derivation of recipient contexts on the client.
+In these tests, the node has several recipient contexts. The goal is to test the retrieval/derivation of recipient contexts on the client.
 
 ### 4.1 Correct Group OSCORE Use
 
 #### 4.1.1. Identifier: TEST_1a {#test-1a}
 
-**Objective** : Perform an OSCORE Group transaction, where the client retrieve a recipient context that it has stored in memory. (Client side)
+**Objective** : Perform an OSCORE Group transaction, where the client and server retrieve a recipient context that they have stored in memory. (Client side)
 
 **Configuration** :
 
-_client security context_: [Security Context A](#client-sec), with:
+_client security context_: [Security Context A1](#client-sec-a1), with:
 
 * Sequence number received not in client's replay window
 
@@ -313,7 +321,7 @@ _client security context_: [Security Context A](#client-sec), with:
 | 2    | Check    | Client serializes the request, which is a POST request,  |
 |      |          | with:                                                    |
 |      |          |                                                          |
-|      |          | - Object-Security option: kid = 0x                       |
+|      |          | - Object-Security option: kid = 0xa1                     |
 |      |          | - Payload: ciphertext including:                         |
 |      |          |                                                          |
 |      |          |       * Code: GET                                        |
@@ -324,10 +332,10 @@ _client security context_: [Security Context A](#client-sec), with:
 | 4    | Check    | Client parses the response; expected:                    |
 |      |          | 2.04 Changed Response with:                              |
 |      |          |                                                          |
-|      |          | - Object-Security option: kid = 0x01                     |
+|      |          | - Object-Security option: kid = 0xb1                     |
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
-| 4    | Verify   | Client successfully retrieve correct Recipient Context   |
+| 4    | Verify   | Client successfully retrieves correct Recipient Context  |
 |      |          | and decrypts the message: OSCORE verification succeeds   |
 +------+----------+----------------------------------------------------------+
 | 6    | Check    | Client parses the decrypted response and continues the   |
@@ -341,12 +349,12 @@ _client security context_: [Security Context A](#client-sec), with:
 
 #### 4.1.2. Identifier: TEST_1b {#test-1b}
 
-**Objective** : Perform an OSCORE Group transaction, where the client retrieve a recipient context that it has stored in memory. (Server side)
+**Objective** : Perform an OSCORE Group transaction, where the client and server retrieve a recipient context that they have stored in memory. (Server side)
 
 **Configuration** :
 
 _server security context_: 
-[Security Context B](#server-sec), with:
+[Security Context B1](#server-sec-b1), with:
 
 * Sequence number received not in server's replay window
 
@@ -370,10 +378,10 @@ _server resources_:
 | 3    | Check    | Server parses the request; expected:                     |
 |      |          | 0.02 POST with:                                          |
 |      |          |                                                          |
-|      |          | - Object-Security option: kid = 0x                       |
+|      |          | - Object-Security option: kid = 0xa1                     |
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
-| 4    | Verify   | Server successfully retrieve correct Recipient Context   |
+| 4    | Verify   | Server successfully retrieves correct Recipient Context  |
 |      |          | and decrypts the message: OSCORE verification succeeds   |
 +------+----------+----------------------------------------------------------+
 | 5    | Check    | Server parses the request and continues the CoAP         |
@@ -386,7 +394,7 @@ _server resources_:
 | 7    | Check    | Server serialize the response correctly, which is:       |
 |      |          | 2.04 Changed Response with:                              |
 |      |          |                                                          |
-|      |          | - Object-Security option: kid = 0x01                     |
+|      |          | - Object-Security option: kid = 0xb1                     |
 |      |          | - Payload: ciphertext including:                         |
 |      |          |                                                          |
 |      |          |     * Code: 2.05 Content Response                        |
