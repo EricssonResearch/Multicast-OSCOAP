@@ -4,11 +4,14 @@
 <li><a href="#notes">Notes</a></li>
 <li><a href="#security-contexts-and-resources">Security Contexts and Resources</a>
 <ol type="1">
-<li><a href="#client-sec-A1">Security Context A: Client</a></li>
-<li><a href="#server-sec-B">Security Context B: Server</a></li>
-<li><a href="#server-sec-C">Security Context C: Server</a></li>
-<li><a href="#server-sec-D">Security Context C: Server</a></li>
-<li><a href="#server-sec-E">Security Context C: Server</a></li>
+<li><a href="#client-sec-A1">Security Context A1: Client</a></li>
+<li><a href="#server-sec-A2">Security Context A2: Client</a></li>
+<li><a href="#client-sec-A3">Security Context A3: Client</a></li>
+<li><a href="#server-sec-A4">Security Context A4: Client</a></li>
+<li><a href="#server-sec-B1">Security Context B1: Server</a></li>
+<li><a href="#server-sec-B2">Security Context B2: Server</a></li>
+<li><a href="#server-sec-B3">Security Context B3: Server</a></li>
+<li><a href="#server-sec-B4">Security Context B4: Server</a></li>
 <li><a href="#resources">Resources</a></li>
 </ol></li>
 <li><a href="#env-setup">Set up the environment</a>
@@ -166,11 +169,18 @@
 <li>Sender IV: 0x2da58fb85ff1b81d0b7181b85e (using Partial IV: 00)</li>
 <li>Private Key TBD</li>
 </ul></li>
-<li>Recipient Context:
+<li>Recipient Context 1:
 <ul>
 <li>Recipient Id: 0xa1 (0 byte)</li>
 <li>Recipient Key: 0xaf2a1300a5e95788b356336eeecd2b92 (16 bytes)</li>
 <li>Recipient IV: 0x2ca58fb85ff1b81c0b7181b85e (using Partial IV: 00)</li>
+<li>Public Key TBD</li>
+</ul></li>
+<li>Recipient Context 2:
+<ul>
+<li>Recipient ID: 0xa2 (1 byte)</li>
+<li>Recipient Key: TODO (16 bytes)</li>
+<li>Recipient IV: TODO (using Partial IV: TODO)</li>
 <li>Public Key TBD</li>
 </ul></li>
 </ul>
@@ -367,12 +377,12 @@
 </tbody>
 </table>
 <h2 id="client">4. Several Recipient Contexts on Client</h2>
-<p>In these tests, the client has several recipient contexts. The goal is to test the retrieval/derivation of recipient contexts on the client.</p>
+<p>In these tests, the node has several recipient contexts. The goal is to test the retrieval/derivation of recipient contexts on the client.</p>
 <h3 id="correct-group-oscore-use">4.1 Correct Group OSCORE Use</h3>
 <h4 id="test-1a">4.1.1. Identifier: TEST_1a</h4>
-<p><strong>Objective</strong> : Perform an OSCORE Group transaction, where the client retrieve a recipient context that it has stored in memory. (Client side)</p>
+<p><strong>Objective</strong> : Perform an OSCORE Group transaction, where the client and server retrieve a recipient context that they have stored in memory. (Client side)</p>
 <p><strong>Configuration</strong> :</p>
-<p><em>client security context</em>: <a href="#client-sec">Security Context A</a>, with:</p>
+<p><em>client security context</em>: <a href="#client-sec-a1">Security Context A1</a>, with:</p>
 <ul>
 <li>Sequence number received not in client’s replay window</li>
 </ul>
@@ -405,7 +415,7 @@
 <td>Check</td>
 <td><p>Client serializes the request, which is a POST request, with:</p>
 <ul>
-<li>Object-Security option: kid = 0x</li>
+<li>Object-Security option: kid = 0xa1</li>
 <li><p>Payload: ciphertext including:</p>
 <pre><code>* Code: GET
 * Uri-Path : /oscore/hello/1</code></pre></li>
@@ -421,14 +431,14 @@
 <td>Check</td>
 <td><p>Client parses the response; expected: 2.04 Changed Response with:</p>
 <ul>
-<li>Object-Security option: kid = 0x01</li>
+<li>Object-Security option: kid = 0xb1</li>
 <li>Payload</li>
 </ul></td>
 </tr>
 <tr class="odd">
 <td>4</td>
 <td>Verify  </td>
-<td>Client successfully retrieve correct Recipient Context and decrypts the message: OSCORE verification succeeds</td>
+<td>Client successfully retrieves correct Recipient Context and decrypts the message: OSCORE verification succeeds</td>
 </tr>
 <tr class="even">
 <td>6</td>
@@ -447,9 +457,9 @@
 </tbody>
 </table>
 <h4 id="test-1b">4.1.2. Identifier: TEST_1b</h4>
-<p><strong>Objective</strong> : Perform an OSCORE Group transaction, where the client retrieve a recipient context that it has stored in memory. (Server side)</p>
+<p><strong>Objective</strong> : Perform an OSCORE Group transaction, where the client and server retrieve a recipient context that they have stored in memory. (Server side)</p>
 <p><strong>Configuration</strong> :</p>
-<p><em>server security context</em>: <a href="#server-sec">Security Context B</a>, with:</p>
+<p><em>server security context</em>: <a href="#server-sec-b1">Security Context B1</a>, with:</p>
 <ul>
 <li>Sequence number received not in server’s replay window</li>
 </ul>
@@ -491,14 +501,14 @@
 <td>Check</td>
 <td><p>Server parses the request; expected: 0.02 POST with:</p>
 <ul>
-<li>Object-Security option: kid = 0x</li>
+<li>Object-Security option: kid = 0xa1</li>
 <li>Payload</li>
 </ul></td>
 </tr>
 <tr class="even">
 <td>4</td>
 <td>Verify  </td>
-<td>Server successfully retrieve correct Recipient Context and decrypts the message: OSCORE verification succeeds</td>
+<td>Server successfully retrieves correct Recipient Context and decrypts the message: OSCORE verification succeeds</td>
 </tr>
 <tr class="odd">
 <td>5</td>
@@ -518,7 +528,7 @@
 <td>Check</td>
 <td><p>Server serialize the response correctly, which is: 2.04 Changed Response with:</p>
 <ul>
-<li>Object-Security option: kid = 0x01</li>
+<li>Object-Security option: kid = 0xb1</li>
 <li><p>Payload: ciphertext including:</p>
 <ul>
 <li>Code: 2.05 Content Response</li>
