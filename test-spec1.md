@@ -107,7 +107,7 @@ The test specified below can in fact be run on unicast between the nodes, to tes
 
 ### Security Context D: Server {#server-sec-D} 
 
-same as C but with modified Sender Key
+(incorrect sec ctx) modified Sender Key
 
 * Common Context:
     - Master Secret: 0x0102030405060708090a0b0c0d0e0f10 (16 bytes)
@@ -115,7 +115,7 @@ same as C but with modified Sender Key
     - Common IV: 0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
     - ID Context: 0x37cbf3210017a2d3 (8 bytes)
 * Sender Context:
-    - Sender Id: 0x02 (1 byte)
+    - Sender Id: 0x03 (1 byte)
     - Sender Key: TBD (16 bytes) *** Key needs to be manually modified
     - Sender Seq Number: 00
     - Sender IV: TBD (using Partial IV: 00)
@@ -128,7 +128,7 @@ same as C but with modified Sender Key
 
 ### Security Context E: Server {#server-sec-E} 
 
-same as C but with different Private Key
+(incorrect sec ctx) different Private Key
 
 * Common Context:
     - Master Secret: 0x0102030405060708090a0b0c0d0e0f10 (16 bytes)
@@ -136,7 +136,7 @@ same as C but with different Private Key
     - Common IV: 0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
     - ID Context: 0x37cbf3210017a2d3 (8 bytes)
 * Sender Context:
-    - Sender Id: 0x02 (1 byte)
+    - Sender Id: 0x04 (1 byte)
     - Sender Key: TBD (16 bytes) 
     - Sender Seq Number: 00
     - Sender IV: TBD (using Partial IV: 00)
@@ -250,8 +250,9 @@ _client security context_: [Security Context A](#client-sec), with:
 | 2    | Check    | Client serializes the request, which is a POST request,  |
 |      |          | with:                                                    |
 |      |          |                                                          |
-|      |          | - Object-Security option                                 |
+|      |          | - Object-Security option: kid = 0x                       |
 |      |          | - Payload: ciphertext including:                         |
+|      |          |                                                          |
 |      |          |       * Code: GET                                        |
 |      |          |       * Uri-Path : /oscore/hello/1                       |
 +------+----------+----------------------------------------------------------+
@@ -306,7 +307,7 @@ _server resources_:
 | 3    | Check    | Server parses the request; expected:                     |
 |      |          | 0.02 POST with:                                          |
 |      |          |                                                          |
-|      |          | - Object-Security option                                 |
+|      |          | - Object-Security option: kid = 0x                       |
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
 | 4    | Verify   | Server successfully retrieve correct Recipient Context   |
@@ -324,6 +325,7 @@ _server resources_:
 |      |          |                                                          |
 |      |          | - Object-Security option: kid = 0x01                     |
 |      |          | - Payload: ciphertext including:                         |
+|      |          |                                                          |
 |      |          |     * Code: 2.05 Content Response                        |
 |      |          |     * Content-Format = 0 (text/plain)                    |
 |      |          |     * Payload = "Hello World!"                           |
@@ -333,7 +335,7 @@ _server resources_:
 
 #### 4.1.3. Identifier: TEST_2a {#test-2a}
 
-**Objective** : Perform an OSCORE Group transaction, where the client receive a Recipient Id that it does not have in memory, and derives the Recipient Context for it. (Client side)
+**Objective** : Perform an OSCORE Group transaction, where the client receives a Recipient Id that it does not have in memory, and succesfully derives the Recipient Context for it. (Client side)
 
 **Configuration** :
 
@@ -355,8 +357,9 @@ _client security context_: [Security Context A](#client-sec), with:
 | 2    | Check    | Client serializes the request, which is a POST request,  |
 |      |          | with:                                                    |
 |      |          |                                                          |
-|      |          | - Object-Security option                                 |
+|      |          | - Object-Security option: kid = 0x                       |
 |      |          | - Payload: ciphertext including:                         |
+|      |          |                                                          |
 |      |          |       * Code: GET                                        |
 |      |          |       * Uri-Path : /oscore/hello/1                       |
 +------+----------+----------------------------------------------------------+
@@ -412,10 +415,10 @@ _server resources_:
 | 3    | Check    | Server parses the request; expected:                     |
 |      |          | 0.02 POST with:                                          |
 |      |          |                                                          |
-|      |          | - Object-Security option                                 |
+|      |          | - Object-Security option: kid = 0x                       |
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
-| 4    | Verify   | Server successfully retrieve correct Recipient Context   |
+| 4    | Verify   | Server successfully retrieves correct Recipient Context  |
 |      |          | and decrypts the message: OSCORE verification succeeds   |
 +------+----------+----------------------------------------------------------+
 | 5    | Check    | Server parses the request and continues the CoAP         |
@@ -428,8 +431,9 @@ _server resources_:
 | 7    | Check    | Server serialize the response correctly, which is:       |
 |      |          | 2.04 Changed Response with:                              |
 |      |          |                                                          |
-|      |          | - Object-Security option: kid = 0x01                     |
+|      |          | - Object-Security option: kid = 0x02                     |
 |      |          | - Payload: ciphertext including:                         |
+|      |          |                                                          |
 |      |          |     * Code: 2.05 Content Response                        |
 |      |          |     * Content-Format = 0 (text/plain)                    |
 |      |          |     * Payload = "Hello World!"                           |
@@ -463,8 +467,9 @@ _client security context_: [Security Context A](#client-sec), with:
 | 2    | Check    | Client serializes the request, which is a POST request,  |
 |      |          | with:                                                    |
 |      |          |                                                          |
-|      |          | - Object-Security option                                 |
+|      |          | - Object-Security option: kid = 0x                       |
 |      |          | - Payload: ciphertext including:                         |
+|      |          |                                                          |
 |      |          |       * Code: GET                                        |
 |      |          |       * Uri-Path : /oscore/hello/1                       |
 +------+----------+----------------------------------------------------------+
@@ -473,11 +478,11 @@ _client security context_: [Security Context A](#client-sec), with:
 | 4    | Check    | Client parses the response; expected:                    |
 |      |          | 2.04 Changed Response with:                              |
 |      |          |                                                          |
-|      |          | - Object-Security option: kid = 0x01                     |
+|      |          | - Object-Security option: kid = 0x03                     |
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
 | 5    | Verify   | Client successfully derives a new Recipient Context from |
-|      |          | received Recipient Id = 0x02 ; Client tries to decrypt   |
+|      |          | received Recipient Id = 0x03 ; Client tries to decrypt   |
 |      |          | the message: OSCORE verification fail                    |
 +------+----------+----------------------------------------------------------+
 | 6    | Verify   | Client displays the received packet                      |
@@ -490,7 +495,7 @@ _client security context_: [Security Context A](#client-sec), with:
 **Configuration** :
 
 _server security context_: 
-[Security Context B](#server-sec), with:
+[Security Context D](#server-sec-D), with:
 
 * Sequence number received not in server's replay window
 
@@ -514,7 +519,7 @@ _server resources_:
 | 3    | Check    | Server parses the request; expected:                     |
 |      |          | 0.02 POST with:                                          |
 |      |          |                                                          |
-|      |          | - Object-Security option                                 |
+|      |          | - Object-Security option: kid = 0x                       |
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
 | 4    | Verify   | Server successfully retrieve correct Recipient Context   |
@@ -530,8 +535,9 @@ _server resources_:
 | 7    | Check    | Server serialize the response correctly, which is:       |
 |      |          | 2.04 Changed Response with:                              |
 |      |          |                                                          |
-|      |          | - Object-Security option: kid = 0x01                     |
+|      |          | - Object-Security option: kid = 0x03                     |
 |      |          | - Payload: ciphertext including:                         |
+|      |          |                                                          |
 |      |          |     * Code: 2.05 Content Response                        |
 |      |          |     * Content-Format = 0 (text/plain)                    |
 |      |          |     * Payload = "Hello World!"                           |
@@ -541,7 +547,7 @@ _server resources_:
 
 #### 4.1.3. Identifier: TEST_4a {#test-4a}
 
-**Objective** : Perform an OSCORE Group transaction where the client receive a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but signature verification fails. (Client side)
+**Objective** : Perform an OSCORE Group transaction where the client receives a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but signature verification fails. (Client side)
 
 **Configuration** :
 
@@ -563,8 +569,9 @@ _client security context_: [Security Context A](#client-sec), with:
 | 2    | Check    | Client serializes the request, which is a POST request,  |
 |      |          | with:                                                    |
 |      |          |                                                          |
-|      |          | - Object-Security option                                 |
+|      |          | - Object-Security option: kid = 0x                       |
 |      |          | - Payload: ciphertext including:                         |
+|      |          |                                                          |
 |      |          |       * Code: GET                                        |
 |      |          |       * Uri-Path : /oscore/hello/1                       |
 +------+----------+----------------------------------------------------------+
@@ -573,11 +580,11 @@ _client security context_: [Security Context A](#client-sec), with:
 | 4    | Check    | Client parses the response; expected:                    |
 |      |          | 2.04 Changed Response with:                              |
 |      |          |                                                          |
-|      |          | - Object-Security option: kid = 0x02                     |
+|      |          | - Object-Security option: kid = 0x04                     |
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
 | 5    | Verify   | Client successfully derives a new Recipient Context from |
-|      |          | received Recipient Id = 0x02 ; Client decrypts           |
+|      |          | received Recipient Id = 0x04 ; Client decrypts           |
 |      |          | the message successfully; Client verifies signature:     |
 |      |          | signature verification fails                             |
 +------+----------+----------------------------------------------------------+
@@ -586,12 +593,12 @@ _client security context_: [Security Context A](#client-sec), with:
 
 #### 4.1.4. Identifier: TEST_4b {#test-4b}
 
-**Objective** : Perform an OSCORE Group transaction where the client receive a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but signature verification fails. (Server side)
+**Objective** : Perform an OSCORE Group transaction where the client receives a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but signature verification fails. (Server side)
 
 **Configuration** :
 
 _server security context_: 
-[Security Context C](#server-sec), with:
+[Security Context E](#server-sec-E), with:
 
 * Sequence number received not in server's replay window
 
@@ -615,7 +622,7 @@ _server resources_:
 | 3    | Check    | Server parses the request; expected:                     |
 |      |          | 0.02 POST with:                                          |
 |      |          |                                                          |
-|      |          | - Object-Security option                                 |
+|      |          | - Object-Security option: kid = 0x                       |
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
 | 4    | Verify   | Server successfully retrieve correct Recipient Context   |
@@ -631,8 +638,9 @@ _server resources_:
 | 7    | Check    | Server serialize the response correctly, which is:       |
 |      |          | 2.04 Changed Response with:                              |
 |      |          |                                                          |
-|      |          | - Object-Security option: kid = 0x01                     |
+|      |          | - Object-Security option: kid = 0x04                     |
 |      |          | - Payload: ciphertext including:                         |
+|      |          |                                                          |
 |      |          |     * Code: 2.05 Content Response                        |
 |      |          |     * Content-Format = 0 (text/plain)                    |
 |      |          |     * Payload = "Hello World!"                           |
