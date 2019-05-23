@@ -18,6 +18,10 @@
         2. [Test 1b](#test-1b)
         3. [Test 2a](#test-2a)
         4. [Test 2b](#test-2b)
+        5. [Test 3a](#test-3a)
+        6. [Test 3b](#test-3b)
+        7. [Test 4a](#test-4a)
+        8. [Test 4b](#test-4b)
 
 
 ## 1. Notes
@@ -90,7 +94,7 @@ The test specified below can in fact be run on unicast between the nodes, to tes
     - Common IV: 0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
     - ID Context: 0x37cbf3210017a2d3 (8 bytes)
 * Sender Context:
-    - Sender Id: 0x03 (1 byte)
+    - Sender Id: 0x02 (1 byte)
     - Sender Key: TBD (16 bytes)
     - Sender Seq Number: 00
     - Sender IV: TBD (using Partial IV: 00)
@@ -101,7 +105,9 @@ The test specified below can in fact be run on unicast between the nodes, to tes
     - Recipient IV: 0x2ca58fb85ff1b81c0b7181b85e (using Partial IV: 00)
     - Public Key TBD
 
-### Security Context D: Server {#server-sec-C} -- same as C but with modified Sender Key
+### Security Context D: Server {#server-sec-D} 
+
+same as C but with modified Sender Key
 
 * Common Context:
     - Master Secret: 0x0102030405060708090a0b0c0d0e0f10 (16 bytes)
@@ -109,7 +115,7 @@ The test specified below can in fact be run on unicast between the nodes, to tes
     - Common IV: 0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
     - ID Context: 0x37cbf3210017a2d3 (8 bytes)
 * Sender Context:
-    - Sender Id: 0x03 (1 byte)
+    - Sender Id: 0x02 (1 byte)
     - Sender Key: TBD (16 bytes) *** Key needs to be manually modified
     - Sender Seq Number: 00
     - Sender IV: TBD (using Partial IV: 00)
@@ -120,7 +126,9 @@ The test specified below can in fact be run on unicast between the nodes, to tes
     - Recipient IV: 0x2ca58fb85ff1b81c0b7181b85e (using Partial IV: 00)
     - Public Key TBD
 
-### Security Context E: Server {#server-sec-C} -- same as C but with different Private Key
+### Security Context E: Server {#server-sec-E} 
+
+same as C but with different Private Key
 
 * Common Context:
     - Master Secret: 0x0102030405060708090a0b0c0d0e0f10 (16 bytes)
@@ -128,7 +136,7 @@ The test specified below can in fact be run on unicast between the nodes, to tes
     - Common IV: 0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
     - ID Context: 0x37cbf3210017a2d3 (8 bytes)
 * Sender Context:
-    - Sender Id: 0x03 (1 byte)
+    - Sender Id: 0x02 (1 byte)
     - Sender Key: TBD (16 bytes) 
     - Sender Seq Number: 00
     - Sender IV: TBD (using Partial IV: 00)
@@ -357,11 +365,11 @@ _client security context_: [Security Context A](#client-sec), with:
 | 4    | Check    | Client parses the response; expected:                    |
 |      |          | 2.04 Changed Response with:                              |
 |      |          |                                                          |
-|      |          | - Object-Security option: kid = 0x03                     |
+|      |          | - Object-Security option: kid = 0x02                     |
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
 | 5    | Verify   | Client successfully derives a new Recipient Context from |
-|      |          | received Recipient Id = 0x03 ; Client decrypts           |
+|      |          | received Recipient Id = 0x02 ; Client decrypts           |
 |      |          | the message: OSCORE verification succeeds                |
 +------+----------+----------------------------------------------------------+
 | 6    | Check    | Client parses the decrypted response and continues the   |
@@ -469,7 +477,7 @@ _client security context_: [Security Context A](#client-sec), with:
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
 | 5    | Verify   | Client successfully derives a new Recipient Context from |
-|      |          | received Recipient Id = 0x03 ; Client tries to decrypt   |
+|      |          | received Recipient Id = 0x02 ; Client tries to decrypt   |
 |      |          | the message: OSCORE verification fail                    |
 +------+----------+----------------------------------------------------------+
 | 6    | Verify   | Client displays the received packet                      |
@@ -565,18 +573,18 @@ _client security context_: [Security Context A](#client-sec), with:
 | 4    | Check    | Client parses the response; expected:                    |
 |      |          | 2.04 Changed Response with:                              |
 |      |          |                                                          |
-|      |          | - Object-Security option: kid = 0x03                     |
+|      |          | - Object-Security option: kid = 0x02                     |
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
 | 5    | Verify   | Client successfully derives a new Recipient Context from |
-|      |          | received Recipient Id = 0x03 ; Client decrypts           |
+|      |          | received Recipient Id = 0x02 ; Client decrypts           |
 |      |          | the message successfully; Client verifies signature:     |
 |      |          | signature verification fails                             |
 +------+----------+----------------------------------------------------------+
 | 6    | Verify   | Client displays the received packet                      |
 +------+----------+----------------------------------------------------------+
 
-#### 4.1.4. Identifier: TEST_4b {#test-2b}
+#### 4.1.4. Identifier: TEST_4b {#test-4b}
 
 **Objective** : Perform an OSCORE Group transaction where the client receive a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but signature verification fails. (Server side)
 
@@ -633,3 +641,4 @@ _server resources_:
 +------+----------+----------------------------------------------------------+
 
 **********
+
