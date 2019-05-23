@@ -5,9 +5,11 @@
 ## Table of Contents
 1. [Notes](#notes)
 2. [Security Contexts and Resources](#security-contexts-and-resources)
-    1. [Security Context A: Client](#client-sec)
-    2. [Security Context B: Server](#server-sec)
+    1. [Security Context A: Client](#client-sec-A1)
+    2. [Security Context B: Server](#server-sec-B)
     3. [Security Context C: Server](#server-sec-C)
+    3. [Security Context C: Server](#server-sec-D)
+    3. [Security Context C: Server](#server-sec-E)
     3. [Resources](#resources)
 3. [Set up the environment](#env-setup)
     1. [Test 0a](#test-0a)
@@ -43,7 +45,7 @@ The test specified below can in fact be run on unicast between the nodes, to tes
 
 ## 2. Configuration, Security Contexts and Resources
 
-### Security Context A: Client {#client-sec}
+### Security Context A1: Client {#client-sec-a1}
 
 * Common Context:
     - Master Secret: 0x0102030405060708090a0b0c0d0e0f10 (16 bytes)
@@ -51,23 +53,84 @@ The test specified below can in fact be run on unicast between the nodes, to tes
     - Common IV: 0x0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
     - ID Context: 0x37cbf3210017a2d3 (8 bytes)
 * Sender Context:
-    - Sender ID: 0x (0 byte)
+    - Sender ID: 0xa1 (0 byte)
     - Sender Key: 0xaf2a1300a5e95788b356336eeecd2b92 (16 bytes)
     - Sender Seq Number: 00
     - Sender IV: 0x2ca58fb85ff1b81c0b7181b85e (using Partial IV: 00)
     - Private Key TBD
 * Recipient Context 1:
-    - Recipient ID: 0x01 (1 byte)
+    - Recipient ID: 0xb1 (1 byte)
     - Recipient Key: 0xe39a0c7c77b43f03b4b39ab9a268699f (16 bytes)
     - Recipient IV: 0x2da58fb85ff1b81d0b7181b85e (using Partial IV: 00)
     - Public Key TBD
 * Recipient Context 2:
-    - Recipient ID: 0x02 (1 byte)
+    - Recipient ID: 0xb2 (1 byte)
     - Recipient Key: TODO (16 bytes)
     - Recipient IV: TODO (using Partial IV: TODO)
     - Public Key TBD
 
-### Security Context B: Server {#server-sec}
+### Security Context A2: Client {#client-sec-a2}
+
+* Common Context:
+    - Master Secret: 0x0102030405060708090a0b0c0d0e0f10 (16 bytes)
+    - Master Salt: 0x9e7ca92223786340 (8 bytes)
+    - Common IV: 0x0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
+    - ID Context: 0x37cbf3210017a2d3 (8 bytes)
+* Sender Context:
+    - Sender ID: 0xa2 (0 byte)
+    - Sender Key: TBD (16 bytes)
+    - Sender Seq Number: 00
+    - Sender IV: TBD (using Partial IV: 00)
+    - Private Key TBD
+* Recipient Context 1:
+    - Recipient ID: 0xb1 (1 byte)
+    - Recipient Key: 0xe39a0c7c77b43f03b4b39ab9a268699f (16 bytes)
+    - Recipient IV: 0x2da58fb85ff1b81d0b7181b85e (using Partial IV: 00)
+    - Public Key TBD
+
+### Security Context A3: Client {#client-sec-a3}
+
+(incorrect sec ctx) modified Sender Key
+
+* Common Context:
+    - Master Secret: 0x0102030405060708090a0b0c0d0e0f10 (16 bytes)
+    - Master Salt: 0x9e7ca92223786340 (8 bytes)
+    - Common IV: 0x0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
+    - ID Context: 0x37cbf3210017a2d3 (8 bytes)
+* Sender Context:
+    - Sender ID: 0xa3 (0 byte)
+    - Sender Key: TBD (16 bytes)
+    - Sender Seq Number: 00
+    - Sender IV: TBD (using Partial IV: 00)
+    - Private Key TBD
+* Recipient Context 1:
+    - Recipient ID: 0xb1 (1 byte)
+    - Recipient Key: 0xe39a0c7c77b43f03b4b39ab9a268699f (16 bytes)
+    - Recipient IV: 0x2da58fb85ff1b81d0b7181b85e (using Partial IV: 00)
+    - Public Key TBD
+
+### Security Context A4: Client {#client-sec-a4}
+
+(incorrect sec ctx) modified Private Key
+
+* Common Context:
+    - Master Secret: 0x0102030405060708090a0b0c0d0e0f10 (16 bytes)
+    - Master Salt: 0x9e7ca92223786340 (8 bytes)
+    - Common IV: 0x0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
+    - ID Context: 0x37cbf3210017a2d3 (8 bytes)
+* Sender Context:
+    - Sender ID: 0xa4 (0 byte)
+    - Sender Key: TBD (16 bytes)
+    - Sender Seq Number: 00
+    - Sender IV: TBD (using Partial IV: 00)
+    - Private Key TBD
+* Recipient Context 1:
+    - Recipient ID: 0xb1 (1 byte)
+    - Recipient Key: 0xe39a0c7c77b43f03b4b39ab9a268699f (16 bytes)
+    - Recipient IV: 0x2da58fb85ff1b81d0b7181b85e (using Partial IV: 00)
+    - Public Key TBD
+
+### Security Context B1: Server {#server-sec-b1}
 
 * Common Context:
     - Master Secret: 0x0102030405060708090a0b0c0d0e0f10 (16 bytes)
@@ -75,18 +138,18 @@ The test specified below can in fact be run on unicast between the nodes, to tes
     - Common IV: 0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
     - ID Context: 0x37cbf3210017a2d3 (8 bytes)
 * Sender Context:
-    - Sender Id: 0x01 (1 byte)
+    - Sender Id: 0xb1 (1 byte)
     - Sender Key: 0xe39a0c7c77b43f03b4b39ab9a268699f (16 bytes)
     - Sender Seq Number: 00
     - Sender IV: 0x2da58fb85ff1b81d0b7181b85e (using Partial IV: 00)
     - Private Key TBD
 * Recipient Context:
-    - Recipient Id: 0x (0 byte)
+    - Recipient Id: 0xa1 (0 byte)
     - Recipient Key: 0xaf2a1300a5e95788b356336eeecd2b92 (16 bytes)
     - Recipient IV: 0x2ca58fb85ff1b81c0b7181b85e (using Partial IV: 00)
     - Public Key TBD
 
-### Security Context C: Server {#server-sec-C}
+### Security Context B2: Server {#server-sec-b2}
 
 * Common Context:
     - Master Secret: 0x0102030405060708090a0b0c0d0e0f10 (16 bytes)
@@ -94,18 +157,18 @@ The test specified below can in fact be run on unicast between the nodes, to tes
     - Common IV: 0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
     - ID Context: 0x37cbf3210017a2d3 (8 bytes)
 * Sender Context:
-    - Sender Id: 0x02 (1 byte)
+    - Sender Id: 0xb2 (1 byte)
     - Sender Key: TBD (16 bytes)
     - Sender Seq Number: 00
     - Sender IV: TBD (using Partial IV: 00)
     - Private Key TBD
 * Recipient Context:
-    - Recipient Id: 0x (0 byte)
+    - Recipient Id: 0xa1 (0 byte)
     - Recipient Key: 0xaf2a1300a5e95788b356336eeecd2b92 (16 bytes)
     - Recipient IV: 0x2ca58fb85ff1b81c0b7181b85e (using Partial IV: 00)
     - Public Key TBD
 
-### Security Context D: Server {#server-sec-D} 
+### Security Context B3: Server {#server-sec-b3} 
 
 (incorrect sec ctx) modified Sender Key
 
@@ -115,18 +178,18 @@ The test specified below can in fact be run on unicast between the nodes, to tes
     - Common IV: 0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
     - ID Context: 0x37cbf3210017a2d3 (8 bytes)
 * Sender Context:
-    - Sender Id: 0x03 (1 byte)
+    - Sender Id: 0xb3 (1 byte)
     - Sender Key: TBD (16 bytes) *** Key needs to be manually modified
     - Sender Seq Number: 00
     - Sender IV: TBD (using Partial IV: 00)
     - Private Key TBD
 * Recipient Context:
-    - Recipient Id: 0x (0 byte)
+    - Recipient Id: 0xa1 (0 byte)
     - Recipient Key: 0xaf2a1300a5e95788b356336eeecd2b92 (16 bytes)
     - Recipient IV: 0x2ca58fb85ff1b81c0b7181b85e (using Partial IV: 00)
     - Public Key TBD
 
-### Security Context E: Server {#server-sec-E} 
+### Security Context B4: Server {#server-sec-b4} 
 
 (incorrect sec ctx) different Private Key
 
@@ -136,13 +199,13 @@ The test specified below can in fact be run on unicast between the nodes, to tes
     - Common IV: 0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
     - ID Context: 0x37cbf3210017a2d3 (8 bytes)
 * Sender Context:
-    - Sender Id: 0x04 (1 byte)
+    - Sender Id: 0xb4 (1 byte)
     - Sender Key: TBD (16 bytes) 
     - Sender Seq Number: 00
     - Sender IV: TBD (using Partial IV: 00)
     - Private Key TBD *** Key does not match Sec Ctx A Public Key
 * Recipient Context:
-    - Recipient Id: 0x (0 byte)
+    - Recipient Id: 0xa1 (0 byte)
     - Recipient Key: 0xaf2a1300a5e95788b356336eeecd2b92 (16 bytes)
     - Recipient IV: 0x2ca58fb85ff1b81c0b7181b85e (using Partial IV: 00)
     - Public Key TBD
@@ -441,6 +504,114 @@ _server resources_:
 | 8    | Verify   | Server displays the sent packet                          |
 +------+----------+----------------------------------------------------------+
 
+#### 4.1.3. Identifier: TEST_3a {#test-3a}
+
+**Objective** : Perform an OSCORE Group transaction, where the server receives a Recipient Id that it does not have in memory, and succesfully derives the Recipient Context for it. (Client side)
+
+**Configuration** :
+
+_client security context_: [Security Context A2](#client-sec-a), with:
+
+* Sequence number received not in client's replay window
+
+**Test Sequence**
+
++------+----------+----------------------------------------------------------+
+| Step | Type     | Description                                              |
++======+==========+==========================================================+
+| 1    | Stimulus | The client is requested to send a CoAP GET request       |
+|      |          | protected with OSCORE, including:                        |
+|      |          |                                                          |
+|      |          | - Object-Security option                                 |
+|      |          | - Uri-Path : /oscore/hello/1                             |
++------+----------+----------------------------------------------------------+
+| 2    | Check    | Client serializes the request, which is a POST request,  |
+|      |          | with:                                                    |
+|      |          |                                                          |
+|      |          | - Object-Security option: kid = 0x00                     |
+|      |          | - Payload: ciphertext including:                         |
+|      |          |                                                          |
+|      |          |       * Code: GET                                        |
+|      |          |       * Uri-Path : /oscore/hello/1                       |
++------+----------+----------------------------------------------------------+
+| 3    | Verify   | Client displays the sent packet                          |
++------+----------+----------------------------------------------------------+
+| 4    | Check    | Client parses the response; expected:                    |
+|      |          | 2.04 Changed Response with:                              |
+|      |          |                                                          |
+|      |          | - Object-Security option: kid = 0x01                     |
+|      |          | - Payload                                                |
++------+----------+----------------------------------------------------------+
+| 5    | Verify   | Client successfully retrieves correct Recipient Context  |
+|      |          | and decrypts the message: OSCORE verification succeeds   |
++------+----------+----------------------------------------------------------+
+| 6    | Check    | Client parses the decrypted response and continues the   |
+|      |          | CoAP processing; expected 2.05 Content Response with:    |
+|      |          |                                                          |
+|      |          | - Content-Format = 0 (text/plain)                        |
+|      |          | - Payload = "Hello World!"                               |
++------+----------+----------------------------------------------------------+
+| 7    | Verify   | Client displays the received packet                      |
++------+----------+----------------------------------------------------------+
+
+#### 4.1.4. Identifier: TEST_3b {#test-3b}
+
+**Objective** : Perform an OSCORE Group transaction, where the server receive a Recipient Id that it does not have in memory, and derives the Recipient Context for it. (Server side)
+
+**Configuration** :
+
+_server security context_: 
+[Security Context B](#server-sec-B), with:
+
+* Sequence number received not in server's replay window
+
+_server resources_:
+
+* /oscore/hello/1 : protected resource, authorized method: GET, returns the string "Hello World!" with content-format 0 (text/plain)
+
+**Test Sequence**
+
++------+----------+----------------------------------------------------------+
+| Step | Type     | Description                                              |
++======+==========+==========================================================+
+| 1    | Stimulus | The client is requested to send a CoAP GET request       |
+|      |          | protected with OSCORE, including:                        |
+|      |          |                                                          |
+|      |          | - Object-Security option                                 |
+|      |          | - Uri-Path = /oscore/hello/1                             |
++------+----------+----------------------------------------------------------+
+| 2    | Verify   | Server displays the received packet                      |
++------+----------+----------------------------------------------------------+
+| 3    | Check    | Server parses the request; expected:                     |
+|      |          | 0.02 POST with:                                          |
+|      |          |                                                          |
+|      |          | - Object-Security option: kid = 0x00                     |
+|      |          | - Payload                                                |
++------+----------+----------------------------------------------------------+
+| 4    | Verify   | Server successfully derives a new Recipient Context from |
+|      |          | received Recipient Id = 0x00 ; Client decrypts           |
+|      |          | the message: OSCORE verification succeeds                |
++------+----------+----------------------------------------------------------+
+| 5    | Check    | Server parses the request and continues the CoAP         |
+|      |          | processing; expected: CoAP GET request, including:       |
+|      |          |                                                          |
+|      |          | - Uri-Path : /oscore/hello/1                             |
++------+----------+----------------------------------------------------------+
+| 6    | Verify   | Server displays the received packet                      |
++------+----------+----------------------------------------------------------+
+| 7    | Check    | Server serialize the response correctly, which is:       |
+|      |          | 2.04 Changed Response with:                              |
+|      |          |                                                          |
+|      |          | - Object-Security option: kid = 0x01                     |
+|      |          | - Payload: ciphertext including:                         |
+|      |          |                                                          |
+|      |          |     * Code: 2.05 Content Response                        |
+|      |          |     * Content-Format = 0 (text/plain)                    |
+|      |          |     * Payload = "Hello World!"                           |
++------+----------+----------------------------------------------------------+
+| 8    | Verify   | Server displays the sent packet                          |
++------+----------+----------------------------------------------------------+
+
 ### 4.2 Incorrect Group OSCORE Use
 
 #### 4.2.1. Identifier: TEST_3a {#test-3a}
@@ -450,6 +621,110 @@ _server resources_:
 **Configuration** :
 
 _client security context_: [Security Context A](#client-sec), with:
+
+* Sequence number received not in client's replay window
+
+**Test Sequence**
+
++------+----------+----------------------------------------------------------+
+| Step | Type     | Description                                              |
++======+==========+==========================================================+
+| 1    | Stimulus | The client is requested to send a CoAP GET request       |
+|      |          | protected with OSCORE, including:                        |
+|      |          |                                                          |
+|      |          | - Object-Security option                                 |
+|      |          | - Uri-Path : /oscore/hello/1                             |
++------+----------+----------------------------------------------------------+
+| 2    | Check    | Client serializes the request, which is a POST request,  |
+|      |          | with:                                                    |
+|      |          |                                                          |
+|      |          | - Object-Security option: kid = 0x                       |
+|      |          | - Payload: ciphertext including:                         |
+|      |          |                                                          |
+|      |          |       * Code: GET                                        |
+|      |          |       * Uri-Path : /oscore/hello/1                       |
++------+----------+----------------------------------------------------------+
+| 3    | Verify   | Client displays the sent packet                          |
++------+----------+----------------------------------------------------------+
+| 4    | Check    | Client parses the response; expected:                    |
+|      |          | 2.04 Changed Response with:                              |
+|      |          |                                                          |
+|      |          | - Object-Security option: kid = 0x03                     |
+|      |          | - Payload                                                |
++------+----------+----------------------------------------------------------+
+| 5    | Verify   | Client successfully derives a new Recipient Context from |
+|      |          | received Recipient Id = 0x03 ; Client tries to decrypt   |
+|      |          | the message: OSCORE verification fail                    |
++------+----------+----------------------------------------------------------+
+| 6    | Verify   | Client displays the received packet                      |
++------+----------+----------------------------------------------------------+
+
+#### 4.2.2. Identifier: TEST_3b {#test-3b}
+
+**Objective** : Perform an OSCORE Group transaction where the client receive a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but decryption fails. (Server side)
+
+**Configuration** :
+
+_server security context_: 
+[Security Context D](#server-sec-D), with:
+
+* Sequence number received not in server's replay window
+
+_server resources_:
+
+* /oscore/hello/1 : protected resource, authorized method: GET, returns the string "Hello World!" with content-format 0 (text/plain)
+
+**Test Sequence**
+
++------+----------+----------------------------------------------------------+
+| Step | Type     | Description                                              |
++======+==========+==========================================================+
+| 1    | Stimulus | The client is requested to send a CoAP GET request       |
+|      |          | protected with OSCORE, including:                        |
+|      |          |                                                          |
+|      |          | - Object-Security option                                 |
+|      |          | - Uri-Path = /oscore/hello/1                             |
++------+----------+----------------------------------------------------------+
+| 2    | Verify   | Server displays the received packet                      |
++------+----------+----------------------------------------------------------+
+| 3    | Check    | Server parses the request; expected:                     |
+|      |          | 0.02 POST with:                                          |
+|      |          |                                                          |
+|      |          | - Object-Security option: kid = 0x                       |
+|      |          | - Payload                                                |
++------+----------+----------------------------------------------------------+
+| 4    | Verify   | Server successfully retrieve correct Recipient Context   |
+|      |          | and decrypts the message: OSCORE verification succeeds   |
++------+----------+----------------------------------------------------------+
+| 5    | Check    | Server parses the request and continues the CoAP         |
+|      |          | processing; expected: CoAP GET request, including:       |
+|      |          |                                                          |
+|      |          | - Uri-Path : /oscore/hello/1                             |
++------+----------+----------------------------------------------------------+
+| 6    | Verify   | Server displays the received packet                      |
++------+----------+----------------------------------------------------------+
+| 7    | Check    | Server serialize the response correctly, which is:       |
+|      |          | 2.04 Changed Response with:                              |
+|      |          |                                                          |
+|      |          | - Object-Security option: kid = 0x03                     |
+|      |          | - Payload: ciphertext including:                         |
+|      |          |                                                          |
+|      |          |     * Code: 2.05 Content Response                        |
+|      |          |     * Content-Format = 0 (text/plain)                    |
+|      |          |     * Payload = "Hello World!"                           |
++------+----------+----------------------------------------------------------+
+| 8    | Verify   | Server displays the sent packet                          |
++------+----------+----------------------------------------------------------+
+
+***** Server
+
+#### 4.2.1. Identifier: TEST_3a {#test-3a}
+
+**Objective** : Perform an OSCORE Group transaction where the server receives a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but decryption fails. (Client side)
+
+**Configuration** :
+
+_client security context_: [Security Context A3](#client-sec), with:
 
 * Sequence number received not in client's replay window
 
