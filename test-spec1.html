@@ -121,7 +121,7 @@
 </ul></li>
 </ul>
 <h3 id="server-sec-D">Security Context D: Server</h3>
-<p>same as C but with modified Sender Key</p>
+<p>(incorrect sec ctx) modified Sender Key</p>
 <ul>
 <li>Common Context:
 <ul>
@@ -132,7 +132,7 @@
 </ul></li>
 <li>Sender Context:
 <ul>
-<li>Sender Id: 0x02 (1 byte)</li>
+<li>Sender Id: 0x03 (1 byte)</li>
 <li>Sender Key: TBD (16 bytes) *** Key needs to be manually modified</li>
 <li>Sender Seq Number: 00</li>
 <li>Sender IV: TBD (using Partial IV: 00)</li>
@@ -147,7 +147,7 @@
 </ul></li>
 </ul>
 <h3 id="server-sec-E">Security Context E: Server</h3>
-<p>same as C but with different Private Key</p>
+<p>(incorrect sec ctx) different Private Key</p>
 <ul>
 <li>Common Context:
 <ul>
@@ -158,7 +158,7 @@
 </ul></li>
 <li>Sender Context:
 <ul>
-<li>Sender Id: 0x02 (1 byte)</li>
+<li>Sender Id: 0x04 (1 byte)</li>
 <li>Sender Key: TBD (16 bytes)</li>
 <li>Sender Seq Number: 00</li>
 <li>Sender IV: TBD (using Partial IV: 00)</li>
@@ -326,8 +326,10 @@
 <td>Check</td>
 <td><p>Client serializes the request, which is a POST request, with:</p>
 <ul>
-<li>Object-Security option</li>
-<li>Payload: ciphertext including: * Code: GET * Uri-Path : /oscore/hello/1</li>
+<li>Object-Security option: kid = 0x</li>
+<li><p>Payload: ciphertext including:</p>
+<pre><code>* Code: GET
+* Uri-Path : /oscore/hello/1</code></pre></li>
 </ul></td>
 </tr>
 <tr class="odd">
@@ -410,7 +412,7 @@
 <td>Check</td>
 <td><p>Server parses the request; expected: 0.02 POST with:</p>
 <ul>
-<li>Object-Security option</li>
+<li>Object-Security option: kid = 0x</li>
 <li>Payload</li>
 </ul></td>
 </tr>
@@ -438,7 +440,7 @@
 <td><p>Server serialize the response correctly, which is: 2.04 Changed Response with:</p>
 <ul>
 <li>Object-Security option: kid = 0x01</li>
-<li>Payload: ciphertext including:
+<li><p>Payload: ciphertext including:</p>
 <ul>
 <li>Code: 2.05 Content Response</li>
 <li>Content-Format = 0 (text/plain)</li>
@@ -454,7 +456,7 @@
 </tbody>
 </table>
 <h4 id="test-2a">4.1.3. Identifier: TEST_2a</h4>
-<p><strong>Objective</strong> : Perform an OSCORE Group transaction, where the client receive a Recipient Id that it does not have in memory, and derives the Recipient Context for it. (Client side)</p>
+<p><strong>Objective</strong> : Perform an OSCORE Group transaction, where the client receives a Recipient Id that it does not have in memory, and succesfully derives the Recipient Context for it. (Client side)</p>
 <p><strong>Configuration</strong> :</p>
 <p><em>client security context</em>: <a href="#client-sec">Security Context A</a>, with:</p>
 <ul>
@@ -489,8 +491,10 @@
 <td>Check</td>
 <td><p>Client serializes the request, which is a POST request, with:</p>
 <ul>
-<li>Object-Security option</li>
-<li>Payload: ciphertext including: * Code: GET * Uri-Path : /oscore/hello/1</li>
+<li>Object-Security option: kid = 0x</li>
+<li><p>Payload: ciphertext including:</p>
+<pre><code>* Code: GET
+* Uri-Path : /oscore/hello/1</code></pre></li>
 </ul></td>
 </tr>
 <tr class="odd">
@@ -574,14 +578,14 @@
 <td>Check</td>
 <td><p>Server parses the request; expected: 0.02 POST with:</p>
 <ul>
-<li>Object-Security option</li>
+<li>Object-Security option: kid = 0x</li>
 <li>Payload</li>
 </ul></td>
 </tr>
 <tr class="even">
 <td>4</td>
 <td>Verify  </td>
-<td>Server successfully retrieve correct Recipient Context and decrypts the message: OSCORE verification succeeds</td>
+<td>Server successfully retrieves correct Recipient Context and decrypts the message: OSCORE verification succeeds</td>
 </tr>
 <tr class="odd">
 <td>5</td>
@@ -601,8 +605,8 @@
 <td>Check</td>
 <td><p>Server serialize the response correctly, which is: 2.04 Changed Response with:</p>
 <ul>
-<li>Object-Security option: kid = 0x01</li>
-<li>Payload: ciphertext including:
+<li>Object-Security option: kid = 0x02</li>
+<li><p>Payload: ciphertext including:</p>
 <ul>
 <li>Code: 2.05 Content Response</li>
 <li>Content-Format = 0 (text/plain)</li>
@@ -654,8 +658,10 @@
 <td>Check</td>
 <td><p>Client serializes the request, which is a POST request, with:</p>
 <ul>
-<li>Object-Security option</li>
-<li>Payload: ciphertext including: * Code: GET * Uri-Path : /oscore/hello/1</li>
+<li>Object-Security option: kid = 0x</li>
+<li><p>Payload: ciphertext including:</p>
+<pre><code>* Code: GET
+* Uri-Path : /oscore/hello/1</code></pre></li>
 </ul></td>
 </tr>
 <tr class="odd">
@@ -668,7 +674,7 @@
 <td>Check</td>
 <td><p>Client parses the response; expected: 2.04 Changed Response with:</p>
 <ul>
-<li>Object-Security option: kid = 0x01</li>
+<li>Object-Security option: kid = 0x03</li>
 <li>Payload</li>
 </ul></td>
 </tr>
@@ -676,7 +682,7 @@
 <td><p>5</p>
 <p> </p></td>
 <td>Verify  </td>
-<td>Client successfully derives a new Recipient Context from received Recipient Id = 0x02 ; Client tries to decrypt the message: OSCORE verification fail</td>
+<td>Client successfully derives a new Recipient Context from received Recipient Id = 0x03 ; Client tries to decrypt the message: OSCORE verification fail</td>
 </tr>
 <tr class="even">
 <td>6</td>
@@ -688,7 +694,7 @@
 <h4 id="test-3b">4.2.2. Identifier: TEST_3b</h4>
 <p><strong>Objective</strong> : Perform an OSCORE Group transaction where the client receive a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but decryption fails. (Server side)</p>
 <p><strong>Configuration</strong> :</p>
-<p><em>server security context</em>: <a href="#server-sec">Security Context B</a>, with:</p>
+<p><em>server security context</em>: <a href="#server-sec-D">Security Context D</a>, with:</p>
 <ul>
 <li>Sequence number received not in server’s replay window</li>
 </ul>
@@ -730,7 +736,7 @@
 <td>Check</td>
 <td><p>Server parses the request; expected: 0.02 POST with:</p>
 <ul>
-<li>Object-Security option</li>
+<li>Object-Security option: kid = 0x</li>
 <li>Payload</li>
 </ul></td>
 </tr>
@@ -757,8 +763,8 @@
 <td>Check</td>
 <td><p>Server serialize the response correctly, which is: 2.04 Changed Response with:</p>
 <ul>
-<li>Object-Security option: kid = 0x01</li>
-<li>Payload: ciphertext including:
+<li>Object-Security option: kid = 0x03</li>
+<li><p>Payload: ciphertext including:</p>
 <ul>
 <li>Code: 2.05 Content Response</li>
 <li>Content-Format = 0 (text/plain)</li>
@@ -774,7 +780,7 @@
 </tbody>
 </table>
 <h4 id="test-4a">4.1.3. Identifier: TEST_4a</h4>
-<p><strong>Objective</strong> : Perform an OSCORE Group transaction where the client receive a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but signature verification fails. (Client side)</p>
+<p><strong>Objective</strong> : Perform an OSCORE Group transaction where the client receives a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but signature verification fails. (Client side)</p>
 <p><strong>Configuration</strong> :</p>
 <p><em>client security context</em>: <a href="#client-sec">Security Context A</a>, with:</p>
 <ul>
@@ -809,8 +815,10 @@
 <td>Check</td>
 <td><p>Client serializes the request, which is a POST request, with:</p>
 <ul>
-<li>Object-Security option</li>
-<li>Payload: ciphertext including: * Code: GET * Uri-Path : /oscore/hello/1</li>
+<li>Object-Security option: kid = 0x</li>
+<li><p>Payload: ciphertext including:</p>
+<pre><code>* Code: GET
+* Uri-Path : /oscore/hello/1</code></pre></li>
 </ul></td>
 </tr>
 <tr class="odd">
@@ -823,7 +831,7 @@
 <td>Check</td>
 <td><p>Client parses the response; expected: 2.04 Changed Response with:</p>
 <ul>
-<li>Object-Security option: kid = 0x02</li>
+<li>Object-Security option: kid = 0x04</li>
 <li>Payload</li>
 </ul></td>
 </tr>
@@ -831,7 +839,7 @@
 <td><p>5</p>
 <p>    </p></td>
 <td>Verify  </td>
-<td>Client successfully derives a new Recipient Context from received Recipient Id = 0x02 ; Client decrypts the message successfully; Client verifies signature: signature verification fails</td>
+<td>Client successfully derives a new Recipient Context from received Recipient Id = 0x04 ; Client decrypts the message successfully; Client verifies signature: signature verification fails</td>
 </tr>
 <tr class="even">
 <td>6</td>
@@ -841,9 +849,9 @@
 </tbody>
 </table>
 <h4 id="test-4b">4.1.4. Identifier: TEST_4b</h4>
-<p><strong>Objective</strong> : Perform an OSCORE Group transaction where the client receive a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but signature verification fails. (Server side)</p>
+<p><strong>Objective</strong> : Perform an OSCORE Group transaction where the client receives a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but signature verification fails. (Server side)</p>
 <p><strong>Configuration</strong> :</p>
-<p><em>server security context</em>: <a href="#server-sec">Security Context C</a>, with:</p>
+<p><em>server security context</em>: <a href="#server-sec-E">Security Context E</a>, with:</p>
 <ul>
 <li>Sequence number received not in server’s replay window</li>
 </ul>
@@ -885,7 +893,7 @@
 <td>Check</td>
 <td><p>Server parses the request; expected: 0.02 POST with:</p>
 <ul>
-<li>Object-Security option</li>
+<li>Object-Security option: kid = 0x</li>
 <li>Payload</li>
 </ul></td>
 </tr>
@@ -912,8 +920,8 @@
 <td>Check</td>
 <td><p>Server serialize the response correctly, which is: 2.04 Changed Response with:</p>
 <ul>
-<li>Object-Security option: kid = 0x01</li>
-<li>Payload: ciphertext including:
+<li>Object-Security option: kid = 0x04</li>
+<li><p>Payload: ciphertext including:</p>
 <ul>
 <li>Code: 2.05 Content Response</li>
 <li>Content-Format = 0 (text/plain)</li>
