@@ -98,8 +98,9 @@ The test specified below can in fact be run on unicast between the nodes, to tes
     - Master Secret: 0x102030405060708090a0b0c0d0e0f001 (16 bytes)
     - Master Salt: 0xe9c79a2232873604 (8 bytes)
     - ID Context: 0x73bc3f1200712a3d (8 bytes)
-    
     - Common IV: 0x0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
+    - Par Countersign: 0x06
+    - Par Countersign Key: 0x820106
     
 * Entity #1:
     - Sender ID: 0xa2 (0 byte)
