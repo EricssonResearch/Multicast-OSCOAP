@@ -94,38 +94,89 @@
 <li>Master Secret: 0x102030405060708090a0b0c0d0e0f001 (16 bytes)</li>
 <li>Master Salt: 0xe9c79a2232873604 (8 bytes)</li>
 <li>ID Context: 0x73bc3f1200712a3d (8 bytes)</li>
-<li>Common IV: 0x2ca58fb85ff1b81c0b7181b85e (13 bytes)</li>
+<li>Common IV: 0x5B188ED0BD4B9B046B818BE37E (13 bytes)</li>
 <li>Par Countersign: 0x06</li>
 <li>Par Countersign Key: 0x820106</li>
 </ul></li>
 <li>Entity #1:
 <ul>
-<li>Sender ID: 0xa2 (0 byte)</li>
-<li>Sender Key: 0x8FDCB65DB23B63D9338A276DF844A371 (16 bytes)</li>
-<li>Sender Seq Number: 00</li>
-<li>Sender IV: 0x5A188ED0BD4B9BA66B818BE37E (using Partial IV: 00)</li>
 <li>Signing Key: {1: 1, -1: 6, -2: h’4C5E5A898AFC77D9C90773D9B4F5E7B378605753F9BA9E8A62488C64E1A524B0’, -4: h’C9AFCF6610BAB69A7E72B78B6D364BE86F12CF293523DA51433B09A799FF0F62’}</li>
 </ul></li>
 <li>Entity #2:
 <ul>
-<li>Recipient ID: 0xb1 (1 byte)</li>
-<li>Recipient Key: 0xe39a0c7c77b43f03b4b39ab9a268699f (16 bytes)</li>
-<li>Recipient IV: 0x2da58fb85ff1b81d0b7181b85e (using Partial IV: 00)</li>
 <li>Signing Key: {1: 1, -1: 6, -2: h’90F28C4CC63A56574F1873B802B587F9CE05E718887B3411E8EC97B9C28E7227’, -4: h’732BA0EF6CAC00A91E97BDA18E1E4D94C4C75988676BE43B7B7664A1D5B2651F’}</li>
 </ul></li>
 <li>Entity #3:
 <ul>
-<li>Recipient ID: 0xb1 (1 byte)</li>
-<li>Recipient Key: 0xe39a0c7c77b43f03b4b39ab9a268699f (16 bytes)</li>
-<li>Recipient IV: 0x2da58fb85ff1b81d0b7181b85e (using Partial IV: 00)</li>
 <li>Signing Key: {1: 1, -1: 6, -2: h’91BDA65809E1D37B74E7B9AB5797479D47AF6E8CE6C4940AAA468562F04CE715’, -4: h’00FC63AD4D5C3C4B645B3DE47E937F419EE3FA58B41BEBE8FB7E7429520AD06B’}</li>
 </ul></li>
 <li>Entity #4:
 <ul>
-<li>Recipient ID: 0xb1 (1 byte)</li>
-<li>Recipient Key: 0xe39a0c7c77b43f03b4b39ab9a268699f (16 bytes)</li>
-<li>Recipient IV: 0x2da58fb85ff1b81d0b7181b85e (using Partial IV: 00)</li>
 <li>Signing Key: {1: 1, -1: 6, -2: h’2A279191227491C92E9C5AEDCF72F5C73E78E19C7E77172B4FEFCE09018AEFD4’, -4: h’D744189028C8F2652EBBF3576B4CB740926B25DA087043E978AE570AAD333495’}</li>
+</ul></li>
+<li>Jim’s Client
+<ul>
+<li>Sender ID: 0xa1 (1 byte)</li>
+<li>Sender Key: TBD (16 bytes)</li>
+<li>Sender Seq Number: 00</li>
+<li>Sender IV: TBD (using Partial IV: 00)</li>
+<li>Signing Key: Entity 1 Signing Key</li>
+</ul></li>
+<li>Jim’s Server 1
+<ul>
+<li>Sender ID: 0xa2 (1 byte)</li>
+<li>Sender Key: 0x8FDCB65DB23B63D9338A276DF844A371 (16 bytes)</li>
+<li>Sender Seq Number: 00</li>
+<li>Sender IV: 0x5A188ED0BD4B9BA66B818BE37E (using Partial IV: 00)</li>
+<li>Signing Key: Entity 1 Signing Key</li>
+</ul></li>
+<li>Jim’s Server 2
+<ul>
+<li>Sender ID: 0xa3 (1 byte)</li>
+<li>Sender Key: TBD (16 bytes)</li>
+<li>Sender Seq Number: 00</li>
+<li>Sender IV: TBD (using Partial IV: 00)</li>
+<li>Signing Key: Entity 1 Signing Key</li>
+</ul></li>
+<li>Rikard’s Client
+<ul>
+<li>Sender ID: 0xb1 (1 byte)</li>
+<li>Sender Key: TBD (16 bytes)</li>
+<li>Sender Seq Number: 00</li>
+<li>Sender IV: TBD (using Partial IV: 00)</li>
+<li>Signing Key: Entity 2 Signing Key</li>
+</ul></li>
+<li>Rikard’s Server 1
+<ul>
+<li>Sender ID: 0xb2 (1 byte)</li>
+<li>Sender Key: TBD (16 bytes)</li>
+<li>Sender Seq Number: 00</li>
+<li>Sender IV: TBD (using Partial IV: 00)</li>
+<li>Signing Key: Entity 2 Signing Key</li>
+</ul></li>
+<li>Rikard’s Server 2
+<ul>
+<li>Sender ID: 0xb3 (1 byte)</li>
+<li>Sender Key: TBD (16 bytes)</li>
+<li>Sender Seq Number: 00</li>
+<li>Sender IV: TBD (using Partial IV: 00)</li>
+<li>Signing Key: Entity 2 Signing Key</li>
+</ul></li>
+<li>Peter’s Client
+<ul>
+<li>Sender ID: 0xc1 (1 byte)</li>
+<li>Sender Key: TBD (16 bytes)</li>
+<li>Sender Seq Number: 00</li>
+<li>Sender IV: TBD (using Partial IV: 00)</li>
+<li>Signing Key: TBD</li>
+</ul></li>
+<li>Peter’s Server
+<ul>
+<li>Sender ID: 0xc2 (1 byte)</li>
+<li>Sender Key: TBD (16 bytes)</li>
+<li>Sender Seq Number: 00</li>
+<li>Sender IV: TBD (using Partial IV: 00)</li>
+<li>Signing Key: TBD</li>
 </ul></li>
 </ul>
 <h3 id="server-sec-b3">Security Context B3: Server</h3>
