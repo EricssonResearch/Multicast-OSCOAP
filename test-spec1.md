@@ -114,9 +114,9 @@ The test specified below can in fact be run on unicast between the nodes, to tes
     
 * Entity #1:
     - Sender ID: 0xa2 (0 byte)
-    - Sender Key: TBD (16 bytes)
+    - Sender Key: 0x8FDCB65DB23B63D9338A276DF844A371 (16 bytes)
     - Sender Seq Number: 00
-    - Sender IV: TBD (using Partial IV: 00)
+    - Sender IV: 0x5B188ED0BD4B9B046B818BE37E (using Partial IV: 00)
     - Signing Key: {1: 1, -1: 6,
               -2: h'4C5E5A898AFC77D9C90773D9B4F5E7B378605753F9BA9E8A62488C64E1A524B0',
               -4: h'C9AFCF6610BAB69A7E72B78B6D364BE86F12CF293523DA51433B09A799FF0F62'}
