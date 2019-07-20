@@ -46,6 +46,16 @@ Most of the tests can be run between 2 nodes. A few tests require 3/4 nodes.
 Although these specifications test the implementation of group OSCORE, this version does not rely on multicast communication.
 The test specified below can in fact be run on unicast between the nodes, to test the group OSCORE implementation features.
 
+### Addresses
+
+31.133.136.216 - Jim
+
+31.133.155.197 - Jim
+
+31.133.136.213 - Rikard
+
+31.133.156.244 - Peter
+
 ### Jim's Modifications from draft -05
 
 1.  Section 3.1.2 - The fields OSCORE_option and options are swapped in the aad_array structure.  This only changes the external_aad for signing and not for encryption.
