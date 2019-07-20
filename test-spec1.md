@@ -169,7 +169,7 @@ The test specified below can in fact be run on unicast between the nodes, to tes
 
 * Rikard's Server 2
     - Sender ID: 0xb3 (1 byte)
-    - Sender Key: TBD (16 bytes)
+    - Sender Key: 0xEB999F5EE8F06813B346E937723BDEF4 (16 bytes)
     - Sender Seq Number: 00
     - Sender IV: TBD (using Partial IV: 00)
     - Signing Key: Entity 2 Signing Key
