@@ -474,7 +474,7 @@ _server resources_:
 | 8    | Verify   | Server displays the sent packet                          |
 +------+----------+----------------------------------------------------------+
 
-#### 4.1.3. Identifier: TEST_3a {#test-3a}
+#### 4.1.5. Identifier: TEST_3a {#test-3a}
 
 **Objective** : Perform an OSCORE Group transaction, where the server receives a Recipient Id that it does not have in memory, and succesfully derives the Recipient Context for it. (Client side)
 
@@ -524,7 +524,7 @@ _client security context_: [Security Context A2](#client-sec-a), with:
 | 7    | Verify   | Client displays the received packet                      |
 +------+----------+----------------------------------------------------------+
 
-#### 4.1.4. Identifier: TEST_3b {#test-3b}
+#### 4.1.6. Identifier: TEST_3b {#test-3b}
 
 **Objective** : Perform an OSCORE Group transaction, where the server receive a Recipient Id that it does not have in memory, and derives the Recipient Context for it. (Server side)
 
@@ -584,7 +584,7 @@ _server resources_:
 
 ### 4.2 Incorrect Group OSCORE Use
 
-#### 4.2.1. Identifier: TEST_3a {#test-3a}
+#### 4.2.1. Identifier: TEST_4a {#test-4a}
 
 **Objective** : Perform an OSCORE Group transaction where the client receives a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but decryption fails. (Client side)
 
@@ -629,7 +629,7 @@ _client security context_: [Security Context A](#client-sec), with:
 | 6    | Verify   | Client displays the received packet                      |
 +------+----------+----------------------------------------------------------+
 
-#### 4.2.2. Identifier: TEST_3b {#test-3b}
+#### 4.2.2. Identifier: TEST_4b {#test-4b}
 
 **Objective** : Perform an OSCORE Group transaction where the client receive a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but decryption fails. (Server side)
 
@@ -688,7 +688,7 @@ _server resources_:
 
 ***** Server
 
-#### 4.2.1. Identifier: TEST_3a {#test-3a}
+#### 4.2.3. Identifier: TEST_5a {#test-5a}
 
 **Objective** : Perform an OSCORE Group transaction where the server receives a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but decryption fails. (Client side)
 
@@ -733,7 +733,7 @@ _client security context_: [Security Context A3](#client-sec), with:
 | 6    | Verify   | Client displays the received packet                      |
 +------+----------+----------------------------------------------------------+
 
-#### 4.2.2. Identifier: TEST_3b {#test-3b}
+#### 4.2.4. Identifier: TEST_5b {#test-5b}
 
 **Objective** : Perform an OSCORE Group transaction where the client receive a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but decryption fails. (Server side)
 
@@ -790,7 +790,7 @@ _server resources_:
 | 8    | Verify   | Server displays the sent packet                          |
 +------+----------+----------------------------------------------------------+
 
-#### 4.1.3. Identifier: TEST_4a {#test-4a}
+#### 4.2.5. Identifier: TEST_6a {#test-6a}
 
 **Objective** : Perform an OSCORE Group transaction where the client receives a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but signature verification fails. (Client side)
 
@@ -836,7 +836,7 @@ _client security context_: [Security Context A](#client-sec), with:
 | 6    | Verify   | Client displays the received packet                      |
 +------+----------+----------------------------------------------------------+
 
-#### 4.1.4. Identifier: TEST_4b {#test-4b}
+#### 4.2.6. Identifier: TEST_6b {#test-6b}
 
 **Objective** : Perform an OSCORE Group transaction where the client receives a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but signature verification fails. (Server side)
 
