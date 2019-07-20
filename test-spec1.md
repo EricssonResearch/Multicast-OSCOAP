@@ -46,135 +46,94 @@ Most of the tests can be run between 2 nodes. A few tests require 3/4 nodes.
 Although these specifications test the implementation of group OSCORE, this version does not rely on multicast communication.
 The test specified below can in fact be run on unicast between the nodes, to test the group OSCORE implementation features.
 
+### Jim's Modifications from draft -05
+
+1.  Section 3.1.2 - The fields OSCORE_option and options are swapped in the aad_array structure.  This only changes the external_aad for signing and not for encryption.
+
+2.  Section 9.2 - The items are wrapped in an array when more than one elemet exists.  This is reflected in the fields below.
+
 ## 2. Configuration, Security Contexts and Resources
 
-### Security Context A1: Client {#client-sec-a1}
+### Group Security Context #1:  ECDSA {#group-sec-1}
 
 * Common Context:
     - Master Secret: 0x0102030405060708090a0b0c0d0e0f10 (16 bytes)
     - Master Salt: 0x9e7ca92223786340 (8 bytes)
     - Common IV: 0x0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
     - ID Context: 0x37cbf3210017a2d3 (8 bytes)
-* Sender Context:
+    - Par Countersign: 0x26
+    - Par Countersign Key: 0x822601
+
+* Entity #1
     - Sender ID: 0xa1 (0 byte)
     - Sender Key: 0xaf2a1300a5e95788b356336eeecd2b92 (16 bytes)
     - Sender Seq Number: 00
     - Sender IV: 0x2ca58fb85ff1b81c0b7181b85e (using Partial IV: 00)
-    - Private Key TBD
-* Recipient Context 1:
+    - Signing Key: {1: 2, -1: 1,
+              -2: h'E2A7DC0C5D23831A4F52FBFF759EF01A6B3A7D58694774D6E8505B31A351D6C4',
+              -3: h'F8CA44FEDC6C322D0946FC69AE7482CD066AD11F34AA5F5C63F4EADB320FD941',
+              -4: h'469C76F26B8D9F286449F42566AB8B8BA1B3A8DC6E711A1E2A6B548DBE2A1578'}
+    
+* Entity #2
     - Recipient ID: 0xb1 (1 byte)
     - Recipient Key: 0xe39a0c7c77b43f03b4b39ab9a268699f (16 bytes)
     - Recipient IV: 0x2da58fb85ff1b81d0b7181b85e (using Partial IV: 00)
-    - Public Key TBD
-* Recipient Context 2:
+    - Signing Key: {1: 2, -1: 1,
+              -2: h'5BC9E40487130A030D37F8162A17EF14CC9E96019A307DBADC90691C563D766B',
+              -3: h'1D6EB75E5585C1B19051A84DCC7608B604095BE857BA37727D65343FEF616DC3',
+              -4: h'BB39276D3A04E14E4421A56689F7CAFEC1D08DF3029CB7CED968283A084B7E38'}
+    
+* Entity #3
     - Recipient ID: 0xb2 (1 byte)
     - Recipient Key: TODO (16 bytes)
     - Recipient IV: TODO (using Partial IV: TODO)
-    - Public Key TBD
+    - Signing Key:  {1: 2, -1: 1,
+               -2: h'57CF4C3DBF16216B1009D30F3C7C408A7144E63FEC18C561970F2EDC6EEA993A',
+               -3: h'B20EF6B0518D25CBEB2EF5DB8E12DE056B4075B3F4986781385B90A625B04AC7',
+               -4: h'C96D7F08EF1FE13BC311CAB7FC5C5CBA3693004293C638F250EB6EA122E7C879'}
 
-### Security Context A2: Client {#client-sec-a2}
+### Group Security Context #2: EdDSA   {#group-sec-2}
 
 * Common Context:
-    - Master Secret: 0x0102030405060708090a0b0c0d0e0f10 (16 bytes)
-    - Master Salt: 0x9e7ca92223786340 (8 bytes)
+    - Master Secret: 0x102030405060708090a0b0c0d0e0f001 (16 bytes)
+    - Master Salt: 0xe9c79a2232873604 (8 bytes)
+    - ID Context: 0x73bc3f1200712a3d (8 bytes)
+    
     - Common IV: 0x0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
-    - ID Context: 0x37cbf3210017a2d3 (8 bytes)
-* Sender Context:
+    
+* Entity #1:
     - Sender ID: 0xa2 (0 byte)
     - Sender Key: TBD (16 bytes)
     - Sender Seq Number: 00
     - Sender IV: TBD (using Partial IV: 00)
-    - Private Key TBD
-* Recipient Context 1:
+    - Signing Key: {1: 1, -1: 6,
+              -2: h'4C5E5A898AFC77D9C90773D9B4F5E7B378605753F9BA9E8A62488C64E1A524B0',
+              -4: h'C9AFCF6610BAB69A7E72B78B6D364BE86F12CF293523DA51433B09A799FF0F62'}
+    
+* Entity #2:
     - Recipient ID: 0xb1 (1 byte)
     - Recipient Key: 0xe39a0c7c77b43f03b4b39ab9a268699f (16 bytes)
     - Recipient IV: 0x2da58fb85ff1b81d0b7181b85e (using Partial IV: 00)
-    - Public Key TBD
+    - Signing Key: {1: 1, -1: 6,
+              -2: h'90F28C4CC63A56574F1873B802B587F9CE05E718887B3411E8EC97B9C28E7227',
+              -4: h'732BA0EF6CAC00A91E97BDA18E1E4D94C4C75988676BE43B7B7664A1D5B2651F'}
 
-### Security Context A3: Client {#client-sec-a3}
-
-(incorrect sec ctx) modified Sender Key
-
-* Common Context:
-    - Master Secret: 0x0102030405060708090a0b0c0d0e0f10 (16 bytes)
-    - Master Salt: 0x9e7ca92223786340 (8 bytes)
-    - Common IV: 0x0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
-    - ID Context: 0x37cbf3210017a2d3 (8 bytes)
-* Sender Context:
-    - Sender ID: 0xa3 (0 byte)
-    - Sender Key: TBD (16 bytes)
-    - Sender Seq Number: 00
-    - Sender IV: TBD (using Partial IV: 00)
-    - Private Key TBD
-* Recipient Context 1:
+* Entity #3:
     - Recipient ID: 0xb1 (1 byte)
     - Recipient Key: 0xe39a0c7c77b43f03b4b39ab9a268699f (16 bytes)
     - Recipient IV: 0x2da58fb85ff1b81d0b7181b85e (using Partial IV: 00)
-    - Public Key TBD
+    - Signing Key: {1: 1, -1: 6,
+              -2: h'91BDA65809E1D37B74E7B9AB5797479D47AF6E8CE6C4940AAA468562F04CE715',
+              -4: h'00FC63AD4D5C3C4B645B3DE47E937F419EE3FA58B41BEBE8FB7E7429520AD06B'}
 
-### Security Context A4: Client {#client-sec-a4}
-
-(incorrect sec ctx) modified Private Key
-
-* Common Context:
-    - Master Secret: 0x0102030405060708090a0b0c0d0e0f10 (16 bytes)
-    - Master Salt: 0x9e7ca92223786340 (8 bytes)
-    - Common IV: 0x0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
-    - ID Context: 0x37cbf3210017a2d3 (8 bytes)
-* Sender Context:
-    - Sender ID: 0xa4 (0 byte)
-    - Sender Key: TBD (16 bytes)
-    - Sender Seq Number: 00
-    - Sender IV: TBD (using Partial IV: 00)
-    - Private Key TBD
-* Recipient Context 1:
+* Entity #4:
     - Recipient ID: 0xb1 (1 byte)
     - Recipient Key: 0xe39a0c7c77b43f03b4b39ab9a268699f (16 bytes)
     - Recipient IV: 0x2da58fb85ff1b81d0b7181b85e (using Partial IV: 00)
-    - Public Key TBD
+    - Signing Key: {1: 1, -1: 6,
+              -2: h'2A279191227491C92E9C5AEDCF72F5C73E78E19C7E77172B4FEFCE09018AEFD4',
+              -4: h'D744189028C8F2652EBBF3576B4CB740926B25DA087043E978AE570AAD333495'}
 
-### Security Context B1: Server {#server-sec-b1}
-
-* Common Context:
-    - Master Secret: 0x0102030405060708090a0b0c0d0e0f10 (16 bytes)
-    - Master Salt: 0x9e7ca92223786340 (8 bytes)
-    - Common IV: 0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
-    - ID Context: 0x37cbf3210017a2d3 (8 bytes)
-* Sender Context:
-    - Sender Id: 0xb1 (1 byte)
-    - Sender Key: 0xe39a0c7c77b43f03b4b39ab9a268699f (16 bytes)
-    - Sender Seq Number: 00
-    - Sender IV: 0x2da58fb85ff1b81d0b7181b85e (using Partial IV: 00)
-    - Private Key TBD
-* Recipient Context 1:
-    - Recipient Id: 0xa1 (0 byte)
-    - Recipient Key: 0xaf2a1300a5e95788b356336eeecd2b92 (16 bytes)
-    - Recipient IV: 0x2ca58fb85ff1b81c0b7181b85e (using Partial IV: 00)
-    - Public Key TBD
-* Recipient Context 2:
-    - Recipient ID: 0xa2 (1 byte)
-    - Recipient Key: TODO (16 bytes)
-    - Recipient IV: TODO (using Partial IV: TODO)
-    - Public Key TBD
-
-### Security Context B2: Server {#server-sec-b2}
-
-* Common Context:
-    - Master Secret: 0x0102030405060708090a0b0c0d0e0f10 (16 bytes)
-    - Master Salt: 0x9e7ca92223786340 (8 bytes)
-    - Common IV: 0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
-    - ID Context: 0x37cbf3210017a2d3 (8 bytes)
-* Sender Context:
-    - Sender Id: 0xb2 (1 byte)
-    - Sender Key: TBD (16 bytes)
-    - Sender Seq Number: 00
-    - Sender IV: TBD (using Partial IV: 00)
-    - Private Key TBD
-* Recipient Context:
-    - Recipient Id: 0xa1 (0 byte)
-    - Recipient Key: 0xaf2a1300a5e95788b356336eeecd2b92 (16 bytes)
-    - Recipient IV: 0x2ca58fb85ff1b81c0b7181b85e (using Partial IV: 00)
-    - Public Key TBD
 
 ### Security Context B3: Server {#server-sec-b3} 
 
@@ -295,15 +254,19 @@ _server resources_:
 
 In these tests, the node has several recipient contexts. The goal is to test the retrieval/derivation of recipient contexts on the client.
 
+For these tests, all parties need to agree on a signature algorithm to be used and from that select the group context to be used.
+
 ### 4.1 Correct Group OSCORE Use
+
+
 
 #### 4.1.1. Identifier: TEST_1a {#test-1a}
 
 **Objective** : Perform an OSCORE Group transaction, where the client and server retrieve a recipient context that they have stored in memory. (Client side)
 
-**Configuration** :
+**Configuration** :  
 
-_client security context_: [Security Context A1](#client-sec-a1), with:
+_client security context_: Client takes the key for Entity #1
 
 * Sequence number received not in client's replay window
 
@@ -336,7 +299,7 @@ _client security context_: [Security Context A1](#client-sec-a1), with:
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
 | 4    | Verify   | Client successfully retrieves correct Recipient Context  |
-|      |          | and decrypts the message: OSCORE verification succeeds   |
+|      |          | and decrypts the message: OSCORE verification succeeds   |
 +------+----------+----------------------------------------------------------+
 | 6    | Check    | Client parses the decrypted response and continues the   |
 |      |          | CoAP processing; expected 2.05 Content Response with:    |
@@ -353,8 +316,7 @@ _client security context_: [Security Context A1](#client-sec-a1), with:
 
 **Configuration** :
 
-_server security context_: 
-[Security Context B1](#server-sec-b1), with:
+_server security context_:  Server takes the roll of Entity #2 with:
 
 * Sequence number received not in server's replay window
 
@@ -382,7 +344,7 @@ _server resources_:
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
 | 4    | Verify   | Server successfully retrieves correct Recipient Context  |
-|      |          | and decrypts the message: OSCORE verification succeeds   |
+|      |          | and decrypts the message: OSCORE verification succeeds   |
 +------+----------+----------------------------------------------------------+
 | 5    | Check    | Server parses the request and continues the CoAP         |
 |      |          | processing; expected: CoAP GET request, including:       |
@@ -443,8 +405,8 @@ _client security context_: [Security Context A](#client-sec), with:
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
 | 5    | Verify   | Client successfully derives a new Recipient Context from |
-|      |          | received Recipient Id = 0x02 ; Client decrypts           |
-|      |          | the message: OSCORE verification succeeds                |
+|      |          | received Recipient Id = 0x02 ; Client decrypts           |
+|      |          | the message: OSCORE verification succeeds                |
 +------+----------+----------------------------------------------------------+
 | 6    | Check    | Client parses the decrypted response and continues the   |
 |      |          | CoAP processing; expected 2.05 Content Response with:    |
@@ -490,7 +452,7 @@ _server resources_:
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
 | 4    | Verify   | Server successfully retrieves correct Recipient Context  |
-|      |          | and decrypts the message: OSCORE verification succeeds   |
+|      |          | and decrypts the message: OSCORE verification succeeds   |
 +------+----------+----------------------------------------------------------+
 | 5    | Check    | Server parses the request and continues the CoAP         |
 |      |          | processing; expected: CoAP GET request, including:       |
@@ -551,7 +513,7 @@ _client security context_: [Security Context A2](#client-sec-a), with:
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
 | 5    | Verify   | Client successfully retrieves correct Recipient Context  |
-|      |          | and decrypts the message: OSCORE verification succeeds   |
+|      |          | and decrypts the message: OSCORE verification succeeds   |
 +------+----------+----------------------------------------------------------+
 | 6    | Check    | Client parses the decrypted response and continues the   |
 |      |          | CoAP processing; expected 2.05 Content Response with:    |
@@ -597,8 +559,8 @@ _server resources_:
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
 | 4    | Verify   | Server successfully derives a new Recipient Context from |
-|      |          | received Recipient Id = 0x00 ; Client decrypts           |
-|      |          | the message: OSCORE verification succeeds                |
+|      |          | received Recipient Id = 0x00 ; Client decrypts           |
+|      |          | the message: OSCORE verification succeeds                |
 +------+----------+----------------------------------------------------------+
 | 5    | Check    | Server parses the request and continues the CoAP         |
 |      |          | processing; expected: CoAP GET request, including:       |
@@ -661,8 +623,8 @@ _client security context_: [Security Context A](#client-sec), with:
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
 | 5    | Verify   | Client successfully derives a new Recipient Context from |
-|      |          | received Recipient Id = 0x03 ; Client tries to decrypt   |
-|      |          | the message: OSCORE verification fail                    |
+|      |          | received Recipient Id = 0x03 ; Client tries to decrypt   |
+|      |          | the message: OSCORE verification fail                    |
 +------+----------+----------------------------------------------------------+
 | 6    | Verify   | Client displays the received packet                      |
 +------+----------+----------------------------------------------------------+
@@ -702,7 +664,7 @@ _server resources_:
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
 | 4    | Verify   | Server successfully retrieve correct Recipient Context   |
-|      |          | and decrypts the message: OSCORE verification succeeds   |
+|      |          | and decrypts the message: OSCORE verification succeeds   |
 +------+----------+----------------------------------------------------------+
 | 5    | Check    | Server parses the request and continues the CoAP         |
 |      |          | processing; expected: CoAP GET request, including:       |
@@ -765,8 +727,8 @@ _client security context_: [Security Context A3](#client-sec), with:
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
 | 5    | Verify   | Client successfully derives a new Recipient Context from |
-|      |          | received Recipient Id = 0x03 ; Client tries to decrypt   |
-|      |          | the message: OSCORE verification fail                    |
+|      |          | received Recipient Id = 0x03 ; Client tries to decrypt   |
+|      |          | the message: OSCORE verification fail                    |
 +------+----------+----------------------------------------------------------+
 | 6    | Verify   | Client displays the received packet                      |
 +------+----------+----------------------------------------------------------+
@@ -806,7 +768,7 @@ _server resources_:
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
 | 4    | Verify   | Server successfully retrieve correct Recipient Context   |
-|      |          | and decrypts the message: OSCORE verification succeeds   |
+|      |          | and decrypts the message: OSCORE verification succeeds   |
 +------+----------+----------------------------------------------------------+
 | 5    | Check    | Server parses the request and continues the CoAP         |
 |      |          | processing; expected: CoAP GET request, including:       |
@@ -867,9 +829,9 @@ _client security context_: [Security Context A](#client-sec), with:
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
 | 5    | Verify   | Client successfully derives a new Recipient Context from |
-|      |          | received Recipient Id = 0x04 ; Client decrypts           |
-|      |          | the message successfully; Client verifies signature:     |
-|      |          | signature verification fails                             |
+|      |          | received Recipient Id = 0x04 ; Client decrypts           |
+|      |          | the message successfully; Client verifies signature:     |
+|      |          | signature verification fails                             |
 +------+----------+----------------------------------------------------------+
 | 6    | Verify   | Client displays the received packet                      |
 +------+----------+----------------------------------------------------------+
@@ -909,7 +871,7 @@ _server resources_:
 |      |          | - Payload                                                |
 +------+----------+----------------------------------------------------------+
 | 4    | Verify   | Server successfully retrieve correct Recipient Context   |
-|      |          | and decrypts the message: OSCORE verification succeeds   |
+|      |          | and decrypts the message: OSCORE verification succeeds   |
 +------+----------+----------------------------------------------------------+
 | 5    | Check    | Server parses the request and continues the CoAP         |
 |      |          | processing; expected: CoAP GET request, including:       |
@@ -932,4 +894,3 @@ _server resources_:
 +------+----------+----------------------------------------------------------+
 
 **********
-
