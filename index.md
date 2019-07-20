@@ -2,6 +2,8 @@
 
 Latest test specifications and report:
 
+* [Test specifications v1 - work in progress](test-spec2.html)
+
 * [Test specifications v1](test-spec1.html)
 <!-- * [Interop DD/MM/YYYY]() -->
 
