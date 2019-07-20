@@ -155,9 +155,9 @@ The test specified below can in fact be run on unicast between the nodes, to tes
 
 * Rikard's Client
     - Sender ID: 0xb1 (1 byte)
-    - Sender Key: TBD (16 bytes)
+    - Sender Key: 0xA09B63097B20B43A895B5A65D709BA81 (16 bytes)
     - Sender Seq Number: 00
-    - Sender IV: TBD (using Partial IV: 00)
+    - Sender IV: 0x5A188ED0BD4B9BB56B818BE37E (using Partial IV: 00)
     - Signing Key: Entity 2 Signing Key
 
 * Rikard's Server 1
@@ -179,14 +179,14 @@ The test specified below can in fact be run on unicast between the nodes, to tes
     - Sender Key: TBD (16 bytes)
     - Sender Seq Number: 00
     - Sender IV: TBD (using Partial IV: 00)
-    - Signing Key: TBD
+    - Public Signing Key: 0x508afc1c29037ef3614d63af87e1ea31d891d76b1f906098af8fa39bbe874019 (32 bytes)
 
 * Peter's Server
     - Sender ID: 0xc2 (1 byte)
     - Sender Key: TBD (16 bytes)
     - Sender Seq Number: 00
     - Sender IV: TBD (using Partial IV: 00)
-    - Signing Key: TBD
+    - Public Signing Key: TBD
 
 ### Security Context B3: Server {#server-sec-b3} 
 
