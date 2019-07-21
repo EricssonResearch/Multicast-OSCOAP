@@ -30,9 +30,9 @@
     7. [Test 8a](#test-8a)
     8. [Test 8b](#test-8b)
     9. [Test 9a]
-    6. [Test 9b]
-    7. [Test 10a]
-    8. [Test 10b]
+    10. [Test 9b]
+    11. [Test 10a]
+    12. [Test 10b]
 
 
 ## 1. Notes
