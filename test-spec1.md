@@ -5,20 +5,13 @@
 ## Table of Contents
 1. [Notes](#notes)
 2. [Security Contexts and Resources](#security-contexts-and-resources)
-    1. [Security Context A1: Client](#client-sec-A1)
-    2. [Security Context A2: Client](#server-sec-A2)
-    3. [Security Context A3: Client](#client-sec-A3)
-    4. [Security Context A4: Client](#server-sec-A4)
-    5. [Security Context B1: Server](#server-sec-B1)
-    6. [Security Context B2: Server](#server-sec-B2)
-    7. [Security Context B3: Server](#server-sec-B3)
-    8. [Security Context B4: Server](#server-sec-B4)
-    9. [Resources](#resources)
+    1. [Security Context](#group-sec)
+    2. [Resources](#resources)
+3. [Summary of Tests](#summary)
 3. [Set up the environment](#env-setup)
     1. [Test 0a](#test-0a)
     2. [Test 0b](#test-0b)
 4. [Correct OSCORE use](#correct-oscore-use)
-    1. [test](#client)
         1. [Test 1a](#test-1a)
         2. [Test 1b](#test-1b)
         3. [Test 2a](#test-2a)
@@ -27,6 +20,19 @@
         6. [Test 3b](#test-3b)
         7. [Test 4a](#test-4a)
         8. [Test 4b](#test-4b)
+4. [Incorrect OSCORE use](#incorrect-oscore-use)
+        1. [Test 5a](#test-5a)
+        2. [Test 5b](#test-5b)
+        3. [Test 6a](#test-6a)
+        4. [Test 6b](#test-6b)
+        5. [Test 7a](#test-7a)
+        6. [Test 7b](#test-7b)
+        7. [Test 8a](#test-8a)
+        8. [Test 8b](#test-8b)
+        9. [Test 9a]
+        6. [Test 9b]
+        7. [Test 10a]
+        8. [Test 10b]
 
 
 ## 1. Notes
@@ -64,45 +70,7 @@ The test specified below can in fact be run on unicast between the nodes, to tes
 
 ## 2. Configuration, Security Contexts and Resources
 
-### Group Security Context #1:  ECDSA {#group-sec-1}
-
-* Common Context:
-    - Master Secret: 0x0102030405060708090a0b0c0d0e0f10 (16 bytes)
-    - Master Salt: 0x9e7ca92223786340 (8 bytes)
-    - Common IV: 0x0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
-    - ID Context: 0x37cbf3210017a2d3 (8 bytes)
-    - Par Countersign: 0x26
-    - Par Countersign Key: 0x822601
-
-* Entity #1
-    - Sender ID: 0xa1 (0 byte)
-    - Sender Key: 0xaf2a1300a5e95788b356336eeecd2b92 (16 bytes)
-    - Sender Seq Number: 00
-    - Sender IV: 0x2ca58fb85ff1b81c0b7181b85e (using Partial IV: 00)
-    - Signing Key: {1: 2, -1: 1,
-              -2: h'E2A7DC0C5D23831A4F52FBFF759EF01A6B3A7D58694774D6E8505B31A351D6C4',
-              -3: h'F8CA44FEDC6C322D0946FC69AE7482CD066AD11F34AA5F5C63F4EADB320FD941',
-              -4: h'469C76F26B8D9F286449F42566AB8B8BA1B3A8DC6E711A1E2A6B548DBE2A1578'}
-    
-* Entity #2
-    - Recipient ID: 0xb1 (1 byte)
-    - Recipient Key: 0xe39a0c7c77b43f03b4b39ab9a268699f (16 bytes)
-    - Recipient IV: 0x2da58fb85ff1b81d0b7181b85e (using Partial IV: 00)
-    - Signing Key: {1: 2, -1: 1,
-              -2: h'5BC9E40487130A030D37F8162A17EF14CC9E96019A307DBADC90691C563D766B',
-              -3: h'1D6EB75E5585C1B19051A84DCC7608B604095BE857BA37727D65343FEF616DC3',
-              -4: h'BB39276D3A04E14E4421A56689F7CAFEC1D08DF3029CB7CED968283A084B7E38'}
-    
-* Entity #3
-    - Recipient ID: 0xb2 (1 byte)
-    - Recipient Key: TODO (16 bytes)
-    - Recipient IV: TODO (using Partial IV: TODO)
-    - Signing Key:  {1: 2, -1: 1,
-               -2: h'57CF4C3DBF16216B1009D30F3C7C408A7144E63FEC18C561970F2EDC6EEA993A',
-               -3: h'B20EF6B0518D25CBEB2EF5DB8E12DE056B4075B3F4986781385B90A625B04AC7',
-               -4: h'C96D7F08EF1FE13BC311CAB7FC5C5CBA3693004293C638F250EB6EA122E7C879'}
-
-### Group Security Context #2: EdDSA   {#group-sec-2}
+### Group Security Context: EdDSA   {#group-sec}
 
 * Common Context:
     - Master Secret: 0x102030405060708090a0b0c0d0e0f001 (16 bytes)
@@ -186,49 +154,8 @@ The test specified below can in fact be run on unicast between the nodes, to tes
     - Sender Key: TBD (16 bytes)
     - Sender Seq Number: 00
     - Sender IV: TBD (using Partial IV: 00)
-    - Public Signing Key: TBD
+    - Public Signing Key: 0x508AFC1C29037EF3614D63AF87E1EA31D891D76B1F906098AF8FA39BBE874019 (32 bytes)
 
-### Security Context B3: Server {#server-sec-b3} 
-
-(incorrect sec ctx) modified Sender Key
-
-* Common Context:
-    - Master Secret: 0x0102030405060708090a0b0c0d0e0f10 (16 bytes)
-    - Master Salt: 0x9e7ca92223786340 (8 bytes)
-    - Common IV: 0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
-    - ID Context: 0x37cbf3210017a2d3 (8 bytes)
-* Sender Context:
-    - Sender Id: 0xb3 (1 byte)
-    - Sender Key: TBD (16 bytes) *** Key needs to be manually modified
-    - Sender Seq Number: 00
-    - Sender IV: TBD (using Partial IV: 00)
-    - Private Key TBD
-* Recipient Context:
-    - Recipient Id: 0xa1 (0 byte)
-    - Recipient Key: 0xaf2a1300a5e95788b356336eeecd2b92 (16 bytes)
-    - Recipient IV: 0x2ca58fb85ff1b81c0b7181b85e (using Partial IV: 00)
-    - Public Key TBD
-
-### Security Context B4: Server {#server-sec-b4} 
-
-(incorrect sec ctx) different Private Key
-
-* Common Context:
-    - Master Secret: 0x0102030405060708090a0b0c0d0e0f10 (16 bytes)
-    - Master Salt: 0x9e7ca92223786340 (8 bytes)
-    - Common IV: 0x2ca58fb85ff1b81c0b7181b85e (13 bytes)
-    - ID Context: 0x37cbf3210017a2d3 (8 bytes)
-* Sender Context:
-    - Sender Id: 0xb4 (1 byte)
-    - Sender Key: TBD (16 bytes) 
-    - Sender Seq Number: 00
-    - Sender IV: TBD (using Partial IV: 00)
-    - Private Key TBD *** Key does not match Sec Ctx A Public Key
-* Recipient Context:
-    - Recipient Id: 0xa1 (0 byte)
-    - Recipient Key: 0xaf2a1300a5e95788b356336eeecd2b92 (16 bytes)
-    - Recipient IV: 0x2ca58fb85ff1b81c0b7181b85e (using Partial IV: 00)
-    - Public Key TBD
 
 ### Resources
 
@@ -238,6 +165,30 @@ The list of resources the OSCORE-aware server must implement is the following:
 * /oscore/hello/1 : protected resource, authorized method: GET, returns the string "Hello World!" with content-format 0 (text/plain)
 
 ------
+
+## Summary of tests {#summary}
+
+0: Verify that CoAP exchange works. Perform a simple GET transaction using COAP, Content-Format and Uri-Path option.
+
+1: Perform an OSCORE Group transaction, where the client and server retrieve a recipient context that they have stored in memory.
+
+2: Perform an OSCORE Group transaction, where the client sends requests to 2 servers and receives 2 successfully validated responses.
+
+3: Perform an OSCORE Group transaction, where the client receives a Recipient Id that it does not have in memory, and succesfully derives the Recipient Context for it.
+
+4: Perform an OSCORE Group transaction, where the server receives a Recipient Id that it does not have in memory, and succesfully derives the Recipient Context for it.
+
+5: Perform an OSCORE Group transaction where the client receives a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but decryption fails.
+
+6: Perform an OSCORE Group transaction where the server receives a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but decryption fails.
+
+7: Perform an OSCORE Group transaction where the client receives a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but signature verification fails.
+
+8: Perform an OSCORE Group transaction where the server receives a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but signature verification fails.
+
+9: 2 clients and 1 server with both clients sending the same sequence number, SEQ1, client 1 sending it once and client 2 sending it twice. Server detects replay for client 2 and accept the message from client 1.
+
+10: replay handling on the client - client getting 2 responses from the same server (fresh response or replay) it discards the second.
 
 ## 3. Set up the environment {#env-setup}
 
@@ -419,7 +370,7 @@ _server resources_:
 +------+----------+----------------------------------------------------------+
 
 
-#### 4.1.1. Identifier: TEST_2a {#test-1aa}
+#### 4.1.3. Identifier: TEST_2a {#test-2a}
 
 **Objective** : Perform an OSCORE Group transaction, where the client sends requests to 2 servers and receives 2 successfully validated responses. (Client side)
 
@@ -469,7 +420,7 @@ _client security context_: Client takes the key for Entity #1
 | 7    | Verify   | Client displays the received packet                      |
 +------+----------+----------------------------------------------------------+
 
-#### 4.1.2. Identifier: TEST_2b {#test-1ab}
+#### 4.1.4. Identifier: TEST_2b {#test-2b}
 
 **Objective** : Perform an OSCORE Group transaction, where the client sends requests to 2 servers and receives 2 successfully validated responses. (Server side)
 
@@ -525,7 +476,7 @@ _server resources_:
 | 8    | Verify   | Server displays the sent packet                          |
 +------+----------+----------------------------------------------------------+
 
-#### 4.1.3. Identifier: TEST_2a {#test-2a}
+#### 4.1.5. Identifier: TEST_3a {#test-3a}
 
 **Objective** : Perform an OSCORE Group transaction, where the client receives a Recipient Id that it does not have in memory, and succesfully derives the Recipient Context for it. (Client side)
 
@@ -576,7 +527,7 @@ _client security context_: [Security Context A](#client-sec), with:
 | 7    | Verify   | Client displays the received packet                      |
 +------+----------+----------------------------------------------------------+
 
-#### 4.1.4. Identifier: TEST_2b {#test-2b}
+#### 4.1.6. Identifier: TEST_3b {#test-3b}
 
 **Objective** : Perform an OSCORE Group transaction, where the client receive a Recipient Id that it does not have in memory, and successfully derives the Recipient Context for it. (Server side)
 
@@ -633,7 +584,7 @@ _server resources_:
 | 8    | Verify   | Server displays the sent packet                          |
 +------+----------+----------------------------------------------------------+
 
-#### 4.1.5. Identifier: TEST_3a {#test-3a}
+#### 4.1.7. Identifier: TEST_4a {#test-4a}
 
 **Objective** : Perform an OSCORE Group transaction, where the server receives a Recipient Id that it does not have in memory, and succesfully derives the Recipient Context for it. (Client side)
 
@@ -683,7 +634,7 @@ _client security context_: [Security Context A2](#client-sec-a), with:
 | 7    | Verify   | Client displays the received packet                      |
 +------+----------+----------------------------------------------------------+
 
-#### 4.1.6. Identifier: TEST_3b {#test-3b}
+#### 4.1.8. Identifier: TEST_4b {#test-4b}
 
 **Objective** : Perform an OSCORE Group transaction, where the server receive a Recipient Id that it does not have in memory, and derives the Recipient Context for it. (Server side)
 
@@ -743,7 +694,7 @@ _server resources_:
 
 ### 4.2 Incorrect Group OSCORE Use
 
-#### 4.2.1. Identifier: TEST_4a {#test-4a}
+#### 4.2.1. Identifier: TEST_5a {#test-5a}
 
 **Objective** : Perform an OSCORE Group transaction where the client receives a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but decryption fails. (Client side)
 
@@ -788,7 +739,7 @@ _client security context_: [Security Context A](#client-sec), with:
 | 6    | Verify   | Client displays the received packet                      |
 +------+----------+----------------------------------------------------------+
 
-#### 4.2.2. Identifier: TEST_4b {#test-4b}
+#### 4.2.2. Identifier: TEST_5b {#test-5b}
 
 **Objective** : Perform an OSCORE Group transaction where the client receives a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but decryption fails. (Server side)
 
@@ -845,7 +796,7 @@ _server resources_:
 | 8    | Verify   | Server displays the sent packet                          |
 +------+----------+----------------------------------------------------------+
 
-#### 4.2.3. Identifier: TEST_5a {#test-5a}
+#### 4.2.3. Identifier: TEST_6a {#test-6a}
 
 **Objective** : Perform an OSCORE Group transaction where the server receives a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but decryption fails. (Client side)
 
@@ -890,7 +841,7 @@ _client security context_: [Security Context A3](#client-sec), with:
 | 6    | Verify   | Client displays the received packet                      |
 +------+----------+----------------------------------------------------------+
 
-#### 4.2.4. Identifier: TEST_5b {#test-5b}
+#### 4.2.4. Identifier: TEST_6b {#test-6b}
 
 **Objective** : Perform an OSCORE Group transaction where the server receives a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but decryption fails. (Server side)
 
@@ -947,7 +898,7 @@ _server resources_:
 | 8    | Verify   | Server displays the sent packet                          |
 +------+----------+----------------------------------------------------------+
 
-#### 4.2.5. Identifier: TEST_6a {#test-6a}
+#### 4.2.5. Identifier: TEST_7a {#test-7a}
 
 **Objective** : Perform an OSCORE Group transaction where the client receives a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but signature verification fails. (Client side)
 
@@ -993,7 +944,7 @@ _client security context_: [Security Context A](#client-sec), with:
 | 6    | Verify   | Client displays the received packet                      |
 +------+----------+----------------------------------------------------------+
 
-#### 4.2.6. Identifier: TEST_6b {#test-6b}
+#### 4.2.6. Identifier: TEST_7b {#test-7b}
 
 **Objective** : Perform an OSCORE Group transaction where the client receives a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but signature verification fails. (Server side)
 
@@ -1050,7 +1001,7 @@ _server resources_:
 | 8    | Verify   | Server displays the sent packet                          |
 +------+----------+----------------------------------------------------------+
 
-#### 4.2.7. Identifier: TEST_7a {#test-7a}
+#### 4.2.7. Identifier: TEST_8a {#test-8a}
 
 **Objective** : Perform an OSCORE Group transaction where the server receives a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but signature verification fails. (Client side)
 
@@ -1096,7 +1047,7 @@ _client security context_: [Security Context A](#client-sec), with:
 | 6    | Verify   | Client displays the received packet                      |
 +------+----------+----------------------------------------------------------+
 
-#### 4.2.8. Identifier: TEST_7b {#test-7b}
+#### 4.2.8. Identifier: TEST_8b {#test-8b}
 
 **Objective** : Perform an OSCORE Group transaction where the server receives a Recipient Id that it does not have in memory, and derives the Recipient Context for it, but signature verification fails. (Server side)
 
