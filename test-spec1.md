@@ -4,8 +4,10 @@
 
 ## Table of Contents
 1. [Notes](#notes)
+    1. [Addresses](#addresses)
+    2. [Modifications from draft -05](#modifs)
 2. [Security Contexts and Resources](#security-contexts-and-resources)
-    1. [Security Context](#group-sec)
+    1. [Group Security Context: EdDSA](#group-sec)
     2. [Resources](#resources)
 3. [Summary of Tests](#summary)
 
@@ -16,20 +18,20 @@ CoAP Version is 1 in all the tests.
 
 The client and server may optionally display external_aad and COSE object (before and after compression) to simplify debugging.
 
-It is recommended to have tested OSCORE functionalities (see TBD link) before running these tests.
+It is recommended to have tested OSCORE functionalities (see [OSCORE, RFC8613](https://tools.ietf.org/html/rfc8613) ) before running these tests.
 
-Note that Group Communication (TBD link) mandates the use of NON for requests. This specification recommends the use of NON for responses as well.
+Note that Group Communication [RFC7390bis](https://tools.ietf.org/html/draft-dijk-core-groupcomm-bis-01) mandates the use of NON for requests. This specification recommends the use of NON for responses as well.
 
-Note that the CoAP Token timeout needs to be configured to run the tests with multiple responses (see TBD). This specification recommends using a timeout of appr. 30 seconds.
+Note that the CoAP Token timeout needs to be configured to run the tests with multiple responses (see Test 2). This specification recommends using a timeout of appr. 90 seconds.
 
-Most of the tests can be run between 2 nodes. A few tests require 3/4 nodes.
+Most of the tests can be run between 2 nodes. A few tests require 3 nodes.
 
 Although these specifications test the implementation of group OSCORE, this version does not rely on multicast communication.
 
 The test specified below can in fact be run on unicast between the nodes, to test the group OSCORE implementation features.
 
 
-### Addresses
+### 1.1. Addresses
 
 31.133.136.216 - Jim
 
@@ -39,7 +41,7 @@ The test specified below can in fact be run on unicast between the nodes, to tes
 
 31.133.156.244 - Peter
 
-### Modifications from draft -05
+### 1.2. Modifications from draft -05 {#modifs}
 
 1.  Section 3.1.2 - The fields OSCORE_option and options are swapped in the aad_array structure.  This only changes the external_aad for signing and not for encryption.
 
@@ -51,7 +53,7 @@ The test specified below can in fact be run on unicast between the nodes, to tes
 
 ## 2. Configuration, Security Contexts and Resources
 
-### Group Security Context: EdDSA   {#group-sec}
+### 2.1Group Security Context: EdDSA   {#group-sec}
 
 * Common Context:
     - Master Secret: 0x102030405060708090a0b0c0d0e0f001 (16 bytes)
