@@ -12,27 +12,27 @@
     1. [Test 0a](#test-0a)
     2. [Test 0b](#test-0b)
 4. [Correct OSCORE use](#correct-oscore-use)
-        1. [Test 1a](#test-1a)
-        2. [Test 1b](#test-1b)
-        3. [Test 2a](#test-2a)
-        4. [Test 2b](#test-2b)
-        5. [Test 3a](#test-3a)
-        6. [Test 3b](#test-3b)
-        7. [Test 4a](#test-4a)
-        8. [Test 4b](#test-4b)
+    1. [Test 1a](#test-1a)
+    2. [Test 1b](#test-1b)
+    3. [Test 2a](#test-2a)
+    4. [Test 2b](#test-2b)
+    5. [Test 3a](#test-3a)
+    6. [Test 3b](#test-3b)
+    7. [Test 4a](#test-4a)
+    8. [Test 4b](#test-4b)
 4. [Incorrect OSCORE use](#incorrect-oscore-use)
-        1. [Test 5a](#test-5a)
-        2. [Test 5b](#test-5b)
-        3. [Test 6a](#test-6a)
-        4. [Test 6b](#test-6b)
-        5. [Test 7a](#test-7a)
-        6. [Test 7b](#test-7b)
-        7. [Test 8a](#test-8a)
-        8. [Test 8b](#test-8b)
-        9. [Test 9a]
-        6. [Test 9b]
-        7. [Test 10a]
-        8. [Test 10b]
+    1. [Test 5a](#test-5a)
+    2. [Test 5b](#test-5b)
+    3. [Test 6a](#test-6a)
+    4. [Test 6b](#test-6b)
+    5. [Test 7a](#test-7a)
+    6. [Test 7b](#test-7b)
+    7. [Test 8a](#test-8a)
+    8. [Test 8b](#test-8b)
+    9. [Test 9a]
+    6. [Test 9b]
+    7. [Test 10a]
+    8. [Test 10b]
 
 
 ## 1. Notes
