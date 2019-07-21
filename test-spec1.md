@@ -25,6 +25,7 @@ Note that the CoAP Token timeout needs to be configured to run the tests with mu
 Most of the tests can be run between 2 nodes. A few tests require 3/4 nodes.
 
 Although these specifications test the implementation of group OSCORE, this version does not rely on multicast communication.
+
 The test specified below can in fact be run on unicast between the nodes, to test the group OSCORE implementation features.
 
 
