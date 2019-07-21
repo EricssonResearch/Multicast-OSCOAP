@@ -1,10 +1,14 @@
 <h1 id="tests-specification-for-oscore-group-communication">Tests Specification for OSCORE Group Communication</h1>
 <h2 id="table-of-contents">Table of Contents</h2>
 <ol type="1">
-<li><a href="#notes">Notes</a></li>
+<li><a href="#notes">Notes</a>
+<ol type="1">
+<li><a href="#addresses">Addresses</a></li>
+<li><a href="#modifs">Modifications from draft -05</a></li>
+</ol></li>
 <li><a href="#security-contexts-and-resources">Security Contexts and Resources</a>
 <ol type="1">
-<li><a href="#group-sec">Security Context</a></li>
+<li><a href="#group-sec">Group Security Context: EdDSA</a></li>
 <li><a href="#resources">Resources</a></li>
 </ol></li>
 <li><a href="#summary">Summary of Tests</a></li>
@@ -12,18 +16,18 @@
 <h2 id="notes">1. Notes</h2>
 <p>CoAP Version is 1 in all the tests.</p>
 <p>The client and server may optionally display external_aad and COSE object (before and after compression) to simplify debugging.</p>
-<p>It is recommended to have tested OSCORE functionalities (see TBD link) before running these tests.</p>
-<p>Note that Group Communication (TBD link) mandates the use of NON for requests. This specification recommends the use of NON for responses as well.</p>
-<p>Note that the CoAP Token timeout needs to be configured to run the tests with multiple responses (see TBD). This specification recommends using a timeout of appr. 30 seconds.</p>
-<p>Most of the tests can be run between 2 nodes. A few tests require 3/4 nodes.</p>
+<p>It is recommended to have tested OSCORE functionalities (see <a href="https://tools.ietf.org/html/rfc8613">OSCORE, RFC8613</a> ) before running these tests.</p>
+<p>Note that Group Communication <a href="https://tools.ietf.org/html/draft-dijk-core-groupcomm-bis-01">RFC7390bis</a> mandates the use of NON for requests. This specification recommends the use of NON for responses as well.</p>
+<p>Note that the CoAP Token timeout needs to be configured to run the tests with multiple responses (see Test 2). This specification recommends using a timeout of appr. 90 seconds.</p>
+<p>Most of the tests can be run between 2 nodes. A few tests require 3 nodes.</p>
 <p>Although these specifications test the implementation of group OSCORE, this version does not rely on multicast communication.</p>
 <p>The test specified below can in fact be run on unicast between the nodes, to test the group OSCORE implementation features.</p>
-<h3 id="addresses">Addresses</h3>
+<h3 id="addresses">1.1. Addresses</h3>
 <p>31.133.136.216 - Jim</p>
 <p>31.133.155.197 - Jim</p>
 <p>31.133.136.213 - Rikard</p>
 <p>31.133.156.244 - Peter</p>
-<h3 id="modifications-from-draft--05">Modifications from draft -05</h3>
+<h3 id="modifs">1.2. Modifications from draft -05</h3>
 <ol type="1">
 <li><p>Section 3.1.2 - The fields OSCORE_option and options are swapped in the aad_array structure. This only changes the external_aad for signing and not for encryption.</p></li>
 <li><p>Section 9.2 - The items are wrapped in an array when more than one elemet exists. This is reflected in the fields below.</p></li>
@@ -31,7 +35,7 @@
 <li><p>Error message for signature validation is 4.00</p></li>
 </ol>
 <h2 id="configuration-security-contexts-and-resources">2. Configuration, Security Contexts and Resources</h2>
-<h3 id="group-sec">Group Security Context: EdDSA</h3>
+<h3 id="group-sec">2.1Group Security Context: EdDSA</h3>
 <ul>
 <li>Common Context:
 <ul>
