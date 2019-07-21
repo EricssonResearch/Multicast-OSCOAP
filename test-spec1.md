@@ -102,9 +102,9 @@ The test specified below can in fact be run on unicast between the nodes, to tes
 
 * Jim's Client
     - Sender ID: 0xa1 (1 byte)
-    - Sender Key: TBD (16 bytes)
+    - Sender Key: 0x57892057B3A8181989F42C23C3DE2F40 (16 bytes)
     - Sender Seq Number: 00
-    - Sender IV: TBD (using Partial IV: 00)
+    - Sender IV: 0x5A188ED0BD4B9BA56B818BE37E (using Partial IV: 00)
     - Signing Key: Entity 1 Signing Key
 
 * Jim's Server 1
@@ -116,9 +116,9 @@ The test specified below can in fact be run on unicast between the nodes, to tes
 
 * Jim's Server 2
     - Sender ID: 0xa3 (1 byte)
-    - Sender Key: TBD (16 bytes)
+    - Sender Key: 0xF598A90DBC770E5F4301F99F572F0763 (16 bytes)
     - Sender Seq Number: 00
-    - Sender IV: TBD (using Partial IV: 00)
+    - Sender IV: 0x5A188ED0BD4B9BA76B818BE37E (using Partial IV: 00)
     - Signing Key: Entity 1 Signing Key
 
 * Rikard's Client
@@ -132,28 +132,28 @@ The test specified below can in fact be run on unicast between the nodes, to tes
     - Sender ID: 0xb2 (1 byte)
     - Sender Key: 0xE9BB12DE9ED96975D78CEBF59A5F87E7 (16 bytes)
     - Sender Seq Number: 00
-    - Sender IV: TBD (using Partial IV: 00)
+    - Sender IV: 0x5A188ED0BD4B9BB66B818BE37E (using Partial IV: 00)
     - Signing Key: Entity 2 Signing Key
 
 * Rikard's Server 2
     - Sender ID: 0xb3 (1 byte)
     - Sender Key: 0xEB999F5EE8F06813B346E937723BDEF4 (16 bytes)
     - Sender Seq Number: 00
-    - Sender IV: TBD (using Partial IV: 00)
+    - Sender IV: 0x5A188ED0BD4B9BB76B818BE37E (using Partial IV: 00)
     - Signing Key: Entity 2 Signing Key
 
 * Peter's Client
     - Sender ID: 0xc1 (1 byte)
-    - Sender Key: TBD (16 bytes)
+    - Sender Key: 0xBA4A352BDADDC787226F78030E5062ED (16 bytes)
     - Sender Seq Number: 00
-    - Sender IV: TBD (using Partial IV: 00)
+    - Sender IV: 0x5A188ED0BD4B9BC56B818BE37E (using Partial IV: 00)
     - Public Signing Key: 0x508AFC1C29037EF3614D63AF87E1EA31D891D76B1F906098AF8FA39BBE874019 (32 bytes)
 
 * Peter's Server
     - Sender ID: 0xc2 (1 byte)
-    - Sender Key: TBD (16 bytes)
+    - Sender Key: 0x6110B3F88024B485ACC6A0616F10D45E (16 bytes)
     - Sender Seq Number: 00
-    - Sender IV: TBD (using Partial IV: 00)
+    - Sender IV: 0x5A188ED0BD4B9BC66B818BE37E (using Partial IV: 00)
     - Public Signing Key: 0x508AFC1C29037EF3614D63AF87E1EA31D891D76B1F906098AF8FA39BBE874019 (32 bytes)
 
 
